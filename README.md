@@ -1,3 +1,3 @@
 # Harvest
 
-A game developed for TTCSS 491 by Luke McAlpine, Luke Smith, Gil Rabara, and Lucas Dahl.
+A game developed for TCSS 491 by Luke McAlpine, Luke Smith, Gil Rabara, and Lucas Dahl.
