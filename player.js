@@ -22,7 +22,7 @@ class Player {
 
     // This method gets all the animations
     getAnimations() {
-        this.animations[0] = new Animator(this.spritesheet, 0, 0, 65, 80, 22, 0.2, 0);
+        this.animations[0] = new Animator(this.spritesheet, 0, 0, 85, 55, 22, 0.2);
     };
 
     // This is the update method called on each frame.
@@ -42,6 +42,6 @@ class Player {
     draw(ctx) {
 
         // Draw the animations
-        //this.animations[this.index].drawFrame(this.game.clockTick, ctx, this.x, this.y);
+        this.animations[this.index].drawFrame(this.game.clockTick, ctx, this.x, this.y);
     };
 }
