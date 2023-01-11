@@ -6,10 +6,14 @@ class Player {
 
         // Properties
         this.game = game;
-        this.speed = 100;
+        this.speed = 200;
         this.index = 0;
         this.x = 0;
         this.y = 0;
+        this.rotation = 0;
+
+        this.enemyX = 500;
+        this.enemyY = 500;
 
         // Get the spritesheet
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/tempPlayer.png");
@@ -35,6 +39,14 @@ class Player {
             this.x -= this.speed * this.game.clockTick;
         }
 
+        if (this.game.keys["s"]) {
+            this.y += this.speed * this.game.clockTick;
+        }
+
+        if (this.game.keys["w"]) {
+            this.y -= this.speed * this.game.clockTick;
+        }
+
     };
 
 
@@ -42,6 +54,39 @@ class Player {
     draw(ctx) {
 
         // Draw the animations
-        this.animations[this.index].drawFrame(this.game.clockTick, ctx, this.x, this.y, 3);
+        //this.animations[this.index].drawFrame(this.game.clockTick, ctx, this.x, this.y, 3);
+
+        ctx.fillRect(this.x, this.y, 100, 100);
+
+        ctx.save();
+        ctx.fillStyle = "red";
+
+        let dx = this.x - this.enemyX;
+        let dy = this.y - this.enemyY;
+
+        let speedE = 0.01;
+
+        let angle = Math.atan2(dy, dx);
+
+        let magnitude = 1.0;
+        let velX = Math.cos(angle) * magnitude;
+        let velY = Math.sin(angle) * magnitude;
+
+
+        //  ctx.translate(dx, dy);
+        let distance = this.calculateDistance(this.x, this.y, this.enemyX, this.enemyY);
+
+        this.enemyX += dx * speedE;
+        this.enemyY += dy * speedE;
+
+        ctx.fillRect(this.enemyX, this.enemyY, 100, 100);
+
+
+        ctx.restore();
     };
+
+
+    calculateDistance(x, y, enemyX, enemyY) {
+        return Math.sqrt((enemyX - x) ** 2 + (enemyY - y) ** 2);
+    }
 }
