@@ -57,3 +57,29 @@ window.requestAnimFrame = (() => {
 const getDistance = (p1, p2) => {
     return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
 };
+
+function rotateImage(spritesheet, xStart, yStart, width, height, theta, scale) {
+    //width *= 2;
+    //height *= 2;
+    let offscreenCanvas = document.createElement('canvas');
+    let dimension = Math.max(width, height) * scale;
+    offscreenCanvas.width = dimension;
+    offscreenCanvas.height = dimension;
+    let offscreenCtx = offscreenCanvas.getContext('2d');
+
+    offscreenCtx.imageSmoothingEnabled = false;
+    offscreenCtx.save();
+    offscreenCtx.translate(offscreenCanvas.width/2 , offscreenCanvas.height/2);
+
+    offscreenCtx.rotate(theta);
+
+    offscreenCtx.translate(-offscreenCanvas.width/2 , -offscreenCanvas.height/2);
+
+    offscreenCtx.drawImage(spritesheet,
+        xStart, yStart, width, height,
+        width * scale < dimension ? (dimension - width * scale) / 2 : 0,
+        height * scale < dimension ? (dimension - height * scale) / 2 : 0, width * scale, height * scale);
+    offscreenCtx.restore();
+    return offscreenCanvas;
+
+}
