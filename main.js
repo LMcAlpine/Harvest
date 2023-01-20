@@ -1,17 +1,43 @@
 const gameEngine = new GameEngine();
 
 const ASSET_MANAGER = new AssetManager();
-ASSET_MANAGER.queueDownload("./sprites/tempPlayer.png")
+
+
+ASSET_MANAGER.queueDownload("./levelTest1.png");
+ASSET_MANAGER.queueDownload("./sprites/G1_MIDDLE_TOP.png");
+ASSET_MANAGER.queueDownload("./img/testmap.png");
+ASSET_MANAGER.queueDownload("./img/background.png");
 
 ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");
+	const ctx = canvas.getContext("2d");
 
+	console.log("Hello world");
+
+
+
+	PARAMS.BLOCKWIDTH = PARAMS.BITWIDTH * PARAMS.SCALE;
+	PARAMS.CANVAS_WIDTH = canvas.width;
+	PARAMS.CANVAS_HEIGHT = canvas.height;
+
+
+	//document.documentElement.style.cursor = 'none';
 
 	canvas.requestPointerLock = canvas.requestPointerLock ||
 		canvas.mozRequestPointerLock;
 
 
 
+	document.exitPointerLock = document.exitPointerLock ||
+		document.mozExitPointerLock;
+
+
+
+	console.log(floorCollisions);
+
+	// canvas.onclick = () => {
+	// 	canvas.requestPointerLock();
+	// }
 
 	if (document.pointerLockElement === canvas ||
 		document.mozPointerLockElement === canvas) {
@@ -20,18 +46,23 @@ ASSET_MANAGER.downloadAll(() => {
 		console.log('The pointer lock status is now unlocked');
 	}
 
-	const ctx = canvas.getContext("2d");
 
-	// Add the Character
-	let player = new Player(gameEngine);
-	gameEngine.addEntity(player);
-	gameEngine.player = player;
+
+	// Attempt to unlock
 
 
 
-	// Put the context into the game engine
+
+	ctx.imageSmoothingEnabled = false;
+
+
+	new SceneManager(gameEngine);
+
+
+
+
+
 	gameEngine.init(ctx);
 
-	// Start the game engine.
 	gameEngine.start();
 });
