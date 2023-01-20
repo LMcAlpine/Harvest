@@ -1,5 +1,5 @@
 /** Global Parameters Object */
-const params = { };
+const params = {};
 
 /**
  * @param {Number} n
@@ -56,4 +56,32 @@ window.requestAnimFrame = (() => {
  */
 const getDistance = (p1, p2) => {
     return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+};
+
+/**
+ * 
+ * 
+ *  does the bottom of the player intersect with the top of the collision block?
+ *  and does the top of the player intersect with the bottom of the collision block?
+ *  and does our players left side intersect with the the blocks right side?
+ *  and is the right side of the player intersect with the left side of the collision block?
+ * 
+ * @param {Object} param0 
+ * @returns 
+ */
+const collision = ({ object1, object2 }) => {
+    return (
+        object1.position.y + object1.height >= object2.position.y &&
+        object1.position.y <= object2.position.y + object2.height &&
+        object1.position.x <= object2.position.x + object2.width &&
+        object1.position.x + object1.width >= object2.position.x);
+}
+
+
+
+
+const PARAMS = {
+    DEBUG: true,
+    SCALE: 3,
+    BITWIDTH: 16
 };

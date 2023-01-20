@@ -41,12 +41,16 @@ class GameEngine {
             x: e.clientX - this.ctx.canvas.getBoundingClientRect().left,
             y: e.clientY - this.ctx.canvas.getBoundingClientRect().top
         });
-        
+
         this.ctx.canvas.addEventListener("mousemove", e => {
             if (this.options.debugging) {
                 console.log("MOUSE_MOVE", getXandY(e));
             }
             this.mouse = getXandY(e);
+
+
+            let angle = Math.atan2(this.mouse.y - gameEngine.player.y, this.mouse.x - gameEngine.player.x) * 180 / Math.PI;
+            gameEngine.player.rotation = angle;
         });
 
         this.ctx.canvas.addEventListener("click", e => {
