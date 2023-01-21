@@ -58,7 +58,7 @@ const getDistance = (p1, p2) => {
     return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
 };
 
-function rotateImage(spritesheet, xStart, yStart, width, height, theta, scale) {
+function rotateImage(spritesheet, xStart, yStart, width, height, theta, scale, flip) {
     //width *= 2;
     //height *= 2;
     let offscreenCanvas = document.createElement('canvas');
@@ -70,7 +70,10 @@ function rotateImage(spritesheet, xStart, yStart, width, height, theta, scale) {
     offscreenCtx.imageSmoothingEnabled = false;
     offscreenCtx.save();
     offscreenCtx.translate(offscreenCanvas.width/2 , offscreenCanvas.height/2);
-
+    if (flip) {
+        offscreenCtx.scale(-1,1);
+    }
+    
     offscreenCtx.rotate(theta);
 
     offscreenCtx.translate(-offscreenCanvas.width/2 , -offscreenCanvas.height/2);
