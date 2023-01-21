@@ -7,6 +7,9 @@ ASSET_MANAGER.queueDownload("./levelTest1.png");
 ASSET_MANAGER.queueDownload("./sprites/G1_MIDDLE_TOP.png");
 ASSET_MANAGER.queueDownload("./img/testmap.png");
 ASSET_MANAGER.queueDownload("./img/background.png");
+ASSET_MANAGER.queueDownload("./sprites/tempPlayer.png")
+ASSET_MANAGER.queueDownload("./sprites/ChiefSprites.png");
+ASSET_MANAGER.queueDownload("./sprites/sniper1.png");
 
 ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");
@@ -61,6 +64,9 @@ ASSET_MANAGER.downloadAll(() => {
 
 
 
+	ctx.imageSmoothingEnabled = false;
+	// Add the Character
+	gameEngine.addEntity(new MasterChief(gameEngine));
 
 	gameEngine.init(ctx);
 

@@ -85,3 +85,32 @@ const PARAMS = {
     SCALE: 3,
     BITWIDTH: 16
 };
+
+function rotateImage(spritesheet, xStart, yStart, width, height, theta, scale, flip) {
+    //width *= 2;
+    //height *= 2;
+    let offscreenCanvas = document.createElement('canvas');
+    let dimension = Math.max(width, height) * scale;
+    offscreenCanvas.width = dimension;
+    offscreenCanvas.height = dimension;
+    let offscreenCtx = offscreenCanvas.getContext('2d');
+
+    offscreenCtx.imageSmoothingEnabled = false;
+    offscreenCtx.save();
+    offscreenCtx.translate(offscreenCanvas.width/2 , offscreenCanvas.height/2);
+    if (flip) {
+        offscreenCtx.scale(-1,1);
+    }
+    
+    offscreenCtx.rotate(theta);
+
+    offscreenCtx.translate(-offscreenCanvas.width/2 , -offscreenCanvas.height/2);
+
+    offscreenCtx.drawImage(spritesheet,
+        xStart, yStart, width, height,
+        width * scale < dimension ? (dimension - width * scale) / 2 : 0,
+        height * scale < dimension ? (dimension - height * scale) / 2 : 0, width * scale, height * scale);
+    offscreenCtx.restore();
+    return offscreenCanvas;
+
+}
