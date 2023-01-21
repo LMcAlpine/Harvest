@@ -35,20 +35,6 @@ class Animator {
         }
     };
 
-    // drawFrame(tick, ctx, x, y, scale) {
-
-    //     this.elapsedTime += tick;
-    //     if(this.elapsedTime > this.totalTime) this.elapsedTime -= this.totalTime;
-    //     const frame = this.currentFrame();
-    //     if (frame !== 0) console.log('Current Frame: ' + frame);
-    //     ctx.drawImage(this.spritesheet,
-    //         this.xStart + this.width * frame, this.yStart,
-    //         this.width, this.height,
-    //         x, y,
-    //         2*this.width, 2*this.height);
-    //         //this.scaleWidth, this.scaleHeight);
-    // };
-
     currentFrame() {
         return Math.floor(this.elapsedTime / this.frameDuration);
     };
