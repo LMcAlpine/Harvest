@@ -4,17 +4,19 @@ class MasterChief {
         this.cache = [];
 
         this.SpriteSheet = ASSET_MANAGER.getAsset("./sprites/ChiefSprites.png");
-        this.RotationSpriteSheet = ASSET_MANAGER.getAsset("./sprites/sniper1.png");
+        this.GunSpriteSheet = ASSET_MANAGER.getAsset("./sprites/sniper1.png");
 
-        //Animation States
+        //Animation states for chief's head/body
         this.state = 0; // 0 = Idle, 1 = walking
         this.facing = 0; // 0 = right, 1 = left
 
+        //Animation states for chief's arms/gun firing
+        this.isFiring = 0; // 0 = Not firing, 1 = Firing
+        this.gunType = 0; // 0 = Sniper Rifle, More to come
 
         this.aimRight = true;
         this.reverse = false;
-        //this.angle = 0; //Angle gun is aiming
-        this.shoot = false;
+        
 
         this.x = 300;
         this.y = 300;
@@ -22,7 +24,7 @@ class MasterChief {
         
         this.bodyAnimations = [];
         this.helmetAnimations = [];
-        this.armAnimations = [];
+        this.gunAnimations = [];
         this.loadAnimations();
 
         this.rectangle = function() {
@@ -36,23 +38,39 @@ class MasterChief {
         for (let i = 0; i <= 1; i++) { // this.state
             this.bodyAnimations.push([]);
             this.helmetAnimations.push([]);
-            this.armAnimations.push([]);
             for (let j = 0; j <= 1; j++) { // this.facing
                 this.bodyAnimations[i].push([]);
                 this.helmetAnimations[i].push([]);
-                this.armAnimations[i].push([]);
             }
         }
 
-        this.armAnimations[0][0] = new Animator(this.RotationSpriteSheet,
+        for (let i = 0; i <= 1; i++) { // this.gunType
+            this.gunAnimations.push([]);
+            for (let j = 0; j <= 0; j++) { // this.isFiring
+                this.gunAnimations[i].push([]);
+            }
+        }
+
+        // ---- GUN ANIMATIONS ----
+        // gunType: Sniper Rifle
+        // isFiring: False
+        this.gunAnimations[0][0] = new Animator(this.GunSpriteSheet,
             0, 0,
-            90, 90,
+            180, 180,
             1, 1,
             0,
             false, true);
 
-        
+        // isFiring: True
+        this.gunAnimations[0][1] = new Animator(this.GunSpriteSheet,
+            0, 0,
+            180, 180,
+            3, 0.1,
+            0,
+            false, true);
 
+            //console.log(this.gunAnimations[0][0]);
+        // ---- CHIEF BODY/HEAD ANIMATIONS ----
         // State: Idle
         // Facing: Right
         this.bodyAnimations[0][0] = new Animator(this.SpriteSheet,
@@ -200,51 +218,16 @@ class MasterChief {
             console.log(degrees + ' degrees');
             
         }
-        this.drawGun(ctx, degrees);
+
+        this.gunAnimations[this.gunType][this.isFiring].drawFrameAndRotate(this.game.clockTick, ctx, this.x, this.y, 2, this.aimRight, degrees);
+        //this.drawGun(ctx, degrees);
       
     };
 
-    drawGun(ctx, angle) {
-
+    shootGun() {
+        this.isFiring = 1;
         
-
-        if (!this.cache[angle]) {
-            let radians = -angle / 360 * 2 * Math.PI;
-            
-            if (this.aimRight) {
-                //console.log('Aim Right');
-                var offscreenCanvas = rotateImage(this.RotationSpriteSheet,
-                    0, 0, 
-                    180, 180,
-                    radians, 5,
-                    false);
-    
-            } else {
-                //console.log('Aim Left');
-                var offscreenCanvas = rotateImage(this.RotationSpriteSheet,
-                    0, 0, 
-                    180, 180,
-                    -radians - Math.PI, 5,
-                    true);
-    
-                
-            }
-
-            this.cache[angle] = offscreenCanvas;
-        }
-
-        //Offset to shift chief's shoulder back in it's socker when he changes face
-        if (this.aimRight) {
-            var armXOffset = 154;
-        } else {
-            var armXOffset = 126;
-        }
-        
-        ctx.drawImage(this.cache[angle], 
-            this.x - armXOffset, this.y - 146, 
-            2*180, 2*180);
-        
-
-    };
+        //this.isFiring = 0;
+    }
 
 }
