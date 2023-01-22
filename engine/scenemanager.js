@@ -2,10 +2,6 @@ class SceneManager {
     constructor(game) {
         this.game = game;
 
-
-
-
-
         // 50 tiles wide
         // 40 tiles tall
         this.floorCollisions2D = [];
@@ -38,11 +34,13 @@ class SceneManager {
 
     loadLevel() {
 
-        let player = new Player({ game: this.game, position: { x: 100, y: 100 }, collisionBlocks: this.collisionBlocks })
+        // let player = new Player({ game: this.game, position: { x: 100, y: 100 }, collisionBlocks: this.collisionBlocks })
 
-        gameEngine.addEntity(player);
-        gameEngine.player = player;
-
+        // gameEngine.addEntity(player);
+        // gameEngine.player = player;
+        
+        // Add Master Cheese
+        gameEngine.addEntity(new MasterChief(gameEngine));
 
 
     }

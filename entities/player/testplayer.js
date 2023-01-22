@@ -1,4 +1,4 @@
-class Player {
+class TestPlayer {
     constructor({ game, position, collisionBlocks }) {
         Object.assign(this, { game, position, collisionBlocks });
 
