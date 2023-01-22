@@ -40,7 +40,8 @@ class SceneManager {
         // gameEngine.player = player;
         
         // Add Master Cheese
-        gameEngine.addEntity(new MasterChief(gameEngine));
+        this.startingPosition =  {x: 300, y: 300};
+        gameEngine.addEntity(new MasterChief(gameEngine, this.startingPosition));
 
 
     }

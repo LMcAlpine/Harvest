@@ -84,6 +84,23 @@ const PARAMS = {
     BITWIDTH: 16
 };
 
+// Player physics
+const PHYSIC_SCALE = 3; 
+const GRAVITY = 1.5; 
+const PLAYER_JUMP = 1000;
+const PLAYER_PHYSICS = {
+    MAX_WALK: 90 * PHYSIC_SCALE,
+    MAX_RUN: 180 * PHYSIC_SCALE,
+    ACC_WALK: 180 * PHYSIC_SCALE,
+    ACC_RUN: 400 * PHYSIC_SCALE,
+    CROUCH_SPEED: 50 * PHYSIC_SCALE,
+    JUMP_HEIGHT: PLAYER_JUMP,
+    DOUBLE_JUMP_HEIGHT: PLAYER_JUMP * .25,
+    MAX_FALL: 300 * PHYSIC_SCALE,
+    ACC_FALL: PLAYER_JUMP * GRAVITY
+};
+
+
 function rotateImage(spritesheet, xStart, yStart, width, height, theta, scale, flip) {
     //width *= 2;
     //height *= 2;
