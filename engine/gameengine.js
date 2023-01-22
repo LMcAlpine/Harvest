@@ -48,9 +48,6 @@ class GameEngine {
             }
             this.mouse = getXandY(e);
 
-
-            let angle = Math.atan2(this.mouse.y - gameEngine.player.y, this.mouse.x - gameEngine.player.x) * 180 / Math.PI;
-            gameEngine.player.rotation = angle;
         });
 
         this.ctx.canvas.addEventListener("click", e => {

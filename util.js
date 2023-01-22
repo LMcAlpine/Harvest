@@ -78,8 +78,6 @@ const collision = ({ object1, object2 }) => {
 }
 
 
-
-
 const PARAMS = {
     DEBUG: true,
     SCALE: 3,
