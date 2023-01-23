@@ -86,8 +86,8 @@ const PARAMS = {
 
 // Player physics
 const PHYSIC_SCALE = 3;
-const GRAVITY = 1.5;
-const PLAYER_JUMP = 125;
+const GRAVITY = 0.5;
+const PLAYER_JUMP = 16;
 const PLAYER_PHYSICS = {
     MAX_WALK: 90 * PHYSIC_SCALE,
     MAX_RUN: 180 * PHYSIC_SCALE,
