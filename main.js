@@ -12,7 +12,7 @@ ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");
 	const ctx = canvas.getContext("2d");
 
-	console.log("Hello world");
+	//console.log("Hello world");
 
 
 

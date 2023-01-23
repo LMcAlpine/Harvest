@@ -14,6 +14,7 @@ class MasterChief {
         this.isFiring = 0; // 0 = Not firing, 1 = Firing
         this.gunType = 0; // 0 = Sniper Rifle, More to come
 
+        this.degrees = 0;
         this.aimRight = true;
         this.reverse = false;
         
@@ -65,9 +66,9 @@ class MasterChief {
         this.gunAnimations[0][1] = new Animator(this.GunSpriteSheet,
             0, 0,
             180, 180,
-            3, 0.1,
+            3, 0.05,
             0,
-            false, true);
+            false, false);
 
             //console.log(this.gunAnimations[0][0]);
         // ---- CHIEF BODY/HEAD ANIMATIONS ----
@@ -187,12 +188,7 @@ class MasterChief {
         
     };
 
-    draw(ctx) {
-
-        this.bodyAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);     
-        this.helmetAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);   
-
-        var degrees = 0;
+    findMouseAngle() {
         //Calculating angle from mouse
         if (gameEngine.mouse !== null) {
 
@@ -204,30 +200,92 @@ class MasterChief {
 
             //console.log('Opp: ' + -opp + ' Adj: ' + adj);
             let angle = Math.atan(opp / adj);
-            degrees = Math.floor(angle * (180/Math.PI));
+            this.degrees = Math.floor(angle * (180/Math.PI));
 
             if (opp >= 0 && adj < 0) {
-                degrees += 180;
+                this.degrees += 180;
             } else if (opp < 0 && adj < 0) {
-                degrees += 180;
+                this.degrees += 180;
             } else if (opp < 0 && adj >= 0) {
-                degrees += 360;
+                this.degrees += 360;
             } 
 
-            
-            console.log(degrees + ' degrees');
+            console.log(this.degrees + ' degrees');
             
         }
+    }
 
-        this.gunAnimations[this.gunType][this.isFiring].drawFrameAndRotate(this.game.clockTick, ctx, this.x, this.y, 2, this.aimRight, degrees);
-        //this.drawGun(ctx, degrees);
+    draw(ctx) {
+
+        this.findMouseAngle();
+
+        this.bodyAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);     
+        this.helmetAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);   
+        this.drawGun(ctx);
       
     };
 
+    drawGun(ctx) {
+        let a = this.gunAnimations[this.gunType][this.isFiring];
+        let scale = 2;
+        
+        a.elapsedTime += this.game.clockTick;
+        
+        if (a.isDone()) {
+            if (a.loop) {
+                a.elapsedTime -= a.totalTime;
+            } 
+            else {
+                // If this is not a continually firing animation, isFiring gets toggled off and animation is reset.
+                this.stopShooting();
+                a.reset();
+                
+            }
+        }
+
+        let frame = a.currentFrame();
+        if (a.reverse) frame = a.frameCount - frame - 1;
+
+        let radians = -this.degrees / 360 * 2 * Math.PI;
+            
+        if (this.aimRight) {
+
+            var offscreenCanvas = rotateImage(a.spritesheet,
+                a.xStart + frame * (a.width + a.framePadding), a.yStart, 
+                a.width, a.height,
+                radians, 5,
+                false);
+
+        } else {
+
+            var offscreenCanvas = rotateImage(a.spritesheet,
+                a.xStart + frame * (a.width + a.framePadding), a.yStart, 
+                a.width, a.height,
+                -radians - Math.PI, 5,
+                true);
+
+        }
+
+        //Offset to shift chief's shoulder back in it's socket when he changes face
+        if (this.aimRight) {
+            var armXOffset = 154;
+        } else {
+            var armXOffset = 126;
+        }
+
+        ctx.drawImage(offscreenCanvas, 
+                this.x - armXOffset, this.y - 146, 
+                scale * 180, scale * 180);
+
+        
+    }
+
     shootGun() {
         this.isFiring = 1;
-        
-        //this.isFiring = 0;
+    }
+
+    stopShooting() {
+        this.isFiring = 0;
     }
 
 }

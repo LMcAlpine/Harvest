@@ -35,64 +35,18 @@ class Animator {
         }
     };
 
-    drawFrameAndRotate(tick, ctx, x, y, scale, aimRight, angle) {
-        this.elapsedTime += tick;
-
-        if (this.isDone()) {
-            if (this.loop) {
-                this.elapsedTime -= this.totalTime;
-            } else {
-                return;
-            }
-        }
-
-        let frame = this.currentFrame();
-        if (this.reverse) frame = this.frameCount - frame - 1;
-
-        let radians = -angle / 360 * 2 * Math.PI;
-            
-        if (aimRight) {
-            // console.log(this.spritesheet);
-            var offscreenCanvas = rotateImage(this.spritesheet,
-                this.xStart + frame * (this.width + this.framePadding), this.yStart, 
-                this.width, this.height,
-                radians, 5,
-                false);
-
-        } else {
-            //console.log('Aim Left');
-            var offscreenCanvas = rotateImage(this.spritesheet,
-                this.xStart + frame * (this.width + this.framePadding), this.yStart, 
-                this.width, this.height,
-                -radians - Math.PI, 5,
-                true);
-
-        }
-
-        //Offset to shift chief's shoulder back in it's socker when he changes face
-        if (aimRight) {
-            var armXOffset = 154;
-        } else {
-            var armXOffset = 126;
-        }
-
-        ctx.drawImage(offscreenCanvas, 
-                x - armXOffset, y - 146, 
-                scale * 180, scale * 180);
-
-        // if (true) {
-        //     ctx.strokeStyle = 'Blue';
-        //     ctx.strokeRect(x, y, this.width * scale, this.height * scale);
-        // }
-    };
-
     currentFrame() {
         return Math.floor(this.elapsedTime / this.frameDuration);
     };
 
     isDone() {
+        //console.log('Is Done?');
         return (this.elapsedTime >= this.totalTime);
     };
+
+    reset() {
+        this.elapsedTime -= this.totalTime;
+    }
 };
 
 
