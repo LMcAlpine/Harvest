@@ -47,6 +47,8 @@ class MasterChief {
 
         //this.hitbox = { position: { x: this.position.x, y: this.position.y }, width: 10, height: 10 };
 
+        this.camera = { position: { x: this.position.x, y: this.position.y }, width: 200, height: 80 };
+
     };
 
     loadAnimations() {
@@ -224,6 +226,7 @@ class MasterChief {
         ctx.scale(4, 4);
 
 
+
         //ctx.save();
         // ctx.scale(4, 4);
 
@@ -231,7 +234,11 @@ class MasterChief {
 
 
 
+        ctx.fillStyle = 'rgba(0,0,255,0.2)';
         ctx.translate(0, -this.level.height + (PARAMS.CANVAS_HEIGHT / 4) + 150);
+
+        ctx.fillRect(this.camera.position.x, this.camera.position.y, this.camera.width, this.camera.height);
+
 
         //  ctx.drawImage(this.level, 0, 0);
 
