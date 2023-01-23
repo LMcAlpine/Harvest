@@ -50,7 +50,7 @@ class GameEngine {
 
         });
 
-        this.ctx.canvas.addEventListener("onclick", e => {
+        this.ctx.canvas.addEventListener("click", e => {
             if (this.options.debugging) {
                 console.log("CLICK", getXandY(e));
             }

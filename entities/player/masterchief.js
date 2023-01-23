@@ -1,6 +1,10 @@
 class MasterChief {
-    constructor(game) {
-        this.game = game;
+    constructor(game, position) {
+
+        // Updated the constructor
+        Object.assign(this, { game, position});
+
+        //this.game = game;
         this.cache = [];
 
         this.SpriteSheet = ASSET_MANAGER.getAsset("./sprites/ChiefSprites.png");
@@ -22,6 +26,11 @@ class MasterChief {
         this.x = 300;
         this.y = 300;
         this.walkingSpeed = 0.07;
+
+
+        // Added for Jumping
+        this.velocity = {x: 0, y: 0};
+        this.inAir = false;
         
         this.bodyAnimations = [];
         this.helmetAnimations = [];
@@ -33,6 +42,7 @@ class MasterChief {
             this.game.ctx.strokeRect(this.x, this.y, 25, 2);
             this.game.ctx.save();
         }
+        
     };
 
     loadAnimations() {
@@ -142,6 +152,9 @@ class MasterChief {
 
     update() {
 
+        // Updater properties
+        const TICK = this.game.clockTick;
+
         //Calculate if player is aiming to right or left of player model
         if (this.game.mouse !== null) {
             let xOffset = 25;
@@ -166,7 +179,8 @@ class MasterChief {
             }
             
             this.state = 1;
-            this.x += 3;
+            //this.x += 3;
+            this.velocity.x += PLAYER_PHYSICS.MAX_RUN * TICK;
         }
         else if (this.game.keys['a']) {
 
@@ -178,17 +192,36 @@ class MasterChief {
                 this.bodyAnimations[this.state][this.facing].reverse = false;
             }
             this.state = 1;
-            this.x -= 3;
-        }
-        else {
+            //this.x -= 3;
+            this.velocity.x -= PLAYER_PHYSICS.MAX_RUN * TICK;
+        } else if(this.game.keys[' '] || this.game.keys['Space']){ // Jumping TODO: JUMP WHILE RUNNING!
+           this.jump();
+        } else {
             this.state = 0;
         }
 
-        
-        
+        // Allow the player to fall
+        this.velocity.y += PLAYER_PHYSICS.MAX_FALL * TICK;
+
+        // Update the player x and y
+        this.x = this.velocity.x * TICK;
+        this.y = this.velocity.y * TICK;
+
     };
 
-    findMouseAngle() {
+    // This method will jump the player
+    jump() {
+        this.velocity.y -= PLAYER_PHYSICS.JUMP_HEIGHT;
+        this.inAir = true;
+    }
+
+
+    draw(ctx) {
+
+        this.bodyAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);     
+        this.helmetAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);   
+
+        var degrees = 0;
         //Calculating angle from mouse
         if (gameEngine.mouse !== null) {
 
@@ -286,6 +319,33 @@ class MasterChief {
 
     stopShooting() {
         this.isFiring = 0;
+    }
+
+    findMouseAngle() {
+        //Calculating angle from mouse
+        if (gameEngine.mouse !== null) {
+
+            let yOffset = 32;
+            let xOffset = 25;
+
+            let opp = -(gameEngine.mouse.y - this.y - yOffset);
+            let adj = gameEngine.mouse.x - this.x - xOffset;
+
+            //console.log('Opp: ' + -opp + ' Adj: ' + adj);
+            let angle = Math.atan(opp / adj);
+            this.degrees = Math.floor(angle * (180/Math.PI));
+
+            if (opp >= 0 && adj < 0) {
+                this.degrees += 180;
+            } else if (opp < 0 && adj < 0) {
+                this.degrees += 180;
+            } else if (opp < 0 && adj >= 0) {
+                this.degrees += 360;
+            } 
+
+            console.log(this.degrees + ' degrees');
+            
+        }
     }
 
 }
