@@ -8,7 +8,7 @@ class MasterChief {
         this.cache = [];
 
         this.SpriteSheet = ASSET_MANAGER.getAsset("./sprites/ChiefSprites.png");
-        this.GunSpriteSheet = ASSET_MANAGER.getAsset("./sprites/sniper1.png");
+        this.GunSpriteSheet = ASSET_MANAGER.getAsset("./sprites/Guns.png");
 
         //Animation states for chief's head/body
         this.state = 0; // 0 = Idle, 1 = walking
@@ -16,7 +16,7 @@ class MasterChief {
 
         //Animation states for chief's arms/gun firing
         this.isFiring = 0; // 0 = Not firing, 1 = Firing
-        this.gunType = 0; // 0 = Sniper Rifle, More to come
+        this.gunType = 1; // 0 = Sniper Rifle, More to come
 
         this.degrees = 0;
         this.aimRight = true;
@@ -57,10 +57,11 @@ class MasterChief {
 
         for (let i = 0; i <= 1; i++) { // this.gunType
             this.gunAnimations.push([]);
-            for (let j = 0; j <= 0; j++) { // this.isFiring
+            for (let j = 0; j <= 1; j++) { // this.isFiring
                 this.gunAnimations[i].push([]);
             }
         }
+
 
         // ---- GUN ANIMATIONS ----
         // gunType: Sniper Rifle
@@ -80,7 +81,24 @@ class MasterChief {
             0,
             false, false);
 
-            //console.log(this.gunAnimations[0][0]);
+        // gunType: Assault Rifle
+        // isFiring: False
+        this.gunAnimations[1][0] = new Animator(this.GunSpriteSheet,
+            0, 180,
+            180, 180,
+            1, 1,
+            0,
+            false, true);
+
+        // isFiring: True
+        this.gunAnimations[1][1] = new Animator(this.GunSpriteSheet,
+            0, 180,
+            180, 180,
+            3, 0.05,
+            0,
+            false, false);
+
+
         // ---- CHIEF BODY/HEAD ANIMATIONS ----
         // State: Idle
         // Facing: Right

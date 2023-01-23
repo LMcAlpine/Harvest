@@ -8,7 +8,7 @@ ASSET_MANAGER.queueDownload("./img/ForrestMap.png");
 
 ASSET_MANAGER.queueDownload("./sprites/tempPlayer.png");
 ASSET_MANAGER.queueDownload("./sprites/ChiefSprites.png");
-ASSET_MANAGER.queueDownload("./sprites/sniper1.png");
+ASSET_MANAGER.queueDownload("./sprites/Guns.png");
 
 ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");
