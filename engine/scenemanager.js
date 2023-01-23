@@ -26,6 +26,10 @@ class SceneManager {
         })
 
 
+        this.block = ASSET_MANAGER.getAsset("./img/testmap.png");
+
+
+
 
 
         this.loadLevel()
@@ -34,14 +38,16 @@ class SceneManager {
 
     loadLevel() {
 
-        // let player = new Player({ game: this.game, position: { x: 100, y: 100 }, collisionBlocks: this.collisionBlocks })
+        //  let player = new TestPlayer({ game: this.game, position: { x: 100, y: 100 }, collisionBlocks: this.collisionBlocks })
 
-        // gameEngine.addEntity(player);
-        // gameEngine.player = player;
-        
+        //  gameEngine.addEntity(player);
+        //  gameEngine.player = player;
+        let level = new DrawLevel(this.collisionBlocks);
+        this.game.addEntity(level);
+
         // Add Master Cheese
-        this.startingPosition =  {x: 300, y: 300};
-        gameEngine.addEntity(new MasterChief(gameEngine, this.startingPosition));
+        this.startingPosition = { x: 300, y: 300 };
+        gameEngine.addEntity(new MasterChief(gameEngine, this.startingPosition, this.collisionBlocks));
 
 
     }

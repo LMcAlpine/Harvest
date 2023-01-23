@@ -3,7 +3,7 @@ class TestPlayer {
         Object.assign(this, { game, position, collisionBlocks });
 
 
-        this.block = ASSET_MANAGER.getAsset("./img/testmap.png");
+        // this.block = ASSET_MANAGER.getAsset("./img/testmap.png");
 
         this.velocity = { x: 0, y: 1 };
         this.gravity = 0.5;
