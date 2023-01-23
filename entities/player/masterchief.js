@@ -24,7 +24,7 @@ class MasterChief {
         this.aimRight = true;
         this.reverse = false;
 
-        this.scale = 2;
+        this.scale = 3;
         this.walkingSpeed = 0.07;
 
         this.width = 30;
@@ -255,15 +255,15 @@ class MasterChief {
 
     draw(ctx) {
 
-        //ctx.save();
-        //ctx.scale(4, 4);
-
-
-        //ctx.save();
+        // ctx.save();
         // ctx.scale(4, 4);
 
 
-        //ctx.translate(0, -this.level.height + (PARAMS.CANVAS_HEIGHT / 4) + 150);
+        ctx.save();
+        ctx.scale(4, 4);
+
+
+        ctx.translate(0, -this.level.height + (PARAMS.CANVAS_HEIGHT / 4) + 150);
 
         //  ctx.drawImage(this.level, 0, 0);
 
@@ -279,7 +279,7 @@ class MasterChief {
         // console.log(this.width);
         //  ctx.fillRect(collisionBlock.position.x, collisionBlock.position.y, 16, 16);
         // })
-        // ctx.restore();
+        ctx.restore();
 
         this.findMouseAngle();
 
