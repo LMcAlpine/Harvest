@@ -55,6 +55,7 @@ class GameEngine {
                 console.log("CLICK", getXandY(e));
             }
             this.click = getXandY(e);
+            this.entities[1].shootGun();
         });
 
         this.ctx.canvas.addEventListener("wheel", e => {
