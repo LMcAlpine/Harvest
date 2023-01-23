@@ -18,14 +18,13 @@ class MasterChief {
 
         //Animation states for chief's arms/gun firing
         this.isFiring = 0; // 0 = Not firing, 1 = Firing
-        this.gunType = 1; // 0 = Sniper Rifle, More to come
+        this.gunType = 0; // 0 = Sniper Rifle, More to come
 
         this.degrees = 0;
         this.aimRight = true;
         this.reverse = false;
 
-        // this.x = 300;
-        // this.y = 300;
+        this.scale = 2;
         this.walkingSpeed = 0.07;
 
         this.width = 30;
@@ -43,7 +42,7 @@ class MasterChief {
 
         this.rectangle = function () {
             this.game.ctx.strokeStyle = "Blue";
-            this.game.ctx.strokeRect(this.x, this.y, 25, 2);
+            this.game.ctx.strokeRect(this.position.x, this.position.y, 25, 2);
             this.game.ctx.save();
         }
 
@@ -172,7 +171,7 @@ class MasterChief {
             false, true);
 
 
-    }
+    };
 
     update() {
 
@@ -214,7 +213,6 @@ class MasterChief {
             this.position.x += this.velocity.x * TICK;
         }
         else if (this.game.keys['a']) {
-            // console.log("HERE");
 
             if (this.aimRight) {
                 this.facing = 0;
@@ -252,22 +250,20 @@ class MasterChief {
     jump() {
         this.velocity.y -= PLAYER_PHYSICS.JUMP_HEIGHT;
         this.inAir = true;
-    }
+    };
 
 
     draw(ctx) {
-        ctx.save();
-        ctx.scale(4, 4);
+
+        //ctx.save();
+        //ctx.scale(4, 4);
 
 
         //ctx.save();
         // ctx.scale(4, 4);
 
 
-
-
-
-        ctx.translate(0, -this.level.height + (PARAMS.CANVAS_HEIGHT / 4) + 150);
+        //ctx.translate(0, -this.level.height + (PARAMS.CANVAS_HEIGHT / 4) + 150);
 
         //  ctx.drawImage(this.level, 0, 0);
 
@@ -285,10 +281,80 @@ class MasterChief {
         // })
         // ctx.restore();
 
-        this.bodyAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x, this.position.y, 1);
-        this.helmetAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x, this.position.y, 1);
+        this.findMouseAngle();
 
-        var degrees = 0;
+        this.bodyAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x, this.position.y, this.scale);     
+        this.helmetAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x, this.position.y, this.scale);   
+        this.drawGun(ctx);
+      
+    };
+
+    drawGun(ctx) {
+        let a = this.gunAnimations[this.gunType][this.isFiring];
+    
+        a.elapsedTime += this.game.clockTick;
+        
+        if (a.isDone()) {
+            if (a.loop) {
+                a.elapsedTime -= a.totalTime;
+            } 
+            else {
+                // If this is not a continually firing animation, isFiring gets toggled off and animation is reset.
+                this.stopShooting();
+                a.reset();
+                
+            }
+        }
+
+        let frame = a.currentFrame();
+        if (a.reverse) frame = a.frameCount - frame - 1;
+
+        let radians = -this.degrees / 360 * 2 * Math.PI;
+            
+        if (this.aimRight) {
+
+            var offscreenCanvas = rotateImage(a.spritesheet,
+                a.xStart + frame * (a.width + a.framePadding), a.yStart, 
+                a.width, a.height,
+                radians, 5,
+                false);
+
+        } else {
+
+            var offscreenCanvas = rotateImage(a.spritesheet,
+                a.xStart + frame * (a.width + a.framePadding), a.yStart, 
+                a.width, a.height,
+                -radians - Math.PI, 5,
+                true);
+
+        }
+
+        //Offset to shift chief's shoulder back in it's socket when he changes face
+        if (this.aimRight) {
+            var armXOffset = 76 * this.scale;
+        } else {
+            var armXOffset = 64 * this.scale;
+        }
+
+        var armYOffset = 72 * this.scale;
+
+        ctx.drawImage(offscreenCanvas, 
+                this.position.x - armXOffset, this.position.y - armYOffset, 
+                this.scale * a.width, this.scale * a.width);
+
+        
+    };
+    
+
+    shootGun() {
+        this.isFiring = 1;
+    };
+
+    stopShooting() {
+        this.isFiring = 0;
+    };
+
+    findMouseAngle() {
         //Calculating angle from mouse
         if (gameEngine.mouse !== null) {
 
@@ -309,99 +375,9 @@ class MasterChief {
             } else if (opp < 0 && adj >= 0) {
                 this.degrees += 360;
             } 
-
-            console.log(this.degrees + ' degrees');
             
         }
-    }
-
-    draw(ctx) {
-
-        this.findMouseAngle();
-
-        this.bodyAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);     
-        this.helmetAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);   
-        this.drawGun(ctx);
-      
     };
-
-    drawGun(ctx, angle) {
-
-        
-
-        if (!this.cache[angle]) {
-            let radians = -angle / 360 * 2 * Math.PI;
-            
-            if (this.aimRight) {
-                //console.log('Aim Right');
-                var offscreenCanvas = rotateImage(this.RotationSpriteSheet,
-                    0, 0, 
-                    180, 180,
-                    radians, 5,
-                    false);
-    
-            } else {
-                //console.log('Aim Left');
-                var offscreenCanvas = rotateImage(this.RotationSpriteSheet,
-                    0, 0, 
-                    180, 180,
-                    -radians - Math.PI, 5,
-                    true);
-    
-                
-            }
-
-            this.cache[angle] = offscreenCanvas;
-        }
-
-        //Offset to shift chief's shoulder back in it's socket when he changes face
-        if (this.aimRight) {
-            var armXOffset = 154 / 4;
-        } else {
-            var armXOffset = 126 / 4;
-        }
-
-        ctx.drawImage(offscreenCanvas, 
-                this.x - armXOffset, this.y - 146, 
-                scale * 180, scale * 180);
-
-        
-    }
-
-    shootGun() {
-        this.isFiring = 1;
-    }
-
-    stopShooting() {
-        this.isFiring = 0;
-    }
-
-    findMouseAngle() {
-        //Calculating angle from mouse
-        if (gameEngine.mouse !== null) {
-
-            let yOffset = 32;
-            let xOffset = 25;
-
-            let opp = -(gameEngine.mouse.y - this.y - yOffset);
-            let adj = gameEngine.mouse.x - this.x - xOffset;
-
-            //console.log('Opp: ' + -opp + ' Adj: ' + adj);
-            let angle = Math.atan(opp / adj);
-            this.degrees = Math.floor(angle * (180/Math.PI));
-
-            if (opp >= 0 && adj < 0) {
-                this.degrees += 180;
-            } else if (opp < 0 && adj < 0) {
-                this.degrees += 180;
-            } else if (opp < 0 && adj >= 0) {
-                this.degrees += 360;
-            } 
-
-            console.log(this.degrees + ' degrees');
-            
-        }
-    }
 
 
     checkForHorizontalCollisions() {
@@ -425,7 +401,7 @@ class MasterChief {
                 }
             }
         }
-    }
+    };
 
 
     // applyGravity() {
@@ -456,6 +432,6 @@ class MasterChief {
                 }
             }
         }
-    }
+    };
 
 }
