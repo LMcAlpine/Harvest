@@ -34,13 +34,13 @@ class SceneManager {
 
     loadLevel() {
 
-        // let player = new Player({ game: this.game, position: { x: 100, y: 100 }, collisionBlocks: this.collisionBlocks })
+        //  let player = new TestPlayer({ game: this.game, position: { x: 100, y: 100 }, collisionBlocks: this.collisionBlocks })
 
-        // gameEngine.addEntity(player);
-        // gameEngine.player = player;
-        
+        //  gameEngine.addEntity(player);
+        //  gameEngine.player = player;
+
         // Add Master Cheese
-        this.startingPosition =  {x: 300, y: 300};
+        this.startingPosition = { x: 300, y: 300 };
         gameEngine.addEntity(new MasterChief(gameEngine, this.startingPosition));
 
 
