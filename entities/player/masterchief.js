@@ -208,7 +208,6 @@ class MasterChief {
 
             this.state = 1;
             //this.x += 3;
-            //  this.velocity.x += PLAYER_PHYSICS.MAX_RUN * TICK;
             this.velocity.x += PLAYER_PHYSICS.MAX_RUN * TICK;
             this.position.x += this.velocity.x * TICK;
         }
@@ -246,7 +245,7 @@ class MasterChief {
 
     };
 
-    // This method will jump the player
+    // This method will allow the player to jump
     jump() {
         this.velocity.y -= PLAYER_PHYSICS.JUMP_HEIGHT;
         this.inAir = true;
@@ -375,7 +374,7 @@ class MasterChief {
             } else if (opp < 0 && adj >= 0) {
                 this.degrees += 360;
             } 
-            
+
         }
     };
 
@@ -403,13 +402,6 @@ class MasterChief {
         }
     };
 
-
-    // applyGravity() {
-
-    //     this.position.y += this.velocity.y;
-    //     this.velocity.y += this.gravity;
-
-    // }
 
     checkForVerticalCollisions() {
         for (let i = 0; i < this.collisionBlocks.length; i++) {

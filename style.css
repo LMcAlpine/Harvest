@@ -1,3 +1,5 @@
+/* General */
+
 body {
     background-color: powderblue;
 }
@@ -17,6 +19,8 @@ canvas {
     border: 1px solid black"
 }
 
+/* Sections under Game window */
+
 .sectionHead {
     font-family:Press Start 2P;
     font-size: 60px;
@@ -35,5 +39,10 @@ canvas {
 
 .credits {
     background-color: rgb(46, 147, 122);
+    padding: 2%;
+}
+
+.patchNotes {
+    background-color: rgb(24, 116, 93);
     padding: 2%;
 }
