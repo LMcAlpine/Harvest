@@ -3,7 +3,11 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Game Project Title Goes Here</title>
+
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel = "shortcut icon" href="images/icon.ico" type="image/x-icon">
+
+    <title>Harvest</title>
 
     <script type="text/javascript" src="./data/collisions.js"></script>
 
@@ -25,8 +29,34 @@
 </head>
 
 <body>
-    <canvas id="gameWorld" width="1920" height="1080" style="background: white; border: 1px solid black" tabindex="0"
-        autofocus></canvas>
+
+    <!-- Title -->
+    <p class = "sectionHead">Harvest</p>
+
+    <!-- Canvas -->
+    <canvas id="gameWorld" width="1920" height="1080" tabindex="0" autofocus></canvas>
+
+    <!-- Infor under Screen -->
+    <p class = "sectionHead">How to Play</p>
+
+    <div class = "controls">
+        <li class = "bullets"><b>[AD]</b> [A] moves left, [D] moves right</li>
+        <li class = "bullets"><b>[Sapce]</b> Jump</li>
+        <li class = "bullets"><b>[Mouse]</b> Look and aim</li>
+        <li class = "bullets"><b>[Right Click]</b> Fire</li>
+    </div>
+
+
+    <p class = "sectionHead">Credits</p>
+
+    <div class = "credits">
+        <li class = "bullets"><b>[Lucas Dahl]</b> Programming and stlye</li>
+        <li class = "bullets"><b>[Gil Rabara]</b> Programming and stlye</li>
+        <li class = "bullets"><b>[Luke McAlpine]</b> Programming and stlye</li>
+        <li class = "bullets"><b>[Luke Smith</b> Programming and stlye</li>
+    </div>
+
+
 </body>
 
 </html>
