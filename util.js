@@ -80,7 +80,7 @@ const collision = ({ object1, object2 }) => {
 const PARAMS = {
     DEBUG: true,
     SCALE: 3,
-    BITWIDTH: 16,
+    BITWIDTH: 16
 };
 
 // Player physics
