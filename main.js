@@ -58,6 +58,4 @@ ASSET_MANAGER.downloadAll(() => {
 	gameEngine.init(ctx);
 
 	gameEngine.start();
-
-	
 });

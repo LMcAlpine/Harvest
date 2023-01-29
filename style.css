@@ -1,7 +1,11 @@
 /* General */
 
+html, body {
+    height: 100%;
+}
+
 body {
-    background-color: powderblue;
+    background-color:#84926a;
 }
 
 canvas {
@@ -12,11 +16,9 @@ canvas {
     margin-right: auto;
     display: block;
     font-size: 20px;
-}
-
-canvas {
     background: white; 
-    border: 1px solid black"
+    border: 10px solid #efb82a;
+    overflow: hidden; 
 }
 
 /* Sections under Game window */
@@ -29,20 +31,20 @@ canvas {
 
 .bullets {
     font-family:Press Start 2P;
+    padding-left: 0.5%;
     font-size: 25px;
 }
 
+.patchNotes {
+    background-color: #efb82a;
+}
+
 .controls {
-    background-color: rgb(20, 203, 158);
-    padding: 2%;
+    background-color: #4c4a45;
+    border: 2px solid #4c4a45;
 }
 
 .credits {
-    background-color: rgb(46, 147, 122);
-    padding: 2%;
-}
-
-.patchNotes {
-    background-color: rgb(24, 116, 93);
-    padding: 2%;
+    background-color: #cdcfcc;
+    border: 2px solid #cdcfcc;
 }

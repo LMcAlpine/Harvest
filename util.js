@@ -1,5 +1,4 @@
 /** Global Parameters Object */
-const params = {};
 
 /**
  * @param {Number} n
