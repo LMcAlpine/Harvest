@@ -50,10 +50,10 @@ ASSET_MANAGER.downloadAll(() => {
 
 	// Attempt to unlock
 
-	new SceneManager(gameEngine);
+	gameEngine.addEntity(new SceneManager(gameEngine));
 
 	ctx.imageSmoothingEnabled = false;
-	
+
 
 	gameEngine.init(ctx);
 

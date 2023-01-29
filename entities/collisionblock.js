@@ -15,7 +15,7 @@ class CollisionBlock {
 
 
         //console.log(this.width);
-        ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+        ctx.fillRect(this.position.x, this.position.y, 16, 16);
 
     }
 }

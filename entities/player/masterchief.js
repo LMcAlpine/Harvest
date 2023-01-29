@@ -231,18 +231,21 @@ class MasterChief {
             this.state = 0;
         }
 
-        this.checkForHorizontalCollisions();
+        //this.checkForHorizontalCollisions();
 
 
         // Allow the player to fall
+
+        //UNCOMMENT
         this.velocity.y += PLAYER_PHYSICS.MAX_FALL * TICK;
 
         // Update the player x and y
         // this.position.x += this.velocity.x * TICK;
+        //UNCOMMENT
         this.position.y += this.velocity.y * TICK;
 
 
-        this.checkForVerticalCollisions();
+        // this.checkForVerticalCollisions();
 
     };
 
@@ -255,15 +258,15 @@ class MasterChief {
 
     draw(ctx) {
 
-        //ctx.save();
-        //ctx.scale(4, 4);
+        // ctx.save();
+        // ctx.scale(4, 4);
 
 
         //ctx.save();
         // ctx.scale(4, 4);
 
 
-        //ctx.translate(0, -this.level.height + (PARAMS.CANVAS_HEIGHT / 4) + 150);
+        // ctx.translate(0, -this.level.height + (PARAMS.CANVAS_HEIGHT / 4) + 150);
 
         //  ctx.drawImage(this.level, 0, 0);
 
@@ -279,30 +282,32 @@ class MasterChief {
         // console.log(this.width);
         //  ctx.fillRect(collisionBlock.position.x, collisionBlock.position.y, 16, 16);
         // })
-        // ctx.restore();
+
 
         this.findMouseAngle();
 
-        this.bodyAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x, this.position.y, this.scale);     
-        this.helmetAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x, this.position.y, this.scale);   
+        this.bodyAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale);
+        this.helmetAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale);
         this.drawGun(ctx);
-      
+
+        //  ctx.restore();
+
     };
 
     drawGun(ctx) {
         let a = this.gunAnimations[this.gunType][this.isFiring];
-    
+
         a.elapsedTime += this.game.clockTick;
-        
+
         if (a.isDone()) {
             if (a.loop) {
                 a.elapsedTime -= a.totalTime;
-            } 
+            }
             else {
                 // If this is not a continually firing animation, isFiring gets toggled off and animation is reset.
                 this.stopShooting();
                 a.reset();
-                
+
             }
         }
 
@@ -310,11 +315,11 @@ class MasterChief {
         if (a.reverse) frame = a.frameCount - frame - 1;
 
         let radians = -this.degrees / 360 * 2 * Math.PI;
-            
+
         if (this.aimRight) {
 
             var offscreenCanvas = rotateImage(a.spritesheet,
-                a.xStart + frame * (a.width + a.framePadding), a.yStart, 
+                a.xStart + frame * (a.width + a.framePadding), a.yStart,
                 a.width, a.height,
                 radians, 5,
                 false);
@@ -322,7 +327,7 @@ class MasterChief {
         } else {
 
             var offscreenCanvas = rotateImage(a.spritesheet,
-                a.xStart + frame * (a.width + a.framePadding), a.yStart, 
+                a.xStart + frame * (a.width + a.framePadding), a.yStart,
                 a.width, a.height,
                 -radians - Math.PI, 5,
                 true);
@@ -338,13 +343,13 @@ class MasterChief {
 
         var armYOffset = 72 * this.scale;
 
-        ctx.drawImage(offscreenCanvas, 
-                this.position.x - armXOffset, this.position.y - armYOffset, 
-                this.scale * a.width, this.scale * a.width);
+        ctx.drawImage(offscreenCanvas,
+            this.position.x - armXOffset - this.game.camera.x, this.position.y - armYOffset,
+            this.scale * a.width, this.scale * a.width);
 
-        
+
     };
-    
+
 
     shootGun() {
         this.isFiring = 1;
@@ -366,7 +371,7 @@ class MasterChief {
 
             //console.log('Opp: ' + -opp + ' Adj: ' + adj);
             let angle = Math.atan(opp / adj);
-            this.degrees = Math.floor(angle * (180/Math.PI));
+            this.degrees = Math.floor(angle * (180 / Math.PI));
 
             if (opp >= 0 && adj < 0) {
                 this.degrees += 180;
@@ -374,8 +379,8 @@ class MasterChief {
                 this.degrees += 180;
             } else if (opp < 0 && adj >= 0) {
                 this.degrees += 360;
-            } 
-            
+            }
+
         }
     };
 
@@ -403,13 +408,6 @@ class MasterChief {
         }
     };
 
-
-    // applyGravity() {
-
-    //     this.position.y += this.velocity.y;
-    //     this.velocity.y += this.gravity;
-
-    // }
 
     checkForVerticalCollisions() {
         for (let i = 0; i < this.collisionBlocks.length; i++) {
