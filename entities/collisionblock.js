@@ -14,8 +14,8 @@ class CollisionBlock {
         ctx.fillStyle = 'rgba(255,0,0,0.5)';
 
 
-        console.log(this.width);
-        ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+        //console.log(this.width);
+        ctx.fillRect(this.position.x, this.position.y, 16, 16);
 
     }
 }

@@ -40,8 +40,13 @@ class Animator {
     };
 
     isDone() {
+        //console.log('Is Done?');
         return (this.elapsedTime >= this.totalTime);
     };
+
+    reset() {
+        this.elapsedTime -= this.totalTime;
+    }
 };
 
 

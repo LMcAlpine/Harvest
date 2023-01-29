@@ -8,13 +8,13 @@ ASSET_MANAGER.queueDownload("./img/ForrestMap.png");
 
 ASSET_MANAGER.queueDownload("./sprites/tempPlayer.png");
 ASSET_MANAGER.queueDownload("./sprites/ChiefSprites.png");
-ASSET_MANAGER.queueDownload("./sprites/sniper1.png");
+ASSET_MANAGER.queueDownload("./sprites/Guns.png");
 
 ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");
 	const ctx = canvas.getContext("2d");
 
-	console.log("Hello world");
+	//console.log("Hello world");
 
 
 
@@ -50,10 +50,10 @@ ASSET_MANAGER.downloadAll(() => {
 
 	// Attempt to unlock
 
-	new SceneManager(gameEngine);
+	gameEngine.addEntity(new SceneManager(gameEngine));
 
 	ctx.imageSmoothingEnabled = false;
-	
+
 
 	gameEngine.init(ctx);
 
