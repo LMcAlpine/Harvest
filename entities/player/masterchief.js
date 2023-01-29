@@ -14,7 +14,7 @@ class MasterChief {
 
         //Animation states for chief's head/body
         this.state = 0; // 0 = Idle, 1 = walking
-        this.facing = 0; // 0 = right, 1 = left
+
 
         //Animation states for chief's arms/gun firing
         this.isFiring = 0; // 0 = Not firing, 1 = Firing
@@ -24,7 +24,7 @@ class MasterChief {
         this.aimRight = true;
         this.reverse = false;
 
-        this.scale = 2;
+        this.scale = 3;
         this.walkingSpeed = 0.07;
 
         this.width = 30;
@@ -54,7 +54,7 @@ class MasterChief {
         for (let i = 0; i <= 1; i++) { // this.state
             this.bodyAnimations.push([]);
             this.helmetAnimations.push([]);
-            for (let j = 0; j <= 1; j++) { // this.facing
+            for (let j = 0; j <= 1; j++) { // 
                 this.bodyAnimations[i].push([]);
                 this.helmetAnimations[i].push([]);
             }
@@ -106,69 +106,34 @@ class MasterChief {
 
         // ---- CHIEF BODY/HEAD ANIMATIONS ----
         // State: Idle
-        // Facing: Right
         this.bodyAnimations[0][0] = new Animator(this.SpriteSheet,
             0, 0,
             40, 50,
             1, 1,
             0,
             false, true);
-
-        // Helmet: Right
         this.helmetAnimations[0][0] = new Animator(this.SpriteSheet,
-            0, 100,
-            40, 50,
-            1, 1,
-            0,
-            false, true);
-
-        // Facing: Left
-        this.bodyAnimations[0][1] = new Animator(this.SpriteSheet,
             0, 50,
             40, 50,
             1, 1,
             0,
             false, true);
 
-        // Helmet: Left
-        this.helmetAnimations[0][1] = new Animator(this.SpriteSheet,
-            0, 150,
-            40, 50,
-            1, 1,
-            0,
-            false, true);
 
         // State: Walking
-        // Facing: Right
         this.bodyAnimations[1][0] = new Animator(this.SpriteSheet,
             0, 0,
             40, 50,
             21, this.walkingSpeed,
             0,
             false, true);
-        // Helmet: Right
         this.helmetAnimations[1][0] = new Animator(this.SpriteSheet,
-            0, 100,
-            40, 50,
-            21, this.walkingSpeed,
-            0,
-            false, true);
-
-        // Facing: Left
-        this.bodyAnimations[1][1] = new Animator(this.SpriteSheet,
             0, 50,
             40, 50,
             21, this.walkingSpeed,
             0,
             false, true);
 
-        // Helmet: Left
-        this.helmetAnimations[1][1] = new Animator(this.SpriteSheet,
-            0, 150,
-            40, 50,
-            21, this.walkingSpeed,
-            0,
-            false, true);
 
 
     };
@@ -187,23 +152,21 @@ class MasterChief {
             const x = this.game.mouse.x - this.position.x - xOffset;
             if (x > 0) {
                 this.aimRight = true;
-                this.facing = 0;
             } else {
                 this.aimRight = false;
-                this.facing = 1;
             }
 
         }
 
         if (this.game.keys['d']) {
             if (this.aimRight) {
-                this.facing = 0;
                 this.bodyAnimations[this.state][this.facing].reverse = false;
+                this.helmetAnimations[this.state][this.facing].reverse = false;
 
 
             } else {
-                this.facing = 1;
                 this.bodyAnimations[this.state][this.facing].reverse = true;
+                this.helmetAnimations[this.state][this.facing].reverse = true;
             }
 
             this.state = 1;
@@ -214,11 +177,11 @@ class MasterChief {
         else if (this.game.keys['a']) {
 
             if (this.aimRight) {
-                this.facing = 0;
+                this.helmetAnimations[this.state][this.facing].reverse = true;
                 this.bodyAnimations[this.state][this.facing].reverse = true;
             } else {
-                this.facing = 1;
                 this.bodyAnimations[this.state][this.facing].reverse = false;
+                this.helmetAnimations[this.state][this.facing].reverse = false;
             }
             this.state = 1;
             //this.x -= 3;
@@ -258,11 +221,11 @@ class MasterChief {
         //ctx.scale(4, 4);
 
 
-        //ctx.save();
-        // ctx.scale(4, 4);
+        ctx.save();
+        ctx.scale(4, 4);
 
 
-        //ctx.translate(0, -this.level.height + (PARAMS.CANVAS_HEIGHT / 4) + 150);
+        ctx.translate(0, -this.level.height + (PARAMS.CANVAS_HEIGHT / 4) + 150);
 
         //  ctx.drawImage(this.level, 0, 0);
 
@@ -278,12 +241,18 @@ class MasterChief {
         // console.log(this.width);
         //  ctx.fillRect(collisionBlock.position.x, collisionBlock.position.y, 16, 16);
         // })
-        // ctx.restore();
+        ctx.restore();
 
         this.findMouseAngle();
 
-        this.bodyAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x, this.position.y, this.scale);     
-        this.helmetAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x, this.position.y, this.scale);   
+        if (this.aimRight) {
+            this.bodyAnimations[this.state][0].drawFrame(this.game.clockTick, ctx, this.position.x, this.position.y, this.scale, false);     
+            this.helmetAnimations[this.state][0].drawFrame(this.game.clockTick, ctx, this.position.x, this.position.y, this.scale, false);   
+        } else {
+            this.bodyAnimations[this.state][0].drawFrame(this.game.clockTick, ctx, this.position.x, this.position.y, this.scale, true);     
+            this.helmetAnimations[this.state][0].drawFrame(this.game.clockTick, ctx, this.position.x, this.position.y, this.scale, true);  
+        }
+
         this.drawGun(ctx);
       
     };
