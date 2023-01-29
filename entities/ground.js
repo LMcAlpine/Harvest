@@ -2,7 +2,7 @@ class Ground {
     constructor(game, x, y, w, width, height) {
         Object.assign(this, { game, x, y, w, width, height });
 
-        // this.spritesheet = ASSET_MANAGER.getAsset("./sprites/bricks.png");
+        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/bricks.png");
 
 
 
@@ -38,16 +38,21 @@ class Ground {
     // };
 
     draw(ctx) {
-        // let brickCount = this.w / PARAMS.BLOCKWIDTH;
-        //  for (var i = 0; i < brickCount; i++) {
+        let brickCount = this.w / PARAMS.BLOCKWIDTH;
+        for (var i = 0; i < brickCount; i++) {
 
 
-        ctx.fillRect(this.x - this.game.camera.x, this.y, this.width, this.height);
 
-        // ctx.fillRect(this.x + i * PARAMS.BLOCKWIDTH - this.game.camera.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
-        // ctx.fillRect(this.x + i * PARAMS.BLOCKWIDTH - this.game.camera.x, this.y + PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
+            ctx.drawImage(this.spritesheet, 0, 0, 16, 16, this.x + i * PARAMS.BLOCKWIDTH - this.game.camera.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
+            ctx.drawImage(this.spritesheet, 0, 0, 16, 16, this.x + i * PARAMS.BLOCKWIDTH - this.game.camera.x, this.y + PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
 
-        //   }
+
+            //ctx.fillRect(this.x - this.game.camera.x, this.y, this.width, this.height);
+
+            // ctx.fillRect(this.x + i * PARAMS.BLOCKWIDTH - this.game.camera.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
+            // ctx.fillRect(this.x + i * PARAMS.BLOCKWIDTH - this.game.camera.x, this.y + PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
+
+        }
 
 
 

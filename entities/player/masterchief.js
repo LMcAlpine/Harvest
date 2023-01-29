@@ -46,9 +46,7 @@ class MasterChief {
             this.game.ctx.save();
         }
 
-        //this.hitbox = { position: { x: this.position.x, y: this.position.y }, width: 10, height: 10 };
 
-        this.camera = { position: { x: this.position.x, y: this.position.y }, width: 200, height: 80 };
 
     };
 
@@ -180,7 +178,7 @@ class MasterChief {
         // Updater properties
         const TICK = this.game.clockTick;
 
-        // this.hitbox = { position: { x: this.position.x + 15, y: this.position.y + 3 }, width: 30, height: 10 };
+
 
 
         //Calculate if player is aiming to right or left of player model
@@ -210,7 +208,7 @@ class MasterChief {
 
             this.state = 1;
             //this.x += 3;
-            //  this.velocity.x += PLAYER_PHYSICS.MAX_RUN * TICK;
+            // this.velocity.x = 0;
             this.velocity.x += PLAYER_PHYSICS.MAX_RUN * TICK;
             this.position.x += this.velocity.x * TICK;
         }
@@ -239,12 +237,13 @@ class MasterChief {
         // Allow the player to fall
 
         //UNCOMMENT
-        this.velocity.y += PLAYER_PHYSICS.MAX_FALL * TICK;
+        // this.velocity.y += PLAYER_PHYSICS.MAX_FALL * TICK;
 
         // Update the player x and y
         // this.position.x += this.velocity.x * TICK;
         //UNCOMMENT
-        this.position.y += this.velocity.y * TICK;
+        //this.position.y += this.velocity.y * TICK;
+
 
 
         // this.checkForVerticalCollisions();
@@ -261,26 +260,13 @@ class MasterChief {
     draw(ctx) {
 
 
-
-
-
- 
-
-
-
-
-
-       
-
-
-
         this.findMouseAngle();
 
         this.bodyAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale);
         this.helmetAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale);
         this.drawGun(ctx);
 
-    
+
 
     };
 

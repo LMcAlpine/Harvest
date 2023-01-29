@@ -10,6 +10,8 @@ ASSET_MANAGER.queueDownload("./sprites/tempPlayer.png");
 ASSET_MANAGER.queueDownload("./sprites/ChiefSprites.png");
 ASSET_MANAGER.queueDownload("./sprites/Guns.png");
 
+ASSET_MANAGER.queueDownload("./sprites/bricks.png");
+
 ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");
 	const ctx = canvas.getContext("2d");

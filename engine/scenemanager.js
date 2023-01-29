@@ -43,14 +43,14 @@ class SceneManager {
         let height = 1080 / this.floorCollisions2D.length;
 
 
-        for (var row = 0; row < this.floorCollisions2D.length; row++) {
-            for (var column = 0; column < this.floorCollisions2D[row].length; column++) {
-                if (this.floorCollisions2D[row][column] !== 0) {
-                    // ctx.fillRect(j * 10, i * 10, 10, 10); // assuming 10 pixels per square
-                    this.game.addEntity(new Ground(this.game, column * width, row * height, this.floorCollisions2D[row].length * 32, width, height));
-                }
-            }
-        }
+        // for (var row = 0; row < this.floorCollisions2D.length; row++) {
+        //     for (var column = 0; column < this.floorCollisions2D[row].length; column++) {
+        //         if (this.floorCollisions2D[row][column] !== 0) {
+        //             // ctx.fillRect(j * 10, i * 10, 10, 10); // assuming 10 pixels per square
+        //             this.game.addEntity(new Ground(this.game, column * width, row * height, this.floorCollisions2D[row].length * 32, width, height));
+        //         }
+        //     }
+        // }
 
 
 
@@ -58,10 +58,11 @@ class SceneManager {
 
         let ground = [{ x: 0, y: 14, size: 69 }, { x: 71, y: 14, size: 15 }, { x: 89, y: 14, size: 63 }, { x: 154, y: 14, size: 69 }]
 
-        // for (let i = 0; i < ground.length; i++) {
+        for (let i = 0; i < ground.length; i++) {
 
-        //     let groundFloor = ground[i];
-        //     this.game.addEntity(new Ground(this.game, groundFloor.x * PARAMS.BLOCKWIDTH, groundFloor.y * PARAMS.BLOCKWIDTH, groundFloor.size * PARAMS.BLOCKWIDTH))
+            let groundFloor = ground[i];
+            this.game.addEntity(new Ground(this.game, groundFloor.x * PARAMS.BLOCKWIDTH, groundFloor.y * PARAMS.BLOCKWIDTH, groundFloor.size * PARAMS.BLOCKWIDTH))
+        }
 
     }
 
