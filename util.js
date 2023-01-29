@@ -81,7 +81,6 @@ const PARAMS = {
     DEBUG: true,
     SCALE: 3,
     BITWIDTH: 16,
-    CURSOR: true
 };
 
 // Player physics
