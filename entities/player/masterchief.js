@@ -14,7 +14,7 @@ class MasterChief {
 
         //Animation states for chief's head/body
         this.state = 0; // 0 = Idle, 1 = walking
-        //this.facing = 0; // 0 = right, 1 = left
+
 
         //Animation states for chief's arms/gun firing
         this.isFiring = 0; // 0 = Not firing, 1 = Firing
@@ -54,7 +54,7 @@ class MasterChief {
         for (let i = 0; i <= 1; i++) { // this.state
             this.bodyAnimations.push([]);
             this.helmetAnimations.push([]);
-            for (let j = 0; j <= 1; j++) { // this.facing
+            for (let j = 0; j <= 1; j++) { // 
                 this.bodyAnimations[i].push([]);
                 this.helmetAnimations[i].push([]);
             }
@@ -152,23 +152,19 @@ class MasterChief {
             const x = this.game.mouse.x - this.position.x - xOffset;
             if (x > 0) {
                 this.aimRight = true;
-                //this.facing = 0;
             } else {
                 this.aimRight = false;
-                //this.facing = 1;
             }
 
         }
 
         if (this.game.keys['d']) {
             if (this.aimRight) {
-                //this.facing = 0;
                 this.bodyAnimations[this.state][this.facing].reverse = false;
                 this.helmetAnimations[this.state][this.facing].reverse = false;
 
 
             } else {
-                //this.facing = 1;
                 this.bodyAnimations[this.state][this.facing].reverse = true;
                 this.helmetAnimations[this.state][this.facing].reverse = true;
             }
@@ -182,11 +178,9 @@ class MasterChief {
         else if (this.game.keys['a']) {
 
             if (this.aimRight) {
-                //this.facing = 0;
                 this.helmetAnimations[this.state][this.facing].reverse = true;
                 this.bodyAnimations[this.state][this.facing].reverse = true;
             } else {
-                //this.facing = 1;
                 this.bodyAnimations[this.state][this.facing].reverse = false;
                 this.helmetAnimations[this.state][this.facing].reverse = false;
             }
@@ -224,8 +218,8 @@ class MasterChief {
 
     draw(ctx) {
 
-        // ctx.save();
-        // ctx.scale(4, 4);
+        //ctx.save();
+        //ctx.scale(4, 4);
 
 
         ctx.save();
