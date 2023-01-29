@@ -34,6 +34,7 @@ class SceneManager {
         this.loadLevel()
 
     }
+    
 
     loadLevel() {
 

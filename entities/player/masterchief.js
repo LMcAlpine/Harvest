@@ -46,7 +46,7 @@ class MasterChief {
             this.game.ctx.save();
         }
 
-        //this.hitbox = { position: { x: this.position.x, y: this.position.y }, width: 10, height: 10 };
+        
 
     };
 
@@ -178,7 +178,7 @@ class MasterChief {
         // Updater properties
         const TICK = this.game.clockTick;
 
-        // this.hitbox = { position: { x: this.position.x + 15, y: this.position.y + 3 }, width: 30, height: 10 };
+        
 
 
         //Calculate if player is aiming to right or left of player model
@@ -208,7 +208,6 @@ class MasterChief {
 
             this.state = 1;
             //this.x += 3;
-            //  this.velocity.x += PLAYER_PHYSICS.MAX_RUN * TICK;
             this.velocity.x += PLAYER_PHYSICS.MAX_RUN * TICK;
             this.position.x += this.velocity.x * TICK;
         }
@@ -249,7 +248,7 @@ class MasterChief {
 
     };
 
-    // This method will jump the player
+    // This method will allow the player to jump
     jump() {
         this.velocity.y -= PLAYER_PHYSICS.JUMP_HEIGHT;
         this.inAir = true;
@@ -258,19 +257,9 @@ class MasterChief {
 
     draw(ctx) {
 
-        // ctx.save();
-        // ctx.scale(4, 4);
+        
 
 
-        //ctx.save();
-        // ctx.scale(4, 4);
-
-
-        // ctx.translate(0, -this.level.height + (PARAMS.CANVAS_HEIGHT / 4) + 150);
-
-        //  ctx.drawImage(this.level, 0, 0);
-
-        //  ctx.fillRect(this.hitbox.position.x, this.hitbox.position.y, this.hitbox.width, this.hitbox.height);
 
 
 
@@ -279,18 +268,14 @@ class MasterChief {
         // ctx.fillStyle = 'rgba(255,0,0,0.5)';
 
 
-        // console.log(this.width);
-        //  ctx.fillRect(collisionBlock.position.x, collisionBlock.position.y, 16, 16);
-        // })
-
-
+       
         this.findMouseAngle();
 
         this.bodyAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale);
         this.helmetAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale);
         this.drawGun(ctx);
 
-        //  ctx.restore();
+      
 
     };
 
@@ -379,7 +364,7 @@ class MasterChief {
                 this.degrees += 180;
             } else if (opp < 0 && adj >= 0) {
                 this.degrees += 360;
-            }
+            } 
 
         }
     };
