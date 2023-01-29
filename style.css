@@ -1,0 +1,50 @@
+/* General */
+
+html, body {
+    height: 100%;
+}
+
+body {
+    background-color:#84926a;
+}
+
+canvas {
+    padding-left: 0;
+    padding-right: 0;
+    margin-top: 1%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    font-size: 20px;
+    background: white; 
+    border: 10px solid #efb82a;
+    overflow: hidden; 
+}
+
+/* Sections under Game window */
+
+.sectionHead {
+    font-family:Press Start 2P;
+    font-size: 60px;
+    text-align:center
+}
+
+.bullets {
+    font-family:Press Start 2P;
+    padding-left: 0.5%;
+    font-size: 25px;
+}
+
+.patchNotes {
+    background-color: #efb82a;
+}
+
+.controls {
+    background-color: #4c4a45;
+    border: 2px solid #4c4a45;
+}
+
+.credits {
+    background-color: #cdcfcc;
+    border: 2px solid #cdcfcc;
+}

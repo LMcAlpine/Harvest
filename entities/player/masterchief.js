@@ -46,6 +46,7 @@ class MasterChief {
             this.game.ctx.save();
         }
 
+        
 
 
     };
@@ -208,7 +209,6 @@ class MasterChief {
 
             this.state = 1;
             //this.x += 3;
-            // this.velocity.x = 0;
             this.velocity.x += PLAYER_PHYSICS.MAX_RUN * TICK;
             this.position.x += this.velocity.x * TICK;
         }
@@ -250,7 +250,7 @@ class MasterChief {
 
     };
 
-    // This method will jump the player
+    // This method will allow the player to jump
     jump() {
         this.velocity.y -= PLAYER_PHYSICS.JUMP_HEIGHT;
         this.inAir = true;
@@ -259,14 +259,25 @@ class MasterChief {
 
     draw(ctx) {
 
+        
 
+
+
+
+
+        // this.collisionBlocks.forEach(collisionBlock => {
+        //collisionBlock.draw(ctx);
+        // ctx.fillStyle = 'rgba(255,0,0,0.5)';
+
+
+       
         this.findMouseAngle();
 
         this.bodyAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale);
         this.helmetAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale);
         this.drawGun(ctx);
 
-
+      
 
     };
 
@@ -355,7 +366,7 @@ class MasterChief {
                 this.degrees += 180;
             } else if (opp < 0 && adj >= 0) {
                 this.degrees += 360;
-            }
+            } 
 
         }
     };
