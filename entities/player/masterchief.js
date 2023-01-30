@@ -1,5 +1,5 @@
 class MasterChief {
-    
+
     constructor(game, position, collisionBlocks) {
 
         // Updated the constructor
@@ -46,20 +46,14 @@ class MasterChief {
         this.gunAnimations = [];
         this.loadAnimations();
 
-<<<<<<< HEAD
-        this.rectangle = function () {
-            this.game.ctx.strokeStyle = "Blue";
-            this.game.ctx.strokeRect(this.position.x, this.position.y, 25, 2);
-            this.game.ctx.save();
-        }
-
-        //this.hitbox = { position: { x: this.position.x, y: this.position.y }, width: 10, height: 10 };
+        this.bodyAnimations = [];
+        this.helmetAnimations = [];
+        this.gunAnimations = [];
+        this.loadAnimations();
 
         // Keeps track of last key pressed
         this.lastKey
 
-=======
->>>>>>> 4325136bbae9930d58bbfa665034246f0a02db57
     };
 
     loadAnimations() {
@@ -191,8 +185,7 @@ class MasterChief {
 
     update() {
 
-        this.velocity.x = 0
-
+        // this.velocity.x = 0
 
         // Updater properties
         const TICK = this.game.clockTick;
@@ -227,12 +220,9 @@ class MasterChief {
             }
 
             this.state = 1;
-<<<<<<< HEAD
-=======
             //this.x += 3;
             this.velocity.x += PLAYER_PHYSICS.MAX_RUN * TICK;
             this.position.x += this.velocity.x * TICK;
->>>>>>> 4325136bbae9930d58bbfa665034246f0a02db57
         }
         else if (this.game.keys['a']) {
 
@@ -244,48 +234,57 @@ class MasterChief {
                 this.bodyAnimations[this.state][this.facing].reverse = false;
             }
             this.state = 1;
-        } 
+        }
         else if (this.game.keys[' '] || this.game.keys['Space']) { // Jumping TODO: JUMP WHILE RUNNING!
             this.velocity.y -= 4;
             console.log('UP')
-        } 
+        }
         else {
             this.state = 0;
         }
 
-<<<<<<< HEAD
         // *** Player Movement ***
         if (keys.a.pressed && lastKey === 'a') {
             this.velocity.x = -5;
             this.position.x += -5;
             console.log('walking left')
-        } 
+        }
         if (keys.d.pressed && lastKey === 'd') {
             this.velocity.x = 5;
             this.position.x += 5;
             console.log('walking right')
         }
 
-        this.checkForHorizontalCollisions();
-=======
+        // *** Player Movement ***
+        if (keys.a.pressed && lastKey === 'a') {
+            this.velocity.x = -5;
+            this.position.x += -5;
+            console.log('walking left')
+        }
+        if (keys.d.pressed && lastKey === 'd') {
+            this.velocity.x = 5;
+            this.position.x += 5;
+            console.log('walking right')
+        }
+        if(keys[' '].pressed) {
+            this.velocity.y += -PLAYER_JUMP;
+            this.position.y += -PLAYER_JUMP;
+            console.log('up')
+        }
+
         //this.checkForHorizontalCollisions();
->>>>>>> 4325136bbae9930d58bbfa665034246f0a02db57
+
 
         // Allow the player to fall
-<<<<<<< HEAD
-        this.velocity.y += GRAVITY;
-=======
 
         //UNCOMMENT
         this.velocity.y += PLAYER_PHYSICS.MAX_FALL * TICK;
->>>>>>> 4325136bbae9930d58bbfa665034246f0a02db57
+        this.velocity.y += GRAVITY;
 
         // Update the player x and y
         // this.position.x += this.velocity.x * TICK;
         //UNCOMMENT
         this.position.y += this.velocity.y * TICK;
-
-
 
         // this.checkForVerticalCollisions();
         this.updateBB();
@@ -321,24 +320,19 @@ class MasterChief {
 
     draw(ctx) {
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 4325136bbae9930d58bbfa665034246f0a02db57
         this.findMouseAngle();
 
         this.bodyAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale);
         this.helmetAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale);
         this.drawGun(ctx);
 
-<<<<<<< HEAD
-=======
         ctx.strokeStyle = 'red';
         ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y, this.BB.width, this.BB.height);
 
 
 
->>>>>>> 4325136bbae9930d58bbfa665034246f0a02db57
+
     };
 
     drawGun(ctx) {
@@ -390,13 +384,6 @@ class MasterChief {
 
         var armYOffset = 72 * this.scale;
 
-<<<<<<< HEAD
-        ctx.drawImage(offscreenCanvas, 
-                this.position.x - armXOffset, this.position.y - armYOffset, 
-                this.scale * a.width, this.scale * a.width);    
-    };
-    
-=======
         ctx.drawImage(offscreenCanvas,
             this.position.x - armXOffset - this.game.camera.x, this.position.y - armYOffset,
             this.scale * a.width, this.scale * a.width);
@@ -404,8 +391,6 @@ class MasterChief {
 
     };
 
-
->>>>>>> 4325136bbae9930d58bbfa665034246f0a02db57
     shootGun() {
         this.isFiring = 1;
     };
@@ -434,76 +419,27 @@ class MasterChief {
                 this.degrees += 180;
             } else if (opp < 0 && adj >= 0) {
                 this.degrees += 360;
-<<<<<<< HEAD
-            } 
-=======
             }
->>>>>>> 4325136bbae9930d58bbfa665034246f0a02db57
 
         }
-    };
 
-    checkForHorizontalCollisions() {
-        for (let i = 0; i < this.collisionBlocks.length; i++) {
-            const collisionBlock = this.collisionBlocks[i];
+    }
+};
 
-            if (collision({ object1: this, object2: collisionBlock })) {
-                // collision on the right
-                if (this.velocity.x > 0) {
-                    this.velocity.x = 0;
-                    // must need 0.01 subtracted
-                    this.position.x = collisionBlock.position.x - this.width - 0.01;
-                    break;
-                }
-                // left
-                if (this.velocity.x < 0) {
-                    this.velocity.x = 0;
 
-                    this.position.x = collisionBlock.position.x + collisionBlock.width + 0.01;
-                    break;
-                }
-            }
-        }
-    };
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 4325136bbae9930d58bbfa665034246f0a02db57
-    checkForVerticalCollisions() {
-        for (let i = 0; i < this.collisionBlocks.length; i++) {
-            const collisionBlock = this.collisionBlocks[i];
-
-            if (collision({ object1: this, object2: collisionBlock })) {
-                // if falling
-                if (this.velocity.y > 0) {
-                    this.velocity.y = 0;
-                    // must need 0.01 subtracted
-                    this.position.y = collisionBlock.position.y - this.height - 0.01;
-                    break;
-                }
-                // moving upwards
-                if (this.velocity.y < 0) {
-                    this.velocity.y = 0;
-
-                    this.position.y = collisionBlock.position.y + collisionBlock.height + 0.01;
-                    break;
-                }
-            }
-        }
-    };
-}
 
 // *** Keys ***
 const keys = {
     a: { // Left key
-    pressed: false
+        pressed: false
     },
     d: { // Right key
-    pressed: false
+        pressed: false
     },
     ' ': { // Up key
-    pressed: false
+        pressed: false
     }
 }
 
@@ -520,8 +456,7 @@ window.addEventListener('keydown', (event) => {
             this.lastKey = 'a';
             break
         case ' ':
-            this.jump;
-            console.log('up')
+            keys[' '].pressed = true
             break
     }
 })
