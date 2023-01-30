@@ -69,8 +69,8 @@ class GameEngine {
             this.wheel = e;
         });
 
-        this.ctx.canvas.addEventListener("keydown", function(event) {
-            event.preventDefault();
+        this.ctx.canvas.addEventListener("keydown", function(e) {
+            e.preventDefault();
             this.space = e; // Prevent space bar scrolling
           })
 
