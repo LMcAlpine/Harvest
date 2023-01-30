@@ -1,4 +1,5 @@
 class MasterChief {
+    
     constructor(game, position, collisionBlocks) {
 
         // Updated the constructor
@@ -47,6 +48,9 @@ class MasterChief {
         }
 
         //this.hitbox = { position: { x: this.position.x, y: this.position.y }, width: 10, height: 10 };
+
+        // Keeps track of last key pressed
+        this.lastKey
 
     };
 
@@ -170,10 +174,12 @@ class MasterChief {
             0,
             false, true);
 
-
     };
 
     update() {
+
+        this.velocity.x = 0
+
 
         // Updater properties
         const TICK = this.game.clockTick;
@@ -192,9 +198,10 @@ class MasterChief {
                 this.aimRight = false;
                 this.facing = 1;
             }
-
         }
 
+
+        // Movement... kinda
         if (this.game.keys['d']) {
             if (this.aimRight) {
                 this.facing = 0;
@@ -207,10 +214,6 @@ class MasterChief {
             }
 
             this.state = 1;
-            //this.x += 3;
-            //  this.velocity.x += PLAYER_PHYSICS.MAX_RUN * TICK;
-            this.velocity.x += PLAYER_PHYSICS.MAX_RUN * TICK;
-            this.position.x += this.velocity.x * TICK;
         }
         else if (this.game.keys['a']) {
 
@@ -222,20 +225,31 @@ class MasterChief {
                 this.bodyAnimations[this.state][this.facing].reverse = false;
             }
             this.state = 1;
-            //this.x -= 3;
-            this.velocity.x -= PLAYER_PHYSICS.MAX_RUN * TICK;
-            this.position.x += this.velocity.x * TICK;
-        } else if (this.game.keys[' '] || this.game.keys['Space']) { // Jumping TODO: JUMP WHILE RUNNING!
-            this.jump();
-        } else {
+        } 
+        else if (this.game.keys[' '] || this.game.keys['Space']) { // Jumping TODO: JUMP WHILE RUNNING!
+            this.velocity.y -= 4;
+            console.log('UP')
+        } 
+        else {
             this.state = 0;
+        }
+
+        // *** Player Movement ***
+        if (keys.a.pressed && lastKey === 'a') {
+            this.velocity.x = -5;
+            this.position.x += -5;
+            console.log('walking left')
+        } 
+        if (keys.d.pressed && lastKey === 'd') {
+            this.velocity.x = 5;
+            this.position.x += 5;
+            console.log('walking right')
         }
 
         this.checkForHorizontalCollisions();
 
-
         // Allow the player to fall
-        this.velocity.y += PLAYER_PHYSICS.MAX_FALL * TICK;
+        this.velocity.y += GRAVITY;
 
         // Update the player x and y
         // this.position.x += this.velocity.x * TICK;
@@ -244,49 +258,25 @@ class MasterChief {
 
         this.checkForVerticalCollisions();
 
+
+
     };
 
-    // This method will jump the player
+    // This method will allow the player to jump
     jump() {
         this.velocity.y -= PLAYER_PHYSICS.JUMP_HEIGHT;
+        this.position.y -= PLAYER_PHYSICS.JUMP_HEIGHT;
         this.inAir = true;
     };
 
-
     draw(ctx) {
-
-        //ctx.save();
-        //ctx.scale(4, 4);
-
-
-        //ctx.save();
-        // ctx.scale(4, 4);
-
-
-        //ctx.translate(0, -this.level.height + (PARAMS.CANVAS_HEIGHT / 4) + 150);
-
-        //  ctx.drawImage(this.level, 0, 0);
-
-        //  ctx.fillRect(this.hitbox.position.x, this.hitbox.position.y, this.hitbox.width, this.hitbox.height);
-
-
-
-        // this.collisionBlocks.forEach(collisionBlock => {
-        //collisionBlock.draw(ctx);
-        // ctx.fillStyle = 'rgba(255,0,0,0.5)';
-
-
-        // console.log(this.width);
-        //  ctx.fillRect(collisionBlock.position.x, collisionBlock.position.y, 16, 16);
-        // })
-        // ctx.restore();
 
         this.findMouseAngle();
 
         this.bodyAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x, this.position.y, this.scale);     
         this.helmetAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x, this.position.y, this.scale);   
         this.drawGun(ctx);
-      
+
     };
 
     drawGun(ctx) {
@@ -340,12 +330,9 @@ class MasterChief {
 
         ctx.drawImage(offscreenCanvas, 
                 this.position.x - armXOffset, this.position.y - armYOffset, 
-                this.scale * a.width, this.scale * a.width);
-
-        
+                this.scale * a.width, this.scale * a.width);    
     };
     
-
     shootGun() {
         this.isFiring = 1;
     };
@@ -375,10 +362,9 @@ class MasterChief {
             } else if (opp < 0 && adj >= 0) {
                 this.degrees += 360;
             } 
-            
+
         }
     };
-
 
     checkForHorizontalCollisions() {
         for (let i = 0; i < this.collisionBlocks.length; i++) {
@@ -403,14 +389,6 @@ class MasterChief {
         }
     };
 
-
-    // applyGravity() {
-
-    //     this.position.y += this.velocity.y;
-    //     this.velocity.y += this.gravity;
-
-    // }
-
     checkForVerticalCollisions() {
         for (let i = 0; i < this.collisionBlocks.length; i++) {
             const collisionBlock = this.collisionBlocks[i];
@@ -433,5 +411,53 @@ class MasterChief {
             }
         }
     };
-
 }
+
+// *** Keys ***
+const keys = {
+    a: { // Left key
+    pressed: false
+    },
+    d: { // Right key
+    pressed: false
+    },
+    ' ': { // Up key
+    pressed: false
+    }
+}
+
+// *** KeyDown ***
+window.addEventListener('keydown', (event) => {
+    switch (event.key) {
+        // Player Keys
+        case 'd':
+            keys.d.pressed = true
+            this.lastKey = 'd';
+            break
+        case 'a':
+            keys.a.pressed = true
+            this.lastKey = 'a';
+            break
+        case ' ':
+            this.jump;
+            console.log('up')
+            break
+    }
+})
+
+// *** KeyUp ***
+window.addEventListener('keyup', (event) => {
+    switch (event.key) {
+        // Player Keys
+        case 'd':
+            keys.d.pressed = false;
+            break
+        case 'a':
+            keys.a.pressed = false;
+            break
+        case ' ':
+            keys[' '].pressed = false;
+            console.log('gravity');
+            break
+    }
+})
