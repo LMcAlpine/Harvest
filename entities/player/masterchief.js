@@ -24,7 +24,7 @@ class MasterChief {
         this.aimRight = true;
         this.reverse = false;
 
-        this.scale = 2;
+        this.scale = 3;
         this.walkingSpeed = 0.07;
 
         this.width = 30;
@@ -35,19 +35,15 @@ class MasterChief {
         this.velocity = { x: 0, y: 0 };
         this.inAir = false;
 
+
+        //anytime we move we should call updateBB
+
+        this.updateBB();
+
         this.bodyAnimations = [];
         this.helmetAnimations = [];
         this.gunAnimations = [];
         this.loadAnimations();
-
-        this.rectangle = function () {
-            this.game.ctx.strokeStyle = "Blue";
-            this.game.ctx.strokeRect(this.position.x, this.position.y, 25, 2);
-            this.game.ctx.save();
-        }
-
-        
-
 
     };
 
@@ -174,6 +170,11 @@ class MasterChief {
 
     };
 
+    updateBB() {
+        this.lastBB = this.BB;
+        this.BB = new BoundingBox(this.position.x, this.position.y, PARAMS.BLOCKWIDTH * this.scale, PARAMS.BLOCKWIDTH * this.scale);
+    }
+
     update() {
 
         // Updater properties
@@ -237,16 +238,35 @@ class MasterChief {
         // Allow the player to fall
 
         //UNCOMMENT
-        // this.velocity.y += PLAYER_PHYSICS.MAX_FALL * TICK;
+        this.velocity.y += PLAYER_PHYSICS.MAX_FALL * TICK;
 
         // Update the player x and y
         // this.position.x += this.velocity.x * TICK;
         //UNCOMMENT
-        //this.position.y += this.velocity.y * TICK;
+        this.position.y += this.velocity.y * TICK;
 
 
 
         // this.checkForVerticalCollisions();
+        this.updateBB();
+
+        let that = this;
+        this.game.entities.forEach(function (entity) {
+            if (entity.BB && that.BB.collide(entity.BB)) {
+                if (that.velocity.y > 0) {
+                    if ((entity instanceof Ground) && that.lastBB.bottom <= entity.BB.top) {
+                        that.position.y = entity.BB.top - PARAMS.BLOCKWIDTH * that.scale;
+                        that.velocity.y = 0;
+                        that.updateBB();
+
+                    }
+
+                }
+            }
+        })
+
+
+
 
     };
 
@@ -259,25 +279,17 @@ class MasterChief {
 
     draw(ctx) {
 
-        
 
-
-
-
-
-        // this.collisionBlocks.forEach(collisionBlock => {
-        //collisionBlock.draw(ctx);
-        // ctx.fillStyle = 'rgba(255,0,0,0.5)';
-
-
-       
         this.findMouseAngle();
 
         this.bodyAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale);
         this.helmetAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale);
         this.drawGun(ctx);
 
-      
+        ctx.strokeStyle = 'red';
+        ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y, this.BB.width, this.BB.height);
+
+
 
     };
 
@@ -366,7 +378,7 @@ class MasterChief {
                 this.degrees += 180;
             } else if (opp < 0 && adj >= 0) {
                 this.degrees += 360;
-            } 
+            }
 
         }
     };

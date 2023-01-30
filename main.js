@@ -12,6 +12,11 @@ ASSET_MANAGER.queueDownload("./sprites/Guns.png");
 
 ASSET_MANAGER.queueDownload("./sprites/bricks.png");
 
+
+ASSET_MANAGER.queueDownload("./images/cityfar.png")
+ASSET_MANAGER.queueDownload("./images/nightsky.png")
+ASSET_MANAGER.queueDownload("./images/cityclose.png")
+
 ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");
 	const ctx = canvas.getContext("2d");
@@ -53,6 +58,20 @@ ASSET_MANAGER.downloadAll(() => {
 	// Attempt to unlock
 
 	gameEngine.addEntity(new SceneManager(gameEngine));
+
+	let nightsky = ASSET_MANAGER.getAsset("./images/nightsky.png")
+	let cityclose = ASSET_MANAGER.getAsset("./images/cityclose.png")
+
+	// for the parallax 
+	let layer = new Layer(cityclose, 0.2);
+	gameEngine.addEntity(layer);
+
+
+	layer = new Layer(nightsky, 0);
+	gameEngine.addEntity(layer)
+
+
+
 
 	ctx.imageSmoothingEnabled = false;
 

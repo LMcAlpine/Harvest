@@ -83,6 +83,9 @@ const PARAMS = {
     BITWIDTH: 16
 };
 
+// for the parallax 
+let scrollSpeed = 2.5;
+
 // Player physics
 const PHYSIC_SCALE = 3;
 const GRAVITY = 0.5;

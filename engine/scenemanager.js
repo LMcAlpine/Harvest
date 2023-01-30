@@ -4,6 +4,7 @@ class SceneManager {
 
         this.game.camera = this;
         this.x = 0;
+        this.y = 0;
 
         // 50 tiles wide
         // 40 tiles tall
@@ -34,7 +35,7 @@ class SceneManager {
         this.loadLevel()
 
     }
-    
+
 
     loadLevel() {
 
@@ -48,7 +49,7 @@ class SceneManager {
         //     for (var column = 0; column < this.floorCollisions2D[row].length; column++) {
         //         if (this.floorCollisions2D[row][column] !== 0) {
         //             // ctx.fillRect(j * 10, i * 10, 10, 10); // assuming 10 pixels per square
-        //             this.game.addEntity(new Ground(this.game, column * width, row * height, this.floorCollisions2D[row].length * 32, width, height));
+        //             this.game.addEntity(new Ground(this.game, column * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, this.floorCollisions2D[row].length * 32, width, height));
         //         }
         //     }
         // }
@@ -71,9 +72,15 @@ class SceneManager {
 
 
         let midpoint = PARAMS.CANVAS_WIDTH / 2 - PARAMS.BLOCKWIDTH / 2;
+        let midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.BLOCKWIDTH / 2;
 
-        //if (this.x < this.game.player.position.x - midpoint) {
+        // if (this.x < this.game.player.position.x - midpoint) {
         this.x = this.game.player.position.x - midpoint;
+
+        // }
+        // if (this.y < this.game.player.position.y - midpoint) {
+        //     console.log("test");
+        //     this.y = this.game.player.position.y - midpoint;
         // }
 
     }

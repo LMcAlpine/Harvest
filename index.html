@@ -5,7 +5,7 @@
     <meta charset="utf-8">
 
     <link rel="stylesheet" type="text/css" href="style.css" />
-    <link rel = "shortcut icon" href="images/icon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="images/icon.ico" type="image/x-icon">
 
     <!-- Title in browser-->
     <title>Harvest</title>
@@ -25,40 +25,44 @@
     <script type="text/javascript" src="./engine/animator.js"></script>
     <script type="text/javascript" src="./entities/player/testplayer.js"></script>
     <script type="text/javascript" src="./entities/player/masterchief.js"></script>
+
+    <script type="text/javascript" src="./entities/layer.js"></script>
+
+    <script type="text/javascript" src="./boundingbox.js"></script>
     <script type="text/javascript" src="./main.js"></script>
 </head>
 
 <body>
 
     <!-- Title -->
-    <p class = "sectionHead">Harvest</p>
+    <p class="sectionHead">Harvest</p>
 
     <!-- Canvas -->
     <canvas id="gameWorld" width="1920" height="1080" tabindex="0" autofocus></canvas>
 
     <!-- Info under Screen -->
-   
 
-    <div class = "patchNotes">
-        <p class = "sectionHead">Patch notes [1/28/23]</p>
-        <li class = "bullets">Added controls and info on main</li>
-        <li class = "bullets">Centered Game screen</li>
+
+    <div class="patchNotes">
+        <p class="sectionHead">Patch notes [1/28/23]</p>
+        <li class="bullets">Added controls and info on main</li>
+        <li class="bullets">Centered Game screen</li>
     </div>
 
-    <div class = "controls">
-        <p class = "sectionHead">How to Play</p>
-        <li class = "bullets"><b>[AD]</b> - [A] moves left, [D] moves right</li>
-        <li class = "bullets"><b>[Space]</b> - Jump</li>
-        <li class = "bullets"><b>[Mouse]</b> - Look and aim</li>
-        <li class = "bullets"><b>[Right Click]</b> - Fire</li>
+    <div class="controls">
+        <p class="sectionHead">How to Play</p>
+        <li class="bullets"><b>[AD]</b> - [A] moves left, [D] moves right</li>
+        <li class="bullets"><b>[Space]</b> - Jump</li>
+        <li class="bullets"><b>[Mouse]</b> - Look and aim</li>
+        <li class="bullets"><b>[Right Click]</b> - Fire</li>
     </div>
-    
-    <div class = "credits">
-        <p class = "sectionHead">Credits</p>
-        <li class = "bullets"><b>[Lucas Dahl]</b> - Programming and style</li>
-        <li class = "bullets"><b>[Gil Rabara]</b> - Programming and style</li>
-        <li class = "bullets"><b>[Luke McAlpine]</b> - Programming and style</li>
-        <li class = "bullets"><b>[Luke Smith]</b> - Programming and style</li>
+
+    <div class="credits">
+        <p class="sectionHead">Credits</p>
+        <li class="bullets"><b>[Lucas Dahl]</b> - Programming and style</li>
+        <li class="bullets"><b>[Gil Rabara]</b> - Programming and style</li>
+        <li class="bullets"><b>[Luke McAlpine]</b> - Programming and style</li>
+        <li class="bullets"><b>[Luke Smith]</b> - Programming and style</li>
     </div>
 
     <!-- End info under Screen -->
