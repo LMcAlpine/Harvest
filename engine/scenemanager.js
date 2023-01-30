@@ -2,54 +2,90 @@ class SceneManager {
     constructor(game) {
         this.game = game;
 
+        this.game.camera = this;
+        this.x = 0;
+        this.y = 0;
+
         // 50 tiles wide
         // 40 tiles tall
         this.floorCollisions2D = [];
 
+        //for every 50 tiles, create a new subarray
         for (let i = 0; i < floorCollisions.length; i += 50) {
             this.floorCollisions2D.push(floorCollisions.slice(i, i + 50));
 
         }
 
 
-        // console.log(this.floorCollisions2D);
+
 
         this.collisionBlocks = [];
-        // loop through all the rows that make up the image
-        this.floorCollisions2D.forEach((row, yIndex) => {
-            row.forEach((symbol, xIndex) => {
-                if (symbol === 61 || symbol === 62) {
-                    console.log("draw block here");
-                    this.collisionBlocks.push(new CollisionBlock({ position: { x: xIndex * 16, y: yIndex * 16 } }))
-                }
-            })
-        })
-
-
-        this.block = ASSET_MANAGER.getAsset("./img/testmap.png");
 
 
 
+
+
+
+        this.startingPosition = { x: 300, y: 300 };
+        let player = new MasterChief(gameEngine, this.startingPosition, this.collisionBlocks);
+        gameEngine.addEntity(player);
+        gameEngine.player = player;
 
 
         this.loadLevel()
 
     }
-    
+
 
     loadLevel() {
 
-        //  let player = new TestPlayer({ game: this.game, position: { x: 100, y: 100 }, collisionBlocks: this.collisionBlocks })
 
-        //  gameEngine.addEntity(player);
-        //  gameEngine.player = player;
-        let level = new DrawLevel(this.collisionBlocks);
-        this.game.addEntity(level);
 
-        // Add Master Cheese
-        this.startingPosition = { x: 300, y: 300 };
-        gameEngine.addEntity(new MasterChief(gameEngine, this.startingPosition, this.collisionBlocks));
+        let width = 1920 / 50;
+        let height = 1080 / this.floorCollisions2D.length;
 
+
+        // for (var row = 0; row < this.floorCollisions2D.length; row++) {
+        //     for (var column = 0; column < this.floorCollisions2D[row].length; column++) {
+        //         if (this.floorCollisions2D[row][column] !== 0) {
+        //             // ctx.fillRect(j * 10, i * 10, 10, 10); // assuming 10 pixels per square
+        //             this.game.addEntity(new Ground(this.game, column * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, this.floorCollisions2D[row].length * 32, width, height));
+        //         }
+        //     }
+        // }
+
+
+
+
+
+        let ground = [{ x: 0, y: 14, size: 69 }, { x: 71, y: 14, size: 15 }, { x: 89, y: 14, size: 63 }, { x: 154, y: 14, size: 69 }]
+
+        for (let i = 0; i < ground.length; i++) {
+
+            let groundFloor = ground[i];
+            this.game.addEntity(new Ground(this.game, groundFloor.x * PARAMS.BLOCKWIDTH, groundFloor.y * PARAMS.BLOCKWIDTH, groundFloor.size * PARAMS.BLOCKWIDTH))
+        }
+
+    }
+
+    update() {
+
+
+        let midpoint = PARAMS.CANVAS_WIDTH / 2 - PARAMS.BLOCKWIDTH / 2;
+        let midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.BLOCKWIDTH / 2;
+
+        // if (this.x < this.game.player.position.x - midpoint) {
+        this.x = this.game.player.position.x - midpoint;
+
+        // }
+        // if (this.y < this.game.player.position.y - midpoint) {
+        //     console.log("test");
+        //     this.y = this.game.player.position.y - midpoint;
+        // }
+
+    }
+
+    draw(ctx) {
 
     }
 }

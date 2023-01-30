@@ -24,7 +24,7 @@ class MasterChief {
         this.aimRight = true;
         this.reverse = false;
 
-        this.scale = 2;
+        this.scale = 3;
         this.walkingSpeed = 0.07;
 
         this.width = 30;
@@ -35,18 +35,15 @@ class MasterChief {
         this.velocity = { x: 0, y: 0 };
         this.inAir = false;
 
+
+        //anytime we move we should call updateBB
+
+        this.updateBB();
+
         this.bodyAnimations = [];
         this.helmetAnimations = [];
         this.gunAnimations = [];
         this.loadAnimations();
-
-        this.rectangle = function () {
-            this.game.ctx.strokeStyle = "Blue";
-            this.game.ctx.strokeRect(this.position.x, this.position.y, 25, 2);
-            this.game.ctx.save();
-        }
-
-        //this.hitbox = { position: { x: this.position.x, y: this.position.y }, width: 10, height: 10 };
 
     };
 
@@ -173,12 +170,17 @@ class MasterChief {
 
     };
 
+    updateBB() {
+        this.lastBB = this.BB;
+        this.BB = new BoundingBox(this.position.x, this.position.y, PARAMS.BLOCKWIDTH * this.scale, PARAMS.BLOCKWIDTH * this.scale);
+    }
+
     update() {
 
         // Updater properties
         const TICK = this.game.clockTick;
 
-        // this.hitbox = { position: { x: this.position.x + 15, y: this.position.y + 3 }, width: 30, height: 10 };
+
 
 
         //Calculate if player is aiming to right or left of player model
@@ -230,18 +232,41 @@ class MasterChief {
             this.state = 0;
         }
 
-        this.checkForHorizontalCollisions();
+        //this.checkForHorizontalCollisions();
 
 
         // Allow the player to fall
+
+        //UNCOMMENT
         this.velocity.y += PLAYER_PHYSICS.MAX_FALL * TICK;
 
         // Update the player x and y
         // this.position.x += this.velocity.x * TICK;
+        //UNCOMMENT
         this.position.y += this.velocity.y * TICK;
 
 
-        this.checkForVerticalCollisions();
+
+        // this.checkForVerticalCollisions();
+        this.updateBB();
+
+        let that = this;
+        this.game.entities.forEach(function (entity) {
+            if (entity.BB && that.BB.collide(entity.BB)) {
+                if (that.velocity.y > 0) {
+                    if ((entity instanceof Ground) && that.lastBB.bottom <= entity.BB.top) {
+                        that.position.y = entity.BB.top - PARAMS.BLOCKWIDTH * that.scale;
+                        that.velocity.y = 0;
+                        that.updateBB();
+
+                    }
+
+                }
+            }
+        })
+
+
+
 
     };
 
@@ -254,54 +279,34 @@ class MasterChief {
 
     draw(ctx) {
 
-        //ctx.save();
-        //ctx.scale(4, 4);
-
-
-        //ctx.save();
-        // ctx.scale(4, 4);
-
-
-        //ctx.translate(0, -this.level.height + (PARAMS.CANVAS_HEIGHT / 4) + 150);
-
-        //  ctx.drawImage(this.level, 0, 0);
-
-        //  ctx.fillRect(this.hitbox.position.x, this.hitbox.position.y, this.hitbox.width, this.hitbox.height);
-
-
-
-        // this.collisionBlocks.forEach(collisionBlock => {
-        //collisionBlock.draw(ctx);
-        // ctx.fillStyle = 'rgba(255,0,0,0.5)';
-
-
-        // console.log(this.width);
-        //  ctx.fillRect(collisionBlock.position.x, collisionBlock.position.y, 16, 16);
-        // })
-        // ctx.restore();
 
         this.findMouseAngle();
 
-        this.bodyAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x, this.position.y, this.scale);     
-        this.helmetAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x, this.position.y, this.scale);   
+        this.bodyAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale);
+        this.helmetAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale);
         this.drawGun(ctx);
-      
+
+        ctx.strokeStyle = 'red';
+        ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y, this.BB.width, this.BB.height);
+
+
+
     };
 
     drawGun(ctx) {
         let a = this.gunAnimations[this.gunType][this.isFiring];
-    
+
         a.elapsedTime += this.game.clockTick;
-        
+
         if (a.isDone()) {
             if (a.loop) {
                 a.elapsedTime -= a.totalTime;
-            } 
+            }
             else {
                 // If this is not a continually firing animation, isFiring gets toggled off and animation is reset.
                 this.stopShooting();
                 a.reset();
-                
+
             }
         }
 
@@ -309,11 +314,11 @@ class MasterChief {
         if (a.reverse) frame = a.frameCount - frame - 1;
 
         let radians = -this.degrees / 360 * 2 * Math.PI;
-            
+
         if (this.aimRight) {
 
             var offscreenCanvas = rotateImage(a.spritesheet,
-                a.xStart + frame * (a.width + a.framePadding), a.yStart, 
+                a.xStart + frame * (a.width + a.framePadding), a.yStart,
                 a.width, a.height,
                 radians, 5,
                 false);
@@ -321,7 +326,7 @@ class MasterChief {
         } else {
 
             var offscreenCanvas = rotateImage(a.spritesheet,
-                a.xStart + frame * (a.width + a.framePadding), a.yStart, 
+                a.xStart + frame * (a.width + a.framePadding), a.yStart,
                 a.width, a.height,
                 -radians - Math.PI, 5,
                 true);
@@ -337,13 +342,13 @@ class MasterChief {
 
         var armYOffset = 72 * this.scale;
 
-        ctx.drawImage(offscreenCanvas, 
-                this.position.x - armXOffset, this.position.y - armYOffset, 
-                this.scale * a.width, this.scale * a.width);
+        ctx.drawImage(offscreenCanvas,
+            this.position.x - armXOffset - this.game.camera.x, this.position.y - armYOffset,
+            this.scale * a.width, this.scale * a.width);
 
-        
+
     };
-    
+
 
     shootGun() {
         this.isFiring = 1;
@@ -365,7 +370,7 @@ class MasterChief {
 
             //console.log('Opp: ' + -opp + ' Adj: ' + adj);
             let angle = Math.atan(opp / adj);
-            this.degrees = Math.floor(angle * (180/Math.PI));
+            this.degrees = Math.floor(angle * (180 / Math.PI));
 
             if (opp >= 0 && adj < 0) {
                 this.degrees += 180;
@@ -373,7 +378,7 @@ class MasterChief {
                 this.degrees += 180;
             } else if (opp < 0 && adj >= 0) {
                 this.degrees += 360;
-            } 
+            }
 
         }
     };
