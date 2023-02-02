@@ -19,7 +19,7 @@ class MasterChief {
 
         //Animation states for chief's arms/gun firing
         this.isFiring = 0; // 0 = Not firing, 1 = Firing
-        this.gunType = 0; // 0 = Sniper Rifle, More to come
+        this.gunType = 1; // 0 = Sniper Rifle, 1 = Assault Rifle
 
         this.degrees = 0;
         this.aimRight = true;
@@ -46,13 +46,8 @@ class MasterChief {
         this.gunAnimations = [];
         this.loadAnimations();
 
-        this.bodyAnimations = [];
-        this.helmetAnimations = [];
-        this.gunAnimations = [];
-        this.loadAnimations();
-
         // Keeps track of last key pressed
-        this.lastKey
+        this.lastKey;
 
     };
 
@@ -112,13 +107,13 @@ class MasterChief {
 
         // ---- CHIEF BODY/HEAD ANIMATIONS ----
         // State: Idle
-        this.bodyAnimations[0][0] = new Animator(this.SpriteSheet,
+        this.bodyAnimations[0] = new Animator(this.SpriteSheet,
             0, 0,
             40, 50,
             1, 1,
             0,
             false, true);
-        this.helmetAnimations[0][0] = new Animator(this.SpriteSheet,
+        this.helmetAnimations[0] = new Animator(this.SpriteSheet,
             0, 50,
             40, 50,
             1, 1,
@@ -127,22 +122,14 @@ class MasterChief {
 
 
         // State: Walking
-        this.bodyAnimations[1][0] = new Animator(this.SpriteSheet,
+        this.bodyAnimations[1] = new Animator(this.SpriteSheet,
             0, 0,
             40, 50,
             21, this.walkingSpeed,
             0,
             false, true);
-        this.helmetAnimations[1][0] = new Animator(this.SpriteSheet,
+        this.helmetAnimations[1] = new Animator(this.SpriteSheet,
             0, 50,
-            40, 50,
-            21, this.walkingSpeed,
-            0,
-            false, true);
-
-        // Helmet: Left
-        this.helmetAnimations[1][1] = new Animator(this.SpriteSheet,
-            0, 150,
             40, 50,
             21, this.walkingSpeed,
             0,
@@ -164,12 +151,11 @@ class MasterChief {
         const TICK = this.game.clockTick;
 
 
-
-
         //Calculate if player is aiming to right or left of player model
         if (this.game.mouse !== null) {
-            let xOffset = 25;
-            const x = this.game.mouse.x - this.position.x - xOffset;
+            let xOffset = 20 * this.scale;
+            const x = this.game.mouse.x - (this.position.x - this.game.camera.x) - xOffset;
+            //const x = this.game.mouse.x - 936 - xOffset;
             if (x > 0) {
                 this.aimRight = true;
             } else {
@@ -180,14 +166,14 @@ class MasterChief {
 
         // Movement... kinda
         if (this.game.keys['d']) {
+
+            //Check direction user is aiming to dictate walking forward or reverse
             if (this.aimRight) {
-                this.bodyAnimations[this.state][this.facing].reverse = false;
-                this.helmetAnimations[this.state][this.facing].reverse = false;
-
-
+                this.bodyAnimations[this.state].reverse = false;
+                this.helmetAnimations[this.state].reverse = false;
             } else {
-                this.bodyAnimations[this.state][this.facing].reverse = true;
-                this.helmetAnimations[this.state][this.facing].reverse = true;
+                this.bodyAnimations[this.state].reverse = true;
+                this.helmetAnimations[this.state].reverse = true;
             }
 
             this.state = 1;
@@ -195,21 +181,28 @@ class MasterChief {
             this.velocity.x += PLAYER_PHYSICS.MAX_RUN * TICK;
             this.position.x += this.velocity.x * TICK;
         }
+
+
         else if (this.game.keys['a']) {
 
+            //Check direction user is aiming to dictate walking forward or reverse
             if (this.aimRight) {
-                this.helmetAnimations[this.state][this.facing].reverse = true;
-                this.bodyAnimations[this.state][this.facing].reverse = true;
+                this.helmetAnimations[this.state].reverse = true;
+                this.bodyAnimations[this.state].reverse = true;
             } else {
-                this.bodyAnimations[this.state][this.facing].reverse = false;
-                this.helmetAnimations[this.state][this.facing].reverse = false;
+                this.bodyAnimations[this.state].reverse = false;
+                this.helmetAnimations[this.state].reverse = false;
             }
             this.state = 1;
         }
+
+
         else if (this.game.keys[' '] || this.game.keys['Space']) { // Jumping TODO: JUMP WHILE RUNNING!
             this.velocity.y -= 4;
             console.log('UP')
         }
+
+
         else {
             this.state = 0;
         }
@@ -295,15 +288,13 @@ class MasterChief {
         this.findMouseAngle();
 
         if (this.aimRight) {
-            this.bodyAnimations[this.state][0].drawFrame(this.game.clockTick, ctx, this.position.x, this.position.y, this.scale, false);     
-            this.helmetAnimations[this.state][0].drawFrame(this.game.clockTick, ctx, this.position.x, this.position.y, this.scale, false);   
+            this.bodyAnimations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale, false);     
+            this.helmetAnimations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale, false);  
         } else {
-            this.bodyAnimations[this.state][0].drawFrame(this.game.clockTick, ctx, this.position.x, this.position.y, this.scale, true);     
-            this.helmetAnimations[this.state][0].drawFrame(this.game.clockTick, ctx, this.position.x, this.position.y, this.scale, true);  
+            this.bodyAnimations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale, true);     
+            this.helmetAnimations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale, true);  
         }
 
-        //this.bodyAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale);
-        //this.helmetAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale);
         this.drawGun(ctx);
 
         ctx.strokeStyle = 'red';
@@ -364,7 +355,7 @@ class MasterChief {
         var armYOffset = 72 * this.scale;
 
         ctx.drawImage(offscreenCanvas,
-            this.position.x - armXOffset - this.game.camera.x, this.position.y - armYOffset,
+            this.position.x - this.game.camera.x - armXOffset, this.position.y - armYOffset,
             this.scale * a.width, this.scale * a.width);
 
 
@@ -378,15 +369,20 @@ class MasterChief {
         this.isFiring = 0;
     };
 
+    
     findMouseAngle() {
+        
         //Calculating angle from mouse
         if (gameEngine.mouse !== null) {
 
-            let yOffset = 32;
-            let xOffset = 25;
+            let yOffset = 24 * this.scale;
+            let xOffset = 25 * this.scale;
 
-            let opp = -(gameEngine.mouse.y - this.position.y - yOffset);
-            let adj = gameEngine.mouse.x - this.position.x - xOffset;
+            // console.log('this.position.x: ' + (this.position.x | 0) + ' game.camera.x: ' + (this.game.camera.x | 0) +
+            // ' math: ' + ((this.position.x - this.game.camera.x) | 0) );
+
+            let opp = -(gameEngine.mouse.y - (this.position.y - this.game.camera.y) - yOffset);
+            let adj = gameEngine.mouse.x - (this.position.x - this.game.camera.x) - xOffset;
 
             //console.log('Opp: ' + -opp + ' Adj: ' + adj);
             let angle = Math.atan(opp / adj);

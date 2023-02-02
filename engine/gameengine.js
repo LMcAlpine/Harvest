@@ -47,7 +47,8 @@ class GameEngine {
 
         this.ctx.canvas.addEventListener("mousemove", e => {
             if (this.options.debugging) {
-                console.log("MOUSE_MOVE", getXandY(e));
+                console.log("MOUSE_MOVE: X: ", (getXandY(e).x | 0) +
+                " Y: ", (getXandY(e).y | 0));
             }
             this.mouse = getXandY(e);
 
@@ -58,7 +59,7 @@ class GameEngine {
                 console.log("CLICK", getXandY(e));
             }
             this.click = getXandY(e);
-            this.entities[1].shootGun();
+            this.entities[0].shootGun();
         });
 
         this.ctx.canvas.addEventListener("wheel", e => {

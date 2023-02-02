@@ -23,7 +23,6 @@ class Animator {
         if (this.reverse) frame = this.frameCount - frame - 1;
 
         if (flip) {
-            console.log('Flip + ' + this.elapsedTime);
             let offScreenCanvas = rotateImage(this.spritesheet,
                 this.xStart + frame * (this.width + this.framePadding), this.yStart, 
                 this.width, this.height,
