@@ -13,6 +13,7 @@ class GameEngine {
         this.click = null;
         this.mouse = null;
         this.wheel = null;
+        this.space = null;
         this.keys = {};
 
         // Options and the Details
@@ -37,6 +38,8 @@ class GameEngine {
     };
 
     startInput() {
+
+        var that = this;
         const getXandY = e => ({
             x: e.clientX - this.ctx.canvas.getBoundingClientRect().left,
             y: e.clientY - this.ctx.canvas.getBoundingClientRect().top
@@ -66,6 +69,11 @@ class GameEngine {
             this.wheel = e;
         });
 
+        this.ctx.canvas.addEventListener("keydown", function(e) {
+            e.preventDefault();
+            this.space = e; // Prevent space bar scrolling
+          })
+
         this.ctx.canvas.addEventListener("contextmenu", e => {
             if (this.options.debugging) {
                 console.log("RIGHT_CLICK", getXandY(e));
@@ -74,10 +82,11 @@ class GameEngine {
             this.rightclick = getXandY(e);
         });
 
-        
 
         this.ctx.canvas.addEventListener("keydown", event => this.keys[event.key] = true);
         this.ctx.canvas.addEventListener("keyup", event => this.keys[event.key] = false);
+
+
     };
 
     addEntity(entity) {
@@ -110,6 +119,7 @@ class GameEngine {
                 this.entities.splice(i, 1);
             }
         }
+
     };
 
     loop() {
@@ -119,5 +129,3 @@ class GameEngine {
     };
 
 };
-
-// KV Le was here :)

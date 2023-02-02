@@ -1,5 +1,4 @@
 /** Global Parameters Object */
-const params = {};
 
 /**
  * @param {Number} n
@@ -83,6 +82,9 @@ const PARAMS = {
     SCALE: 3,
     BITWIDTH: 16
 };
+
+// for the parallax 
+let scrollSpeed = 2.5;
 
 // Player physics
 const PHYSIC_SCALE = 3;
