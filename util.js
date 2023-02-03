@@ -104,8 +104,7 @@ const PLAYER_PHYSICS = {
 
 
 function rotateImage(spritesheet, xStart, yStart, width, height, theta, scale, flip) {
-    //width *= 2;
-    //height *= 2;
+
     let offscreenCanvas = document.createElement('canvas');
     let dimension = Math.max(width, height) * scale;
     offscreenCanvas.width = dimension;
@@ -130,4 +129,4 @@ function rotateImage(spritesheet, xStart, yStart, width, height, theta, scale, f
     offscreenCtx.restore();
     return offscreenCanvas;
 
-}
+};

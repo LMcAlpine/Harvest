@@ -1,4 +1,5 @@
 class MasterChief {
+
     constructor(game, position, collisionBlocks) {
 
         // Updated the constructor
@@ -15,11 +16,11 @@ class MasterChief {
 
         //Animation states for chief's head/body
         this.state = 0; // 0 = Idle, 1 = walking
-        this.facing = 0; // 0 = right, 1 = left
+
 
         //Animation states for chief's arms/gun firing
         this.isFiring = 0; // 0 = Not firing, 1 = Firing
-        this.gunType = 0; // 0 = Sniper Rifle, More to come
+        this.gunType = 1; // 0 = Sniper Rifle, 1 = Assault Rifle
 
         this.degrees = 0;
         this.aimRight = true;
@@ -46,13 +47,16 @@ class MasterChief {
         this.gunAnimations = [];
         this.loadAnimations();
 
+        // Keeps track of last key pressed
+        this.lastKey;
+
     };
 
     loadAnimations() {
         for (let i = 0; i <= 1; i++) { // this.state
             this.bodyAnimations.push([]);
             this.helmetAnimations.push([]);
-            for (let j = 0; j <= 1; j++) { // this.facing
+            for (let j = 0; j <= 1; j++) { // 
                 this.bodyAnimations[i].push([]);
                 this.helmetAnimations[i].push([]);
             }
@@ -104,65 +108,29 @@ class MasterChief {
 
         // ---- CHIEF BODY/HEAD ANIMATIONS ----
         // State: Idle
-        // Facing: Right
-        this.bodyAnimations[0][0] = new Animator(this.SpriteSheet,
+        this.bodyAnimations[0] = new Animator(this.SpriteSheet,
             0, 0,
             40, 50,
             1, 1,
             0,
             false, true);
-
-        // Helmet: Right
-        this.helmetAnimations[0][0] = new Animator(this.SpriteSheet,
-            0, 100,
-            40, 50,
-            1, 1,
-            0,
-            false, true);
-
-        // Facing: Left
-        this.bodyAnimations[0][1] = new Animator(this.SpriteSheet,
+        this.helmetAnimations[0] = new Animator(this.SpriteSheet,
             0, 50,
             40, 50,
             1, 1,
             0,
             false, true);
 
-        // Helmet: Left
-        this.helmetAnimations[0][1] = new Animator(this.SpriteSheet,
-            0, 150,
-            40, 50,
-            1, 1,
-            0,
-            false, true);
 
         // State: Walking
-        // Facing: Right
-        this.bodyAnimations[1][0] = new Animator(this.SpriteSheet,
+        this.bodyAnimations[1] = new Animator(this.SpriteSheet,
             0, 0,
             40, 50,
             21, this.walkingSpeed,
             0,
             false, true);
-        // Helmet: Right
-        this.helmetAnimations[1][0] = new Animator(this.SpriteSheet,
-            0, 100,
-            40, 50,
-            21, this.walkingSpeed,
-            0,
-            false, true);
-
-        // Facing: Left
-        this.bodyAnimations[1][1] = new Animator(this.SpriteSheet,
+        this.helmetAnimations[1] = new Animator(this.SpriteSheet,
             0, 50,
-            40, 50,
-            21, this.walkingSpeed,
-            0,
-            false, true);
-
-        // Helmet: Left
-        this.helmetAnimations[1][1] = new Animator(this.SpriteSheet,
-            0, 150,
             40, 50,
             21, this.walkingSpeed,
             0,
@@ -178,35 +146,35 @@ class MasterChief {
 
     update() {
 
+        // this.velocity.x = 0
+
         // Updater properties
         const TICK = this.game.clockTick;
 
 
-
-
         //Calculate if player is aiming to right or left of player model
         if (this.game.mouse !== null) {
-            let xOffset = 25;
-            const x = this.game.mouse.x - this.position.x - xOffset;
+            let xOffset = 20 * this.scale;
+            const x = this.game.mouse.x - (this.position.x - this.game.camera.x) - xOffset;
+            //const x = this.game.mouse.x - 936 - xOffset;
             if (x > 0) {
                 this.aimRight = true;
-                this.facing = 0;
             } else {
                 this.aimRight = false;
-                this.facing = 1;
             }
-
         }
 
+
+        // Movement... kinda
         if (this.game.keys['d']) {
+
+            //Check direction user is aiming to dictate walking forward or reverse
             if (this.aimRight) {
-                this.facing = 0;
-                this.bodyAnimations[this.state][this.facing].reverse = false;
-
-
+                this.bodyAnimations[this.state].reverse = false;
+                this.helmetAnimations[this.state].reverse = false;
             } else {
-                this.facing = 1;
-                this.bodyAnimations[this.state][this.facing].reverse = true;
+                this.bodyAnimations[this.state].reverse = true;
+                this.helmetAnimations[this.state].reverse = true;
             }
 
             this.state = 1;
@@ -216,29 +184,59 @@ class MasterChief {
             this.game.keys['d'] === false
         }
 
-        // if (this.game.keys['d'] === false) {
-        //     console.log("key up??");
-        // }
+
         else if (this.game.keys['a']) {
 
+            //Check direction user is aiming to dictate walking forward or reverse
             if (this.aimRight) {
-                this.facing = 0;
-                this.bodyAnimations[this.state][this.facing].reverse = true;
+                this.helmetAnimations[this.state].reverse = true;
+                this.bodyAnimations[this.state].reverse = true;
             } else {
-                this.facing = 1;
-                this.bodyAnimations[this.state][this.facing].reverse = false;
+                this.bodyAnimations[this.state].reverse = false;
+                this.helmetAnimations[this.state].reverse = false;
             }
             this.state = 1;
-            //this.x -= 3;
-            this.velocity.x -= PLAYER_PHYSICS.MAX_RUN * TICK;
-            this.position.x += this.velocity.x * TICK;
-        } else if (this.game.keys[' '] || this.game.keys['Space']) { // Jumping TODO: JUMP WHILE RUNNING!
-            this.jump();
-        } else {
-            this.state = 0;
         }
 
 
+        else if (this.game.keys[' '] || this.game.keys['Space']) { // Jumping TODO: JUMP WHILE RUNNING!
+            this.velocity.y -= 4;
+            console.log('UP')
+        }
+
+
+        else {
+            this.state = 0;
+        }
+
+        // *** Player Movement ***
+        if (keys.a.pressed && lastKey === 'a') {
+            this.velocity.x = -5;
+            this.position.x += -5;
+            console.log('walking left')
+        }
+        if (keys.d.pressed && lastKey === 'd') {
+            this.velocity.x = 5;
+            this.position.x += 5;
+            console.log('walking right')
+        }
+
+        // *** Player Movement ***
+        if (keys.a.pressed && lastKey === 'a') {
+            this.velocity.x = -5;
+            this.position.x += -5;
+            console.log('walking left')
+        }
+        if (keys.d.pressed && lastKey === 'd') {
+            this.velocity.x = 5;
+            this.position.x += 5;
+            console.log('walking right')
+        }
+        if(keys[' '].pressed) {
+            this.velocity.y += -PLAYER_JUMP;
+            this.position.y += -PLAYER_JUMP;
+            console.log('up')
+        }
 
         //this.checkForHorizontalCollisions();
 
@@ -247,13 +245,12 @@ class MasterChief {
 
         //UNCOMMENT
         this.velocity.y += PLAYER_PHYSICS.MAX_FALL * TICK;
+        this.velocity.y += GRAVITY;
 
         // Update the player x and y
         // this.position.x += this.velocity.x * TICK;
         //UNCOMMENT
         this.position.y += this.velocity.y * TICK;
-
-
 
         // this.checkForVerticalCollisions();
         this.updateBB();
@@ -276,26 +273,35 @@ class MasterChief {
 
 
 
+
+
     };
 
     // This method will allow the player to jump
     jump() {
         this.velocity.y -= PLAYER_PHYSICS.JUMP_HEIGHT;
+        this.position.y -= PLAYER_PHYSICS.JUMP_HEIGHT;
         this.inAir = true;
     };
-
 
     draw(ctx) {
 
 
         this.findMouseAngle();
 
-        this.bodyAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale);
-        this.helmetAnimations[this.state][this.facing].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale);
+        if (this.aimRight) {
+            this.bodyAnimations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale, false);     
+            this.helmetAnimations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale, false);  
+        } else {
+            this.bodyAnimations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale, true);     
+            this.helmetAnimations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale, true);  
+        }
+
         this.drawGun(ctx);
 
         ctx.strokeStyle = 'red';
         ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y, this.BB.width, this.BB.height);
+
 
 
 
@@ -351,12 +357,11 @@ class MasterChief {
         var armYOffset = 72 * this.scale;
 
         ctx.drawImage(offscreenCanvas,
-            this.position.x - armXOffset - this.game.camera.x, this.position.y - armYOffset,
+            this.position.x - this.game.camera.x - armXOffset, this.position.y - armYOffset,
             this.scale * a.width, this.scale * a.width);
 
 
     };
-
 
     shootGun() {
         this.isFiring = 1;
@@ -366,15 +371,20 @@ class MasterChief {
         this.isFiring = 0;
     };
 
+    
     findMouseAngle() {
+        
         //Calculating angle from mouse
         if (gameEngine.mouse !== null) {
 
-            let yOffset = 32;
-            let xOffset = 25;
+            let yOffset = 24 * this.scale;
+            let xOffset = 25 * this.scale;
 
-            let opp = -(gameEngine.mouse.y - this.position.y - yOffset);
-            let adj = gameEngine.mouse.x - this.position.x - xOffset;
+            // console.log('this.position.x: ' + (this.position.x | 0) + ' game.camera.x: ' + (this.game.camera.x | 0) +
+            // ' math: ' + ((this.position.x - this.game.camera.x) | 0) );
+
+            let opp = -(gameEngine.mouse.y - (this.position.y - this.game.camera.y) - yOffset);
+            let adj = gameEngine.mouse.x - (this.position.x - this.game.camera.x) - xOffset;
 
             //console.log('Opp: ' + -opp + ' Adj: ' + adj);
             let angle = Math.atan(opp / adj);
@@ -389,54 +399,58 @@ class MasterChief {
             }
 
         }
-    };
+
+    }
+};
 
 
-    checkForHorizontalCollisions() {
-        for (let i = 0; i < this.collisionBlocks.length; i++) {
-            const collisionBlock = this.collisionBlocks[i];
-
-            if (collision({ object1: this, object2: collisionBlock })) {
-                // collision on the right
-                if (this.velocity.x > 0) {
-                    this.velocity.x = 0;
-                    // must need 0.01 subtracted
-                    this.position.x = collisionBlock.position.x - this.width - 0.01;
-                    break;
-                }
-                // left
-                if (this.velocity.x < 0) {
-                    this.velocity.x = 0;
-
-                    this.position.x = collisionBlock.position.x + collisionBlock.width + 0.01;
-                    break;
-                }
-            }
-        }
-    };
 
 
-    checkForVerticalCollisions() {
-        for (let i = 0; i < this.collisionBlocks.length; i++) {
-            const collisionBlock = this.collisionBlocks[i];
 
-            if (collision({ object1: this, object2: collisionBlock })) {
-                // if falling
-                if (this.velocity.y > 0) {
-                    this.velocity.y = 0;
-                    // must need 0.01 subtracted
-                    this.position.y = collisionBlock.position.y - this.height - 0.01;
-                    break;
-                }
-                // moving upwards
-                if (this.velocity.y < 0) {
-                    this.velocity.y = 0;
-
-                    this.position.y = collisionBlock.position.y + collisionBlock.height + 0.01;
-                    break;
-                }
-            }
-        }
-    };
-
+// *** Keys ***
+const keys = {
+    a: { // Left key
+        pressed: false
+    },
+    d: { // Right key
+        pressed: false
+    },
+    ' ': { // Up key
+        pressed: false
+    }
 }
+
+// *** KeyDown ***
+window.addEventListener('keydown', (event) => {
+    switch (event.key) {
+        // Player Keys
+        case 'd':
+            keys.d.pressed = true
+            this.lastKey = 'd';
+            break
+        case 'a':
+            keys.a.pressed = true
+            this.lastKey = 'a';
+            break
+        case ' ':
+            keys[' '].pressed = true
+            break
+    }
+})
+
+// *** KeyUp ***
+window.addEventListener('keyup', (event) => {
+    switch (event.key) {
+        // Player Keys
+        case 'd':
+            keys.d.pressed = false;
+            break
+        case 'a':
+            keys.a.pressed = false;
+            break
+        case ' ':
+            keys[' '].pressed = false;
+            console.log('gravity');
+            break
+    }
+})
