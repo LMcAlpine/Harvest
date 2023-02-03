@@ -11,6 +11,7 @@ class MasterChief {
 
         this.SpriteSheet = ASSET_MANAGER.getAsset("./sprites/ChiefSprites.png");
         this.GunSpriteSheet = ASSET_MANAGER.getAsset("./sprites/Guns.png");
+        
 
         //Animation states for chief's head/body
         this.state = 0; // 0 = Idle, 1 = walking
@@ -212,7 +213,12 @@ class MasterChief {
             //this.x += 3;
             this.velocity.x += PLAYER_PHYSICS.MAX_RUN * TICK;
             this.position.x += this.velocity.x * TICK;
+            this.game.keys['d'] === false
         }
+
+        // if (this.game.keys['d'] === false) {
+        //     console.log("key up??");
+        // }
         else if (this.game.keys['a']) {
 
             if (this.aimRight) {
@@ -231,6 +237,8 @@ class MasterChief {
         } else {
             this.state = 0;
         }
+
+
 
         //this.checkForHorizontalCollisions();
 

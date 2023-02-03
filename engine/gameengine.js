@@ -58,7 +58,7 @@ class GameEngine {
                 console.log("CLICK", getXandY(e));
             }
             this.click = getXandY(e);
-            this.entities[1].shootGun();
+            //this.entities[1].shootGun();
         });
 
         this.ctx.canvas.addEventListener("wheel", e => {
@@ -69,10 +69,10 @@ class GameEngine {
             this.wheel = e;
         });
 
-        this.ctx.canvas.addEventListener("keydown", function(event) {
+        this.ctx.canvas.addEventListener("keydown", function (event) {
             event.preventDefault();
-            this.space = e; // Prevent space bar scrolling
-          })
+            this.space = event; // Prevent space bar scrolling
+        })
 
         this.ctx.canvas.addEventListener("contextmenu", e => {
             if (this.options.debugging) {
