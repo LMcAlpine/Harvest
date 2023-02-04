@@ -217,10 +217,9 @@ class MasterChief {
 
         // *** Player Movement ***
         if (keys.a.pressed && lastKey === 'a') {
-            this.velocity.x += PLAYER_PHYSICS.MAX_WALK;
-            this.position.x += -this.velocity.x * TICK;
+            this.velocity.x -= PLAYER_PHYSICS.MAX_WALK;
+            this.position.x += this.velocity.x * TICK;
             console.log('walking left')
-
 
             if (this.velocity.x > PLAYER_PHYSICS.MAX_WALK) {
                 this.velocity.x = PLAYER_PHYSICS.MAX_WALK;
@@ -281,6 +280,7 @@ class MasterChief {
                         that.position.y = entity.BB.top - 46 * that.scale;
                         that.velocity.y = 0;
                         that.updateBB();
+                        return;
 
                     }
 
@@ -294,40 +294,47 @@ class MasterChief {
                         that.velocity.y = 0;
                         that.position.y = entity.BB.bottom + entity.BB.height;
                         that.updateBB();
+                        return;
 
                     }
                 }
+                if (that.velocity.x > 0) {
 
-                if ((entity instanceof Ground)) {
-                    if (that.BB.collide(entity.leftBB)) {
-                        if (that.velocity.x > 0) {
-                            that.velocity.x = 0;
-                            that.position.x = entity.BB.left - PARAMS.BLOCKWIDTH;
-                            that.updateBB();
-                        }
+                    if ((entity instanceof Ground)) {
+                        //if (that.BB.collide(entity.leftBB)) {
 
+                        that.velocity.x = 0;
+                        that.position.x = entity.BB.left - (that.scale * 35);
+                        //      that.updateBB();
+                        return;
+
+                        //  }
 
                     }
 
 
 
 
-                }
-                if (entity instanceof Ground) {
-                    if (that.BB.collide(entity.rightBB)) {
 
-                        if (that.velocity.x < 0) {
+                }
+                if (that.velocity.x < 0) {
+                    if (entity instanceof Ground) {
+                        if (that.BB.collide(entity.rightBB)) {
+
                             that.velocity.x = 0;
 
                             that.position.x = entity.BB.right;
-                            that.updateBB();
-
+                            //   that.updateBB();
+                            return;
                         }
+
+
                     }
+
+
                 }
-
-
             }
+
             //   }
 
         })
@@ -379,7 +386,7 @@ class MasterChief {
 
         this.drawGun(ctx);
 
-        ctx.strokeStyle = 'red';
+        ctx.strokeStyle = 'cyan';
         ctx.strokeRect(10 + this.BB.x - this.game.camera.x, this.BB.y, this.BB.width, this.BB.height);
 
 
