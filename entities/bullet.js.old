@@ -1,0 +1,79 @@
+/*  Class is used to represent a bullet that can be fired by friendlies or enemies.
+    A circle or small object cannot be used as there is a chance due to the tick rate 
+    the bullet will skip over the object it is supposed to collide with.
+
+    -A line will be drawn from the firingPos towards the targetPos and will not stop until it
+    reaches an object to collide with or the edge of the map.
+    -An integer will dictate whether the bullet can penetrate soft targets (enemies):
+        Pen 0: Bullet will not penetrate any enemy
+        Pen 1: Bullet will penetrate enemy if their shields are down.
+        Pen 2: Bullet will penetrate enemy regardless of shield status.
+    -Extra: Bullet loses damage output each penetration.
+
+*/
+
+class Bullet {
+    //gameengine, double, Position, Position, boolean
+    constructor(shooter, game, bulletVelocity, firingPos, targetPos, penetration) {
+        Object.assign(this, { shooter, game, bulletVelocity, firingPos, targetPos, penetration });
+
+        this.y1 = this.targetPos.y;
+        this.x1 = (this.targetPos.x - this.shooter.position.x) + this.firingPos.x;
+
+        this.rate = this.y1 / this.x1;
+
+        this.bulletVelocityMultiplier = 0;
+        this.removeFromWorld = false;
+        this.radius = 5;
+
+        this.aliveCounter = 400;
+
+    };
+
+    update() {
+        
+    };
+
+    draw(ctx) {
+
+        ctx.strokeStyle = "Red";
+        ctx.lineWidth = 2;
+
+        
+
+        //let x =  this.bulletVelocityMultiplier;
+        //let x = 0;
+        let y = (this.rate * 1) + this.y1;
+
+        //Draw Line
+        ctx.beginPath()
+        ctx.moveTo(this.firingPos.x - this.game.camera.x, this.firingPos.y);
+        //console.log('Firing position: ' + (this.firingPos.x - this.game.camera.x));
+
+        ctx.lineTo((this.x1 * this.shooter.position.x) + this.firingPos.x, y);
+        //ctx.lineTo((this.targetPos.x - this.shooter.position.x) + this.firingPos.x, this.targetPos.y);
+        ctx.stroke();
+        
+        console.log('Bullet active');
+            
+        this.bulletVelocityMultiplier += 0.01;
+
+        //Temp loop to kill bullet entity
+        if (this.aliveCounter == 0) {
+            this.removeFromWorld = true;
+
+
+            console.log('X1: ' + (this.x1 | 0));
+            console.log('Y1: ' + (this.y1 | 0));
+            console.log('This.rate: ' + this.rate);
+
+        }
+            this.aliveCounter--;
+        
+
+
+    };
+
+
+
+};

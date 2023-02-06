@@ -16,17 +16,17 @@ class MasterChief {
         //Animation states for chief's head/body
         this.state = 0; // 0 = Idle, 1 = walking
 
-
         //Animation states for chief's arms/gun firing
         this.isFiring = 0; // 0 = Not firing, 1 = Firing
         this.gunType = 1; // 0 = Sniper Rifle, 1 = Assault Rifle
 
-        this.degrees = 0;
+
+        this.degrees = null;;
         this.aimRight = true;
-        this.reverse = false;
 
         this.scale = 3;
         this.walkingSpeed = 0.07;
+        
 
         this.width = 30;
         this.height = 47;
@@ -144,7 +144,6 @@ class MasterChief {
     }
 
     update() {
-
         // this.velocity.x = 0
 
         // Updater properties
@@ -155,7 +154,6 @@ class MasterChief {
         if (this.game.mouse !== null) {
             let xOffset = 20 * this.scale;
             const x = this.game.mouse.x - (this.position.x - this.game.camera.x) - xOffset;
-            //const x = this.game.mouse.x - 936 - xOffset;
             if (x > 0) {
                 this.aimRight = true;
             } else {
@@ -169,11 +167,9 @@ class MasterChief {
 
             //Check direction user is aiming to dictate walking forward or reverse
             if (this.aimRight) {
-                this.bodyAnimations[this.state].reverse = false;
-                this.helmetAnimations[this.state].reverse = false;
+                this.reverseMovement(false);
             } else {
-                this.bodyAnimations[this.state].reverse = true;
-                this.helmetAnimations[this.state].reverse = true;
+                this.reverseMovement(true);
             }
 
             this.state = 1;
@@ -187,12 +183,11 @@ class MasterChief {
 
             //Check direction user is aiming to dictate walking forward or reverse
             if (this.aimRight) {
-                this.helmetAnimations[this.state].reverse = true;
-                this.bodyAnimations[this.state].reverse = true;
+                this.reverseMovement(true);
             } else {
-                this.bodyAnimations[this.state].reverse = false;
-                this.helmetAnimations[this.state].reverse = false;
+                this.reverseMovement(false);
             }
+
             this.state = 1;
         }
 
@@ -284,7 +279,6 @@ class MasterChief {
 
     draw(ctx) {
 
-
         this.findMouseAngle();
 
         if (this.aimRight) {
@@ -306,6 +300,11 @@ class MasterChief {
     };
 
     drawGun(ctx) {
+
+        // ctx.strokeStyle = "Blue";
+        // ctx.strokeRect(this.position.x - this.game.camera.x - 20, this.position.y - this.game.camera.y + 20, 40, 40);
+        // ctx.save();
+
         let a = this.gunAnimations[this.gunType][this.isFiring];
 
         a.elapsedTime += this.game.clockTick;
@@ -345,24 +344,48 @@ class MasterChief {
 
         }
 
-        //Offset to shift chief's shoulder back in it's socket when he changes face
-        if (this.aimRight) {
-            var armXOffset = 76 * this.scale;
-        } else {
-            var armXOffset = 64 * this.scale;
-        }
 
-        var armYOffset = 72 * this.scale;
+        //Adjust arm position depending on face
+        if (this.aimRight) {
+            var armXOffset = (76 * this.scale);
+        } else {
+            var armXOffset = (64 * this.scale);
+        }
+        var armYOffset = (72 * this.scale);
 
         ctx.drawImage(offscreenCanvas,
-            this.position.x - this.game.camera.x - armXOffset, this.position.y - armYOffset,
+            (this.position.x - this.game.camera.x) - armXOffset, (this.position.y - this.game.camera.y) - armYOffset,
             this.scale * a.width, this.scale * a.width);
 
 
     };
 
     shootGun() {
+
         this.isFiring = 1;
+
+        //Capture 
+        const firingPosStatic = {
+            x: this.position.x + (20 * this.scale),
+            y: this.position.y + (15 * this.scale)
+        }
+
+        //Capture the static position
+        const targetPosStatic = {
+            x: gameEngine.mouse.x - (20 * this.scale),
+            y: gameEngine.mouse.y
+        }
+
+        let bullet = new Bullet(
+            this,
+            this.game,
+            5,
+            firingPosStatic,
+            targetPosStatic,
+            1);
+
+        this.game.addEntityToFront(bullet);
+
     };
 
     stopShooting() {
@@ -398,8 +421,18 @@ class MasterChief {
 
         }
 
-    }
+    };
+
+    reverseMovement(cond) {
+        this.bodyAnimations[this.state].reverse = cond;
+        this.helmetAnimations[this.state].reverse = cond;
+    };
+
+
+
 };
+
+
 
 
 
