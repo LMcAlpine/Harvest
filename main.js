@@ -10,6 +10,10 @@ ASSET_MANAGER.queueDownload("./sprites/tempPlayer.png");
 ASSET_MANAGER.queueDownload("./sprites/ChiefSprites.png");
 ASSET_MANAGER.queueDownload("./sprites/Guns.png");
 
+ASSET_MANAGER.getAsset("./sprites/grunt.png");
+ASSET_MANAGER.getAsset("./sprites/elite.png");
+ASSET_MANAGER.getAsset("./sprites/brute.png");
+
 ASSET_MANAGER.queueDownload("./sprites/bricks.png");
 
 

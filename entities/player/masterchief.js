@@ -34,7 +34,7 @@ class MasterChief {
 
         // Added for Jumping
         this.velocity = { x: 0, y: 0 };
-        this.inAir = false;
+        this.onGround = true;
 
 
         //anytime we move we should call updateBB
@@ -225,9 +225,10 @@ class MasterChief {
             this.position.x += 5;
             console.log('walking right')
         }
-        if(keys[' '].pressed) {
-            this.velocity.y += -PLAYER_JUMP;
-            this.position.y += -PLAYER_JUMP;
+        if(keys[' '].pressed && this.onGround) {
+            this.velocity.y = PLAYER_JUMP;
+            this.onGround = false;
+            // this.position.y += -PLAYER_JUMP;
             console.log('up')
         }
 
@@ -256,7 +257,7 @@ class MasterChief {
                         that.position.y = entity.BB.top - PARAMS.BLOCKWIDTH * that.scale;
                         that.velocity.y = 0;
                         that.updateBB();
-
+                        that.onGround = true;
                     }
 
                 }
@@ -274,7 +275,6 @@ class MasterChief {
     jump() {
         this.velocity.y -= PLAYER_PHYSICS.JUMP_HEIGHT;
         this.position.y -= PLAYER_PHYSICS.JUMP_HEIGHT;
-        this.inAir = true;
     };
 
     draw(ctx) {
@@ -481,7 +481,6 @@ window.addEventListener('keyup', (event) => {
             break
         case ' ':
             keys[' '].pressed = false;
-            console.log('gravity');
             break
     }
 })
