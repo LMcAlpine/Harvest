@@ -20,25 +20,20 @@ class MasterChief {
         this.isFiring = 0; // 0 = Not firing, 1 = Firing
         this.gunType = 1; // 0 = Sniper Rifle, 1 = Assault Rifle
 
-
-        this.degrees = null;;
+        this.degrees = null;
         this.aimRight = true;
 
         this.scale = 3;
         this.walkingSpeed = 0.07;
-        
 
         this.width = 30;
         this.height = 47;
-
 
         // Added for Jumping
         this.velocity = { x: 0, y: 0 };
         this.onGround = true;
 
-
         //anytime we move we should call updateBB
-
         this.updateBB();
 
         this.bodyAnimations = [];
@@ -49,9 +44,20 @@ class MasterChief {
         // Keeps track of last key pressed
         this.lastKey;
 
+        // Health Bar
+        this.maxHP = 100;
+        this.hp = 90;
+        
+        // Shield Bar
+        this.maxShield = 100;
+        this.shield = 25;
+        this.regen = 400;
     };
 
     loadAnimations() {
+        let healthBar = new MasterHealthBar(this, this.game);
+        this.game.addEntityToFront(healthBar);
+
         for (let i = 0; i <= 1; i++) { // this.state
             this.bodyAnimations.push([]);
             this.helmetAnimations.push([]);
@@ -144,11 +150,12 @@ class MasterChief {
     }
 
     update() {
-        // this.velocity.x = 0
-
+        if(this.shield < this.maxShield) {
+            this.regenShield();
+        }
+        
         // Updater properties
         const TICK = this.game.clockTick;
-
 
         //Calculate if player is aiming to right or left of player model
         if (this.game.mouse !== null) {
@@ -160,7 +167,6 @@ class MasterChief {
                 this.aimRight = false;
             }
         }
-
 
         // Movement... kinda
         if (this.game.keys['d']) {
@@ -178,7 +184,6 @@ class MasterChief {
             this.position.x += this.velocity.x * TICK;
         }
 
-
         else if (this.game.keys['a']) {
 
             //Check direction user is aiming to dictate walking forward or reverse
@@ -191,12 +196,10 @@ class MasterChief {
             this.state = 1;
         }
 
-
         else if (this.game.keys[' '] || this.game.keys['Space']) { // Jumping TODO: JUMP WHILE RUNNING!
             this.velocity.y -= 4;
             console.log('UP')
         }
-
 
         else {
             this.state = 0;
@@ -234,7 +237,6 @@ class MasterChief {
 
         //this.checkForHorizontalCollisions();
 
-
         // Allow the player to fall
 
         //UNCOMMENT
@@ -263,15 +265,8 @@ class MasterChief {
                 }
             }
         })
-
-
-
-
-
-
     };
 
-    // This method will allow the player to jump
     jump() {
         this.velocity.y -= PLAYER_PHYSICS.JUMP_HEIGHT;
         this.position.y -= PLAYER_PHYSICS.JUMP_HEIGHT;
@@ -293,10 +288,6 @@ class MasterChief {
 
         ctx.strokeStyle = 'red';
         ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y, this.BB.width, this.BB.height);
-
-
-
-
     };
 
     drawGun(ctx) {
@@ -379,7 +370,7 @@ class MasterChief {
         let bullet = new Bullet(
             this,
             this.game,
-            5,
+            16,
             firingPosStatic,
             targetPosStatic,
             1);
@@ -391,7 +382,6 @@ class MasterChief {
     stopShooting() {
         this.isFiring = 0;
     };
-
     
     findMouseAngle() {
         
@@ -428,15 +418,36 @@ class MasterChief {
         this.helmetAnimations[this.state].reverse = cond;
     };
 
+    takeDMG() {
+        this.regen = 400;
+        if(this.shield != 0) {
+            //TODO
+            // subtract shield
+        } else if (this.shield == 0 && this.hp > 0) {
+            //TODO
+            // subtract HP
+        } else {
+            // Dead
+        }
+    }
 
+    addHealth() {
+        // Add to Shield
+        // Add to HP
+    }
 
+    regenShield() {
+        if(this.shield < this.maxShield) {
+            if(this.regen > 0) {
+                this.regen--;
+            } else {
+                this.shield++;
+            }
+        } else {
+            this.regen = 400;
+        }
+    }
 };
-
-
-
-
-
-
 
 // *** Keys ***
 const keys = {
