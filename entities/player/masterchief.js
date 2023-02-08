@@ -33,13 +33,16 @@ class MasterChief {
         this.velocity = { x: 0, y: 0 };
         this.onGround = true;
 
-        //anytime we move we should call updateBB
-        this.updateBB();
+        
 
         this.bodyAnimations = [];
         this.helmetAnimations = [];
         this.gunAnimations = [];
+        //Loads animations into array
         this.loadAnimations();
+
+        //anytime we move we should call updateBB
+        this.updateBB();
 
         // Keeps track of last key pressed
         this.lastKey;
@@ -52,11 +55,14 @@ class MasterChief {
         this.maxShield = 100;
         this.shield = 25;
         this.regen = 400;
+
+        this.healthBar = new MasterHealthBar(this, this.game);
+        //Why does this get added to the beginning of the entity list when it should be at the
+        //end with this syntax???
+        this.game.addEntity(this.healthBar);
     };
 
     loadAnimations() {
-        let healthBar = new MasterHealthBar(this, this.game);
-        this.game.addEntityToFront(healthBar);
 
         for (let i = 0; i <= 1; i++) { // this.state
             this.bodyAnimations.push([]);
@@ -146,7 +152,8 @@ class MasterChief {
 
     updateBB() {
         this.lastBB = this.BB;
-        this.BB = new BoundingBox(this.position.x, this.position.y, PARAMS.BLOCKWIDTH * this.scale, PARAMS.BLOCKWIDTH * this.scale);
+        // this.BB = new BoundingBox(this.position.x, this.position.y, PARAMS.BLOCKWIDTH * this.scale, PARAMS.BLOCKWIDTH * this.scale);
+        this.BB = new BoundingBox(this.position.x + (6 * this.scale), this.position.y, (this.bodyAnimations[this.state].width - 10) * this.scale, PARAMS.BLOCKWIDTH * this.scale);
     }
 
     update() {

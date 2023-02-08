@@ -46,7 +46,7 @@ ASSET_MANAGER.downloadAll(() => {
 
 
 
-	console.log(floorCollisions);
+	//console.log(floorCollisions);
 
 	// canvas.onclick = () => {
 	// 	canvas.requestPointerLock();

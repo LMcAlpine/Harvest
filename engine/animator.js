@@ -51,7 +51,7 @@ class Animator {
                 this.height * scale);
         }
 
-        if (true) {
+        if (false) {
             ctx.strokeStyle = 'Green';
             ctx.strokeRect(x, y, this.width * scale, this.height * scale);
         }

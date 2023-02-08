@@ -1,7 +1,7 @@
 class MasterHealthBar {
     constructor (entity, game) {
         Object.assign(this, {entity, game});
-        this.removeFromWorld = false;
+        ///this.removeFromWorld = false;
 
         this.hpWidth = 200;
         this.hpHeight = 30;
