@@ -221,8 +221,8 @@ class MasterChief {
             this.position.x += this.velocity.x * TICK;
             console.log('walking left')
 
-            if (this.velocity.x > PLAYER_PHYSICS.MAX_WALK) {
-                this.velocity.x = PLAYER_PHYSICS.MAX_WALK;
+            if (this.velocity.x < -PLAYER_PHYSICS.MAX_WALK) {
+                this.velocity.x = 1;
             }
         }
         if (keys.d.pressed && lastKey === 'd') {
@@ -300,7 +300,7 @@ class MasterChief {
                 }
                 if (that.velocity.x > 0) {
 
-                    if ((entity instanceof Ground)) {
+                    if ((entity instanceof Ground) && that.lastBB.right <= entity.BB.left) {
                         //if (that.BB.collide(entity.leftBB)) {
 
                         that.velocity.x = 0;
@@ -377,17 +377,17 @@ class MasterChief {
         this.findMouseAngle();
 
         if (this.aimRight) {
-            this.bodyAnimations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale, false);
-            this.helmetAnimations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale, false);
+            this.bodyAnimations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y - this.game.camera.y, this.scale, false);
+            this.helmetAnimations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y - this.game.camera.y, this.scale, false);
         } else {
-            this.bodyAnimations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale, true);
-            this.helmetAnimations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale, true);
+            this.bodyAnimations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y - this.game.camera.y, this.scale, true);
+            this.helmetAnimations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y - this.game.camera.y, this.scale, true);
         }
 
         this.drawGun(ctx);
 
         ctx.strokeStyle = 'cyan';
-        ctx.strokeRect(10 + this.BB.x - this.game.camera.x, this.BB.y, this.BB.width, this.BB.height);
+        ctx.strokeRect(10 + this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
 
 
 
@@ -444,7 +444,7 @@ class MasterChief {
         var armYOffset = 72 * this.scale;
 
         ctx.drawImage(offscreenCanvas,
-            this.position.x - this.game.camera.x - armXOffset, this.position.y - armYOffset,
+            this.position.x - this.game.camera.x - armXOffset, this.position.y - this.game.camera.y - armYOffset,
             this.scale * a.width, this.scale * a.width);
 
 
