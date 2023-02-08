@@ -74,13 +74,12 @@ class GameEngine {
                         break;
                     } 
                 }
-                console.log(this.playerIndex);
                 this.entities[this.playerIndex].shootGun();
             }
             
-            for (let i = 0; i < this.entities.length; i++) {
-                console.log(this.entities[i]);
-            }
+            // for (let i = 0; i < this.entities.length; i++) {
+            //     console.log(this.entities[i]);
+            // }
             
         });
 

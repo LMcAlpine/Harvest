@@ -117,6 +117,9 @@ class SceneManager {
         gameEngine.addEntity(player);
         gameEngine.player = player;
 
+        this.testPosition = { x: 300, y: 700 };
+        let testEnemy = new Grunt(gameEngine, this.testPosition, this.collisionBlocks);
+        gameEngine.addEntity(testEnemy);
 
         this.loadLevel()
 
