@@ -211,7 +211,7 @@ class SceneManager {
         // }
         // if (this.y < this.game.player.position.y - midpoint) {
         //     console.log("test");
-        this.y = this.game.player.position.y - midpoint;
+        this.y = this.game.player.position.y - midpointY;
         // }
 
     }
