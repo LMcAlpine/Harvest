@@ -1,8 +1,8 @@
 class CollisionBlock {
-    constructor({ position }) {
+    constructor({ position, width, height }) {
         this.position = position;
-        this.width = 16;
-        this.height = 16;
+        this.width = PARAMS.BLOCKWIDTH;
+        this.height = PARAMS.BLOCKWIDTH;
 
 
     }
@@ -15,7 +15,7 @@ class CollisionBlock {
 
 
         //console.log(this.width);
-        ctx.fillRect(this.position.x, this.position.y, 16, 16);
+        ctx.fillRect(this.position.x - gameEngine.camera.x, this.position.y, this.width, this.height);
 
     }
 }

@@ -79,7 +79,7 @@ const collision = ({ object1, object2 }) => {
 
 const PARAMS = {
     DEBUG: true,
-    SCALE: 3,
+    SCALE: 4,
     BITWIDTH: 16
 };
 
@@ -114,6 +114,7 @@ const ENEMY_PHYSICS = {
     MAX_FALL: 150 * PHYSIC_SCALE,
     ACC_FALL: PLAYER_JUMP * GRAVITY
 };
+
 
 
 function rotateImage(spritesheet, xStart, yStart, width, height, theta, scale, flip) {
