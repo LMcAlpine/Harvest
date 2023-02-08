@@ -88,10 +88,10 @@ let scrollSpeed = 2.5;
 
 // Player physics
 const PHYSIC_SCALE = 3;
-const GRAVITY = 1.2
-const PLAYER_JUMP = 8;
+const GRAVITY = 0.5;
+const PLAYER_JUMP = -500;
 const PLAYER_PHYSICS = {
-    MAX_WALK: 95 * PHYSIC_SCALE,
+    MAX_WALK: 90 * PHYSIC_SCALE,
     MAX_RUN: 180 * PHYSIC_SCALE,
     ACC_WALK: 180 * PHYSIC_SCALE,
     ACC_RUN: 400 * PHYSIC_SCALE,
@@ -101,6 +101,20 @@ const PLAYER_PHYSICS = {
     MAX_FALL: 150 * PHYSIC_SCALE,
     ACC_FALL: PLAYER_JUMP * GRAVITY
 };
+
+// Enemy physics
+const ENEMY_PHYSICS = {
+    MAX_WALK: 90 * PHYSIC_SCALE,
+    MAX_RUN: 180 * PHYSIC_SCALE,
+    ACC_WALK: 180 * PHYSIC_SCALE,
+    ACC_RUN: 400 * PHYSIC_SCALE,
+    CROUCH_SPEED: 50 * PHYSIC_SCALE,
+    JUMP_HEIGHT: PLAYER_JUMP,
+    DOUBLE_JUMP_HEIGHT: PLAYER_JUMP * .25,
+    MAX_FALL: 150 * PHYSIC_SCALE,
+    ACC_FALL: PLAYER_JUMP * GRAVITY
+};
+
 
 
 function rotateImage(spritesheet, xStart, yStart, width, height, theta, scale, flip) {

@@ -17,14 +17,12 @@ class MasterChief {
         //Animation states for chief's head/body
         this.state = 0; // 0 = Idle, 1 = walking
 
-
         //Animation states for chief's arms/gun firing
         this.isFiring = 0; // 0 = Not firing, 1 = Firing
         this.gunType = 1; // 0 = Sniper Rifle, 1 = Assault Rifle
 
-        this.degrees = 0;
+        this.degrees = null;
         this.aimRight = true;
-        this.reverse = false;
 
         this.scale = 3;
         this.walkingSpeed = 0.07;
@@ -32,14 +30,11 @@ class MasterChief {
         this.width = 30;
         this.height = 47;
 
-
         // Added for Jumping
         this.velocity = { x: 0, y: 0 };
-        this.inAir = false;
-
+        this.onGround = true;
 
         //anytime we move we should call updateBB
-
         this.updateBB();
 
         this.bodyAnimations = [];
@@ -50,9 +45,20 @@ class MasterChief {
         // Keeps track of last key pressed
         this.lastKey;
 
+        // Health Bar
+        this.maxHP = 100;
+        this.hp = 90;
+        
+        // Shield Bar
+        this.maxShield = 100;
+        this.shield = 25;
+        this.regen = 400;
     };
 
     loadAnimations() {
+        let healthBar = new MasterHealthBar(this, this.game);
+        this.game.addEntityToFront(healthBar);
+
         for (let i = 0; i <= 1; i++) { // this.state
             this.bodyAnimations.push([]);
             this.helmetAnimations.push([]);
@@ -147,18 +153,17 @@ class MasterChief {
     }
 
     update() {
-
-        // this.velocity.x = 0
-
+        if(this.shield < this.maxShield) {
+            this.regenShield();
+        }
+        
         // Updater properties
         const TICK = this.game.clockTick;
-
 
         //Calculate if player is aiming to right or left of player model
         if (this.game.mouse !== null) {
             let xOffset = 20 * this.scale;
             const x = this.game.mouse.x - (this.position.x - this.game.camera.x) - xOffset;
-            //const x = this.game.mouse.x - 936 - xOffset;
             if (x > 0) {
                 this.aimRight = true;
             } else {
@@ -166,17 +171,14 @@ class MasterChief {
             }
         }
 
-
         // Movement... kinda
         if (this.game.keys['d']) {
 
             //Check direction user is aiming to dictate walking forward or reverse
             if (this.aimRight) {
-                this.bodyAnimations[this.state].reverse = false;
-                this.helmetAnimations[this.state].reverse = false;
+                this.reverseMovement(false);
             } else {
-                this.bodyAnimations[this.state].reverse = true;
-                this.helmetAnimations[this.state].reverse = true;
+                this.reverseMovement(true);
             }
 
             this.state = 1;
@@ -186,30 +188,23 @@ class MasterChief {
             // this.game.keys['d'] === false
         }
 
-
         else if (this.game.keys['a']) {
 
             //Check direction user is aiming to dictate walking forward or reverse
             if (this.aimRight) {
-                this.helmetAnimations[this.state].reverse = true;
-                this.bodyAnimations[this.state].reverse = true;
+                this.reverseMovement(true);
             } else {
-                this.bodyAnimations[this.state].reverse = false;
-                this.helmetAnimations[this.state].reverse = false;
+                this.reverseMovement(false);
             }
+
             this.state = 1;
         }
 
 
         // else if (this.game.keys[' '] || this.game.keys['Space']) { // Jumping TODO: JUMP WHILE RUNNING!
-        //     if (!this.inAir) {
-        //         this.velocity.y -= 4;
-        //         console.log('UP')
-        //         this.inAir = true;
-        //     }
-
+        //     this.velocity.y -= 4;
+        //     console.log('UP')
         // }
-
 
         else {
             this.state = 0;
@@ -237,25 +232,25 @@ class MasterChief {
             console.log('walking right')
         }
 
-
-        if (keys[' '].pressed) {
-
-            if (!this.inAir) {
-                //         this.velocity.y -= 4;
-                //         console.log('UP')
-                this.inAir = true;
-                //     }
-                this.velocity.y += -PLAYER_JUMP;
-                this.position.y += -PLAYER_JUMP;
-                console.log('up')
-            }
-            else {
-                this.inAir = false;
-            }
+        // *** Player Movement ***
+        if (keys.a.pressed && lastKey === 'a') {
+            this.velocity.x = -5;
+            this.position.x += -5;
+            console.log('walking left')
+        }
+        if (keys.d.pressed && lastKey === 'd') {
+            this.velocity.x = 5;
+            this.position.x += 5;
+            console.log('walking right')
+        }
+        if(keys[' '].pressed && this.onGround) {
+            this.velocity.y = PLAYER_JUMP;
+            this.onGround = false;
+            // this.position.y += -PLAYER_JUMP;
+            console.log('up')
         }
 
         //this.checkForHorizontalCollisions();
-
 
         // Allow the player to fall
 
@@ -280,8 +275,7 @@ class MasterChief {
                         that.position.y = entity.BB.top - 46 * that.scale;
                         that.velocity.y = 0;
                         that.updateBB();
-                        return;
-
+                        that.onGround = true;
                     }
 
                 }
@@ -338,41 +332,14 @@ class MasterChief {
             //   }
 
         })
-
-
-        // for (let i = 0; i < this.collisionBlocks.length; i++) {
-        //     const block = this.collisionBlocks[i];
-        //     if (collision({ object1: this, object2: block })) {
-        //         if (this.velocity.x > 0) {
-        //             this.velocity.x = 0;
-        //             this.position.x = block.position.x - block.width - 0.01;
-        //             break;
-        //         }
-        //     }
-        // }
-
-
-
-
-
-
-
-
-
     };
 
-    // This method will allow the player to jump
     // jump() {
-    //     if (!this.inAir) {
-    //         this.velocity.y -= PLAYER_PHYSICS.JUMP_HEIGHT;
-    //         this.position.y -= PLAYER_PHYSICS.JUMP_HEIGHT;
-    //         this.inAir = true;
-    //     }
-
+    //     this.velocity.y -= PLAYER_PHYSICS.JUMP_HEIGHT;
+    //     this.position.y -= PLAYER_PHYSICS.JUMP_HEIGHT;
     // };
 
     draw(ctx) {
-
 
         this.findMouseAngle();
 
@@ -395,6 +362,11 @@ class MasterChief {
     };
 
     drawGun(ctx) {
+
+        // ctx.strokeStyle = "Blue";
+        // ctx.strokeRect(this.position.x - this.game.camera.x - 20, this.position.y - this.game.camera.y + 20, 40, 40);
+        // ctx.save();
+
         let a = this.gunAnimations[this.gunType][this.isFiring];
 
         a.elapsedTime += this.game.clockTick;
@@ -434,31 +406,54 @@ class MasterChief {
 
         }
 
-        //Offset to shift chief's shoulder back in it's socket when he changes face
-        if (this.aimRight) {
-            var armXOffset = 76 * this.scale;
-        } else {
-            var armXOffset = 64 * this.scale;
-        }
 
-        var armYOffset = 72 * this.scale;
+        //Adjust arm position depending on face
+        if (this.aimRight) {
+            var armXOffset = (76 * this.scale);
+        } else {
+            var armXOffset = (64 * this.scale);
+        }
+        var armYOffset = (72 * this.scale);
 
         ctx.drawImage(offscreenCanvas,
-            this.position.x - this.game.camera.x - armXOffset, this.position.y - this.game.camera.y - armYOffset,
+            (this.position.x - this.game.camera.x) - armXOffset, (this.position.y - this.game.camera.y) - armYOffset,
             this.scale * a.width, this.scale * a.width);
 
 
     };
 
     shootGun() {
+
         this.isFiring = 1;
+
+        //Capture 
+        const firingPosStatic = {
+            x: this.position.x + (20 * this.scale),
+            y: this.position.y + (15 * this.scale)
+        }
+
+        //Capture the static position
+        const targetPosStatic = {
+            x: gameEngine.mouse.x - (20 * this.scale),
+            y: gameEngine.mouse.y
+        }
+
+        let bullet = new Bullet(
+            this,
+            this.game,
+            16,
+            firingPosStatic,
+            targetPosStatic,
+            1);
+
+        this.game.addEntityToFront(bullet);
+
     };
 
     stopShooting() {
         this.isFiring = 0;
     };
-
-
+    
     findMouseAngle() {
 
         //Calculating angle from mouse
@@ -487,12 +482,43 @@ class MasterChief {
 
         }
 
+    };
+
+    reverseMovement(cond) {
+        this.bodyAnimations[this.state].reverse = cond;
+        this.helmetAnimations[this.state].reverse = cond;
+    };
+
+    takeDMG() {
+        this.regen = 400;
+        if(this.shield != 0) {
+            //TODO
+            // subtract shield
+        } else if (this.shield == 0 && this.hp > 0) {
+            //TODO
+            // subtract HP
+        } else {
+            // Dead
+        }
+    }
+
+    addHealth() {
+        // Add to Shield
+        // Add to HP
+    }
+
+    regenShield() {
+        if(this.shield < this.maxShield) {
+            if(this.regen > 0) {
+                this.regen--;
+            } else {
+                this.shield++;
+            }
+        } else {
+            this.regen = 400;
+        }
     }
 };
-
-
-
-
 
 // *** Keys ***
 const keys = {
@@ -537,7 +563,6 @@ window.addEventListener('keyup', (event) => {
             break
         case ' ':
             keys[' '].pressed = false;
-            console.log('gravity');
             break
     }
 })
