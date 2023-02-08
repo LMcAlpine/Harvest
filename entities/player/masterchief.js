@@ -13,6 +13,7 @@ class MasterChief {
         this.SpriteSheet = ASSET_MANAGER.getAsset("./sprites/ChiefSprites.png");
         this.GunSpriteSheet = ASSET_MANAGER.getAsset("./sprites/Guns.png");
 
+
         //Animation states for chief's head/body
         this.state = 0; // 0 = Idle, 1 = walking
 
@@ -146,7 +147,9 @@ class MasterChief {
 
     updateBB() {
         this.lastBB = this.BB;
-        this.BB = new BoundingBox(this.position.x, this.position.y, PARAMS.BLOCKWIDTH * this.scale, PARAMS.BLOCKWIDTH * this.scale);
+        // 35 = player width
+        // 46 = player height
+        this.BB = new BoundingBox(this.position.x, this.position.y, 35 * this.scale, 46 * this.scale);
     }
 
     update() {
@@ -180,8 +183,9 @@ class MasterChief {
 
             this.state = 1;
             //this.x += 3;
-            this.velocity.x += PLAYER_PHYSICS.MAX_RUN * TICK;
-            this.position.x += this.velocity.x * TICK;
+            // this.velocity.x += PLAYER_PHYSICS.MAX_RUN * TICK;
+            // this.position.x += this.velocity.x * TICK;
+            // this.game.keys['d'] === false
         }
 
         else if (this.game.keys['a']) {
@@ -196,10 +200,11 @@ class MasterChief {
             this.state = 1;
         }
 
-        else if (this.game.keys[' '] || this.game.keys['Space']) { // Jumping TODO: JUMP WHILE RUNNING!
-            this.velocity.y -= 4;
-            console.log('UP')
-        }
+
+        // else if (this.game.keys[' '] || this.game.keys['Space']) { // Jumping TODO: JUMP WHILE RUNNING!
+        //     this.velocity.y -= 4;
+        //     console.log('UP')
+        // }
 
         else {
             this.state = 0;
@@ -207,13 +212,23 @@ class MasterChief {
 
         // *** Player Movement ***
         if (keys.a.pressed && lastKey === 'a') {
-            this.velocity.x = -5;
-            this.position.x += -5;
+            this.velocity.x -= PLAYER_PHYSICS.MAX_WALK;
+            this.position.x += this.velocity.x * TICK;
             console.log('walking left')
+
+            if (this.velocity.x < -PLAYER_PHYSICS.MAX_WALK) {
+                this.velocity.x = 1;
+            }
         }
         if (keys.d.pressed && lastKey === 'd') {
-            this.velocity.x = 5;
-            this.position.x += 5;
+            this.velocity.x += PLAYER_PHYSICS.MAX_WALK;
+
+
+            this.position.x += this.velocity.x * TICK;;
+
+            if (this.velocity.x > PLAYER_PHYSICS.MAX_WALK) {
+                this.velocity.x = PLAYER_PHYSICS.MAX_WALK;
+            }
             console.log('walking right')
         }
 
@@ -256,38 +271,94 @@ class MasterChief {
             if (entity.BB && that.BB.collide(entity.BB)) {
                 if (that.velocity.y > 0) {
                     if ((entity instanceof Ground) && that.lastBB.bottom <= entity.BB.top) {
-                        that.position.y = entity.BB.top - PARAMS.BLOCKWIDTH * that.scale;
+                        // 46 = player height
+                        that.position.y = entity.BB.top - 46 * that.scale;
                         that.velocity.y = 0;
                         that.updateBB();
                         that.onGround = true;
                     }
 
                 }
+                else if (that.velocity.y < 0) {
+
+
+                    if ((entity instanceof Ground) && that.lastBB.top >= entity.BB.bottom) {
+                        // that.position.y = entity.BB.bottom + 46 * that.scale;
+                        console.log("colliding with top?");
+                        that.velocity.y = 0;
+                        that.position.y = entity.BB.bottom + entity.BB.height;
+                        that.updateBB();
+                        return;
+
+                    }
+                }
+                if (that.velocity.x > 0) {
+
+                    if ((entity instanceof Ground) && that.lastBB.right <= entity.BB.left) {
+                        //if (that.BB.collide(entity.leftBB)) {
+
+                        that.velocity.x = 0;
+                        that.position.x = entity.BB.left - (that.scale * 35);
+                        //      that.updateBB();
+                        return;
+
+                        //  }
+
+                    }
+
+
+
+
+
+                }
+                if (that.velocity.x < 0) {
+                    if (entity instanceof Ground) {
+                        if (that.BB.collide(entity.rightBB)) {
+
+                            that.velocity.x = 0;
+
+                            that.position.x = entity.BB.right;
+                            //   that.updateBB();
+                            return;
+                        }
+
+
+                    }
+
+
+                }
             }
+
+            //   }
+
         })
     };
 
-    jump() {
-        this.velocity.y -= PLAYER_PHYSICS.JUMP_HEIGHT;
-        this.position.y -= PLAYER_PHYSICS.JUMP_HEIGHT;
-    };
+    // jump() {
+    //     this.velocity.y -= PLAYER_PHYSICS.JUMP_HEIGHT;
+    //     this.position.y -= PLAYER_PHYSICS.JUMP_HEIGHT;
+    // };
 
     draw(ctx) {
 
         this.findMouseAngle();
 
         if (this.aimRight) {
-            this.bodyAnimations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale, false);     
-            this.helmetAnimations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale, false);  
+            this.bodyAnimations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y - this.game.camera.y, this.scale, false);
+            this.helmetAnimations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y - this.game.camera.y, this.scale, false);
         } else {
-            this.bodyAnimations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale, true);     
-            this.helmetAnimations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y, this.scale, true);  
+            this.bodyAnimations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y - this.game.camera.y, this.scale, true);
+            this.helmetAnimations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y - this.game.camera.y, this.scale, true);
         }
 
         this.drawGun(ctx);
 
-        ctx.strokeStyle = 'red';
-        ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y, this.BB.width, this.BB.height);
+        ctx.strokeStyle = 'cyan';
+        ctx.strokeRect(10 + this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
+
+
+
+
     };
 
     drawGun(ctx) {
@@ -384,7 +455,7 @@ class MasterChief {
     };
     
     findMouseAngle() {
-        
+
         //Calculating angle from mouse
         if (gameEngine.mouse !== null) {
 
