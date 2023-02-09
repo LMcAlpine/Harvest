@@ -15,6 +15,7 @@ class GameEngine {
         this.wheel = null;
         this.space = null;
         this.keys = {};
+        this.playerIndex = null;
 
         // Options and the Details
         this.options = options || {
@@ -59,7 +60,27 @@ class GameEngine {
                 console.log("CLICK", getXandY(e));
             }
             this.click = getXandY(e);
-            this.entities[0].shootGun();
+
+            //Find chief in the array (Runs every time player shoots, maybe change)
+            try {
+                this.entities[this.playerIndex].shootGun();
+            }
+            catch (err) {
+                console.log('Chief not found, searching...');
+                
+                for (var i = 0; i < this.entities.length; i++) {
+                    if (this.entities[i] instanceof MasterChief) {
+                        this.playerIndex = i;
+                        break;
+                    } 
+                }
+                this.entities[this.playerIndex].shootGun();
+            }
+            
+            // for (let i = 0; i < this.entities.length; i++) {
+            //     console.log(this.entities[i]);
+            // }
+            
         });
 
         this.ctx.canvas.addEventListener("wheel", e => {
@@ -94,8 +115,10 @@ class GameEngine {
         this.entities.push(entity);
     };
 
+    //Adds entity after index 1, but for some reason some objects like the MasterHealthBar get put at 0?
     addEntityToFront(entity) {
-        this.entities.splice(1, 0, entity);
+        this.entities.splice(2, 0, entity);
+ 
     };
 
     draw() {
@@ -119,7 +142,7 @@ class GameEngine {
             }
         }
 
-        for (let i = this.entities.length - 1; i >= 0; --i) {
+        for (let i = this.entities.length - 1; i >= 0; --i) {  
             if (this.entities[i].removeFromWorld) {
                 this.entities.splice(i, 1);
             }
@@ -132,5 +155,6 @@ class GameEngine {
         this.update();
         this.draw();
     };
+
 
 };

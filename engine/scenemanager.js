@@ -117,6 +117,9 @@ class SceneManager {
         gameEngine.addEntity(player);
         gameEngine.player = player;
 
+        this.testPosition = { x: 300, y: 700 };
+        let testEnemy = new Grunt(gameEngine, this.testPosition, this.collisionBlocks);
+        gameEngine.addEntity(testEnemy);
 
         this.loadLevel()
 
@@ -211,7 +214,7 @@ class SceneManager {
         // }
         // if (this.y < this.game.player.position.y - midpoint) {
         //     console.log("test");
-        this.y = this.game.player.position.y - midpoint;
+        this.y = this.game.player.position.y - midpointY;
         // }
 
     }

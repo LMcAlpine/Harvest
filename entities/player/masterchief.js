@@ -34,13 +34,16 @@ class MasterChief {
         this.velocity = { x: 0, y: 0 };
         this.onGround = true;
 
-        //anytime we move we should call updateBB
-        this.updateBB();
+        
 
         this.bodyAnimations = [];
         this.helmetAnimations = [];
         this.gunAnimations = [];
+        //Loads animations into array
         this.loadAnimations();
+
+        //anytime we move we should call updateBB
+        this.updateBB();
 
         // Keeps track of last key pressed
         this.lastKey;
@@ -53,11 +56,14 @@ class MasterChief {
         this.maxShield = 100;
         this.shield = 25;
         this.regen = 400;
+
+        this.healthBar = new MasterHealthBar(this, this.game);
+        //Why does this get added to the beginning of the entity list when it should be at the
+        //end with this syntax???
+        this.game.addEntity(this.healthBar);
     };
 
     loadAnimations() {
-        let healthBar = new MasterHealthBar(this, this.game);
-        this.game.addEntityToFront(healthBar);
 
         for (let i = 0; i <= 1; i++) { // this.state
             this.bodyAnimations.push([]);
@@ -214,7 +220,7 @@ class MasterChief {
         if (keys.a.pressed && lastKey === 'a') {
             this.velocity.x -= PLAYER_PHYSICS.MAX_WALK;
             this.position.x += this.velocity.x * TICK;
-            console.log('walking left')
+            //console.log('walking left')
 
             if (this.velocity.x < -PLAYER_PHYSICS.MAX_WALK) {
                 this.velocity.x = 1;
@@ -229,25 +235,25 @@ class MasterChief {
             if (this.velocity.x > PLAYER_PHYSICS.MAX_WALK) {
                 this.velocity.x = PLAYER_PHYSICS.MAX_WALK;
             }
-            console.log('walking right')
+            //console.log('walking right')
         }
 
         // *** Player Movement ***
         if (keys.a.pressed && lastKey === 'a') {
             this.velocity.x = -5;
             this.position.x += -5;
-            console.log('walking left')
+            //console.log('walking left')
         }
         if (keys.d.pressed && lastKey === 'd') {
             this.velocity.x = 5;
             this.position.x += 5;
-            console.log('walking right')
+            //console.log('walking right')
         }
         if(keys[' '].pressed && this.onGround) {
             this.velocity.y = PLAYER_JUMP;
             this.onGround = false;
             // this.position.y += -PLAYER_JUMP;
-            console.log('up')
+            //console.log('up')
         }
 
         //this.checkForHorizontalCollisions();
