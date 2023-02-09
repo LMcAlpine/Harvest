@@ -16,6 +16,7 @@ class MasterChief {
 
         //Animation states for chief's head/body
         this.state = 0; // 0 = Idle, 1 = walking
+        this.helmet = 0; // 0 = Right, 1 = Down-Right, 2 = Up-Right
 
         //Animation states for chief's arms/gun firing
         this.isFiring = 0; // 0 = Not firing, 1 = Firing
@@ -39,6 +40,7 @@ class MasterChief {
         this.bodyAnimations = [];
         this.helmetAnimations = [];
         this.gunAnimations = [];
+        this.animators = [];
         //Loads animations into array
         this.loadAnimations();
 
@@ -68,9 +70,9 @@ class MasterChief {
         for (let i = 0; i <= 1; i++) { // this.state
             this.bodyAnimations.push([]);
             this.helmetAnimations.push([]);
-            for (let j = 0; j <= 1; j++) { // 
+            for (let j = 0; j <= 2; j++) { // this.helmet
                 this.bodyAnimations[i].push([]);
-                this.helmetAnimations[i].push([]);
+                //this.helmetAnimations[i].push([]); 
             }
         }
 
@@ -120,33 +122,59 @@ class MasterChief {
 
         // ---- CHIEF BODY/HEAD ANIMATIONS ----
         // State: Idle
-        this.bodyAnimations[0] = new Animator(this.SpriteSheet,
+        // Helmet: Right
+        this.bodyAnimations[0][0] = new Animator(this.SpriteSheet,
             0, 0,
             40, 50,
             1, 1,
             0,
             false, true);
-        this.helmetAnimations[0] = new Animator(this.SpriteSheet,
+
+        // Helmet: Down Right
+        this.bodyAnimations[0][1] = new Animator(this.SpriteSheet,
             0, 50,
             40, 50,
             1, 1,
             0,
             false, true);
-
+        // Helmet: Up Right
+        this.bodyAnimations[0][2] = new Animator(this.SpriteSheet,
+            0, 2 * 50,
+            40, 50,
+            1, 1,
+            0,
+            false, true);
 
         // State: Walking
-        this.bodyAnimations[1] = new Animator(this.SpriteSheet,
+        // Helmet: Right
+        this.bodyAnimations[1][0] = new Animator(this.SpriteSheet,
             0, 0,
             40, 50,
             21, this.walkingSpeed,
             0,
             false, true);
-        this.helmetAnimations[1] = new Animator(this.SpriteSheet,
+        // Helmet: Down Right
+        this.bodyAnimations[1][1] = new Animator(this.SpriteSheet,
             0, 50,
             40, 50,
             21, this.walkingSpeed,
             0,
             false, true);
+         // Helmet: Up Right
+         this.bodyAnimations[1][2] = new Animator(this.SpriteSheet,
+            0, 2*50,
+            40, 50,
+            21, this.walkingSpeed,
+            0,
+            false, true);
+
+
+        //Load animators to be synced
+        for (let i = 0; i < this.bodyAnimations[0].length; i++) {
+            //console.log(this.bodyAnimations[i][j].currentFrame());
+            this.animators.push(this.bodyAnimations[1][i]);
+        }
+
 
 
     };
@@ -272,7 +300,17 @@ class MasterChief {
         // this.checkForVerticalCollisions();
         this.updateBB();
 
+        this.collisionChecker();
+    };
+
+    // jump() {
+    //     this.velocity.y -= PLAYER_PHYSICS.JUMP_HEIGHT;
+    //     this.position.y -= PLAYER_PHYSICS.JUMP_HEIGHT;
+    // };
+
+    collisionChecker() {
         let that = this;
+        
         this.game.entities.forEach(function (entity) {
             if (entity.BB && that.BB.collide(entity.BB)) {
                 if (that.velocity.y > 0) {
@@ -313,9 +351,6 @@ class MasterChief {
                     }
 
 
-
-
-
                 }
                 if (that.velocity.x < 0) {
                     if (entity instanceof Ground) {
@@ -338,23 +373,18 @@ class MasterChief {
             //   }
 
         })
-    };
-
-    // jump() {
-    //     this.velocity.y -= PLAYER_PHYSICS.JUMP_HEIGHT;
-    //     this.position.y -= PLAYER_PHYSICS.JUMP_HEIGHT;
-    // };
+    }
 
     draw(ctx) {
 
         this.findMouseAngle();
 
         if (this.aimRight) {
-            this.bodyAnimations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y - this.game.camera.y, this.scale, false);
-            this.helmetAnimations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y - this.game.camera.y, this.scale, false);
+            this.bodyAnimations[this.state][this.helmet].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y - this.game.camera.y, this.scale, false);
+            //this.helmetAnimations[this.state][this.helmet].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y - this.game.camera.y, this.scale, false);
         } else {
-            this.bodyAnimations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y - this.game.camera.y, this.scale, true);
-            this.helmetAnimations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y - this.game.camera.y, this.scale, true);
+            this.bodyAnimations[this.state][this.helmet].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y - this.game.camera.y, this.scale, true);
+            //this.helmetAnimations[this.state][this.helmet].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y - this.game.camera.y, this.scale, true);
         }
 
         this.drawGun(ctx);
@@ -447,7 +477,7 @@ class MasterChief {
         let bullet = new Bullet(
             this,
             this.game,
-            16,
+            4,
             firingPosStatic,
             targetPosStatic,
             1);
@@ -478,6 +508,7 @@ class MasterChief {
             let angle = Math.atan(opp / adj);
             this.degrees = Math.floor(angle * (180 / Math.PI));
 
+            //Correct angle to represent 360 degrees around player
             if (opp >= 0 && adj < 0) {
                 this.degrees += 180;
             } else if (opp < 0 && adj < 0) {
@@ -485,6 +516,21 @@ class MasterChief {
             } else if (opp < 0 && adj >= 0) {
                 this.degrees += 360;
             }
+
+            //Record the current elapsed time of animation state
+            let timeSync = this.bodyAnimations[this.state][this.helmet].elapsedTime;
+            //Set helmet animation
+            if ((this.degrees <= 90 && this.degrees > 30) || (this.degrees > 90 && this.degrees <= 150)) {
+              
+                this.helmet = 2;
+                
+            } else if ((this.degrees >= 270 && this.degrees < 330) || (this.degrees < 270 && this.degrees > 210)) {
+                this.helmet = 1;
+            } else {
+                this.helmet = 0;
+            }
+            //Restore prev captured animation elapsed time (This will sync the animations)
+            this.bodyAnimations[this.state][this.helmet].elapsedTime = timeSync;
 
         }
 

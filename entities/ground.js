@@ -56,7 +56,7 @@ class Ground {
         // ctx.fillRect(this.x + i * PARAMS.BLOCKWIDTH - this.game.camera.x, this.y + PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
 
         //  }
-        ctx.strokeStyle = 'red';
+        ctx.strokeStyle = 'blue';
         // ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
         ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
 
