@@ -8,6 +8,7 @@ class GameEngine {
 
         // Everything that will be updated and drawn each frame
         this.entities = [];
+        
 
         // Information on the input
         this.click = null;

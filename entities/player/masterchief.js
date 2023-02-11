@@ -13,6 +13,8 @@ class MasterChief {
         this.SpriteSheet = ASSET_MANAGER.getAsset("./sprites/ChiefSprites.png");
         this.GunSpriteSheet = ASSET_MANAGER.getAsset("./sprites/Guns.png");
 
+        this.lastBB = null;
+        this.BB = null;
 
         //Animation states for chief's head/body
         this.state = 0; // 0 = Idle, 1 = walking
@@ -183,7 +185,7 @@ class MasterChief {
         this.lastBB = this.BB;
         // 35 = player width
         // 46 = player height
-        this.BB = new BoundingBox(this.position.x, this.position.y, 35 * this.scale, 46 * this.scale);
+        this.BB = new BoundingBox(this.position.x + 10, this.position.y, 35 * this.scale, 46 * this.scale);
     }
 
     update() {
@@ -325,7 +327,6 @@ class MasterChief {
                 }
                 else if (that.velocity.y < 0) {
 
-
                     if ((entity instanceof Ground) && that.lastBB.top >= entity.BB.bottom) {
                         // that.position.y = entity.BB.bottom + 46 * that.scale;
                         console.log("colliding with top?");
@@ -339,11 +340,12 @@ class MasterChief {
                 if (that.velocity.x > 0) {
 
                     if ((entity instanceof Ground) && that.lastBB.right <= entity.BB.left) {
+                        console.log("Check");
                         //if (that.BB.collide(entity.leftBB)) {
 
                         that.velocity.x = 0;
                         that.position.x = entity.BB.left - (that.scale * 35);
-                        //      that.updateBB();
+                        //that.updateBB();
                         return;
 
                         //  }
@@ -359,7 +361,7 @@ class MasterChief {
                             that.velocity.x = 0;
 
                             that.position.x = entity.BB.right;
-                            //   that.updateBB();
+                            that.updateBB();
                             return;
                         }
 
@@ -390,7 +392,7 @@ class MasterChief {
         this.drawGun(ctx);
 
         ctx.strokeStyle = 'cyan';
-        ctx.strokeRect(10 + this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
+        ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
 
 
 
