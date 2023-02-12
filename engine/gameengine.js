@@ -8,6 +8,9 @@ class GameEngine {
 
         // Everything that will be updated and drawn each frame
         this.entities = [];
+        //Every
+        this.collisionEntities = [];
+        
 
         // Information on the input
         this.click = null;
@@ -113,6 +116,10 @@ class GameEngine {
 
     addEntity(entity) {
         this.entities.push(entity);
+    };
+
+    addCollisionEntity(entity) {
+        this.collisionEntities.push(entity);
     };
 
     //Adds entity after index 1, but for some reason some objects like the MasterHealthBar get put at 0?

@@ -15,6 +15,9 @@ class Bullet {
     constructor(shooter, game, bulletVelocity, firingPos, targetPos, penetration) {
         Object.assign(this, { shooter, game, bulletVelocity, firingPos, targetPos, penetration });
 
+        // this.BB = null;
+        // this.lastBB = this.BB;
+        
         this.startingX = this.firingPos.x - this.game.camera.x;
         this.startingY = this.firingPos.y - this.game.camera.y;
         let endX = (this.targetPos.x - this.shooter.position.x) + this.firingPos.x;
@@ -35,6 +38,11 @@ class Bullet {
             y: yDiff / vectorMagnitude
         }
 
+        this.bulletPosition = {
+            x: 0,
+            y: 0
+        }
+
     
         this.x = 0;
         this.aimRight = shooter.aimRight;
@@ -42,18 +50,40 @@ class Bullet {
         this.radius = 5;
         this.aliveCounter = 400;
 
+        this.updateBB();
+
     };
 
-    collide(other) {
-        //return distance(this, other) < this.radius + other.radius; //Change this
-        return true;
-    }
+    // collide(other) {
+    //     //return distance(this, other) < this.radius + other.radius; //Change this
+    //     //return true;
+    // }
 
     update() {
 
+        this.bulletPosition = {
+            x: this.startingX + (this.vectorNormalized.x * this.x),
+            y: this.startingY + (this.vectorNormalized.y * this.x)
+        }
+
+        this.collisionChecker();
+
+        this.updateBB();
+
+    };
+
+    collisionChecker() {
         for (var i = 0; i < this.game.entities.length; i++) {
             var ent = this.game.entities[i];
-            if (ent !== this && ent !== this.shooter && this.collide(ent)) {
+            //console.log(ent);
+            //console.log(this.BB.collide(ent));
+
+            if(this.BB.collide(ent)) {
+                console.log('COLLISION');
+            }
+
+            if (ent !== this && ent !== this.shooter && this.BB.collide(ent)) {
+                console.log('COLLISION');
 
                 // if (ent instanceof Brute || ent instanceof Elite
                 //     || ent instanceof Grunt || ent instanceof Hunter
@@ -70,22 +100,26 @@ class Bullet {
 
             }
         }
+    }
 
-    };
+    updateBB() {
+        this.lastBB = this.BB;
+        let width = 20;
+        let height = 20;
+        this.BB = new BoundingBox(this.bulletPosition.x - (width / 2),  this.bulletPosition.y - (height / 2), width, height);
+    }
 
     draw(ctx) {
 
-        let bulletPosition = {
-            x: this.startingX + (this.vectorNormalized.x * this.x),
-            y: this.startingY + (this.vectorNormalized.y * this.x)
-        }
+        ctx.strokeStyle = 'cyan';
+        ctx.strokeRect(this.BB.x, this.BB.y, this.BB.width, this.BB.height);
 
         //Draw circle representing bullet
         ctx.beginPath();
         ctx.fillStyle = "Green";
         ctx.arc(
-            bulletPosition.x, //X Position of circle
-            bulletPosition.y, //Y Position of circle
+            this.bulletPosition.x, //X Position of circle
+            this.bulletPosition.y, //Y Position of circle
             this.radius, 0, Math.PI * 2, false);
         ctx.fill();
         ctx.closePath();
@@ -97,6 +131,8 @@ class Bullet {
             this.removeFromWorld = true;
         }
         this.aliveCounter--;
+
+        
 
     };
 
