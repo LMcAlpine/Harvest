@@ -2,6 +2,8 @@ class Tile {
     constructor(game, x, y, tileSet, firstGID, GID) {
         Object.assign(this, { game, x, y, tileSet, firstGID, GID});
 
+        this.hasCollisions = false;
+
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/" + tileSet["image"]);
 
         this.margin = tileSet["margin"];
@@ -29,41 +31,75 @@ class Tile {
                 }
             }
         }
-        //console.log("Tile = " + tileSet["image"] + ", row = " + row + ", col = " + col);
+        
         this.idRow = row;
         this.idCol = col;
 
+        this.lastBB;
+        this.BB;
+
         this.generateCollision();
+        
 
     };
 
 
     update() {
         
-
+        this.updateBB();
+        
     }
 
     updateBB() {
-
+        this.lastBB = this.BB;
+        this.BB = new BoundingBox(this.x + this.bbX, this.y + this.bbY, this.tileWidth * PARAMS.SCALE, this.tileHeight * PARAMS.SCALE);
+        //console.log("BB X: " + this.BB.x + "BB Y: " + this.BB.y);
     }
 
     draw(ctx) {
 
         let spriteX = (this.margin + (this.tileWidth + this.spacing) * this.idCol);
         let spriteY = (this.margin + (this.tileHeight + this.spacing) * this.idRow);
+
         ctx.drawImage(this.spritesheet, spriteX, spriteY, this.tileWidth, this.tileHeight, this.x - this.game.camera.x, this.y - this.game.camera.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
 
+        //Draw Bounding box
+        if (PARAMS.DEBUG) {
+            ctx.strokeStyle = 'blue';
+            ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
+        }
     }
 
     generateCollision() {
-            // let tiles = this.tileSet["tiles"];
-            // console.log(tiles);
-            // tiles.forEach(element => {
-            //     //if Ids match, check for collision data
-            //     if (element["id"] === this.localID) {
+        let tiles = this.tileSet["tiles"];
+        if (tiles != undefined) { //Not all tileSets have tiles property
+            for (let i = 0; i < tiles.length; i++) {
+                let element = tiles[i];
 
-            //     }
-            // });
+                if (element["id"] === this.localID) { //Search tiles array for matching tile ID
+                    let objects = element["objectgroup"]["objects"];
+
+                    //Check each object to see if it is labeled for a BoundingBox object
+                    //Right now we're just going to only support having one bounding box per
+                    //tile, as going over this would require a much larger overhaul.
+                    //objects.forEach(element => { //For each for multiple bounding boxes
+                    for (let j = 0; j < objects.length; j++) {
+                        let object = objects[j];
+                        if (object["class"] === 'BB') { //Check if tile has bounding box data
+                            this.hasCollisions = true;
+                            this.bbWidth = object["width"];
+                            this.bbHeight = object["height"];
+                            this.bbX = object["x"];
+                            this.bbY = object["y"];
+                        }
+                    }
+                    //});
+
+                    break;
+                }
+            }
+        }
+        
     }
 
 };

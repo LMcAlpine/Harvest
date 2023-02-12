@@ -5,11 +5,12 @@ class Level0Generator {
         Object.assign(this, { game });
    
 
-        this.level0Map = HaloTestMap;
+        this.level0Map = HaloMap1;
         this.tileSets = {
             "GrassBlocks" : GrassBlocks,
             "tree1" : tree1,
-            "tree2" : tree2
+            "tree2" : tree2,
+            "EarthBlocks" : EarthBlocks
         }
 
         //Until we can import JSON correctly, have to copy and paste the JSON file contents
@@ -33,10 +34,12 @@ class Level0Generator {
         //         
     */
         //Sorted level data per layer
-        this.levelData = [];
+        //this.levelData = [];
+        
         let levelData = this.formatLevelData();
-
+        
         this.parseLevelData(levelData);
+        //console.log(this.game.collisionEntities);
 
     };
 
@@ -46,16 +49,18 @@ class Level0Generator {
         let layersCount = this.level0Map['layers'].length;
         for(let i = 0; i < layersCount; i++) {
             let layer = this.level0Map['layers'][i];
-            let width = layer["width"];
-            let height = layer["height"];
-
-            let rawData = layer["data"];
-            let FormattedData = [];
-            for (let id = 0; id < rawData.length; id += width) {
-                FormattedData.push(rawData.slice(id, id + width));
-            }
-            levelData.push(FormattedData);
-
+            
+            if (layer["type"] === "tilelayer"){
+                let width = layer["width"];
+                let height = layer["height"];
+                let rawData = layer["data"];
+                
+                let FormattedData = [];
+                for (let id = 0; id < rawData.length; id += width) {
+                    FormattedData.push(rawData.slice(id, id + width));
+                }
+                levelData.push(FormattedData);
+         }
         }
         return levelData;
 
@@ -66,19 +71,20 @@ class Level0Generator {
         let tileSheets = this.level0Map["tilesets"];
         let layersCount = levelData.length;
         //Parse each layer
-        for(let layerNum = layersCount - 1; layerNum > 0; layerNum--) {
+        
+        for(let layerNum = layersCount - 1; layerNum >= 0; layerNum--) {
             let layer = levelData[layerNum];
             //console.log("LAYER: " + layer);
 
             for (let row = 0; row < layer.length; row++) {
                 for(let col = 0; col < layer[row].length; col++) {
                     let GID = layer[row][col];
-
+                    
                     //Find TileSet by the GID
                     let t = 0;
                     while(t < tileSheets.length) {
                         var firstGID = tileSheets[t]["firstgid"];
-
+                        
                         if (GID < firstGID) {
                             break;
                         } 
@@ -93,15 +99,21 @@ class Level0Generator {
                         let tileSet = this.tileSets[tileSetName.slice(0,-4)];
 
                         let tile = new Tile(this.game, col * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, tileSet, firstGID, GID);
+
+                        //Check if tile has collision data
+                        if (tile.hasCollisions) {
+                            this.game.addCollisionEntity(tile);
+                        }
                         this.game.addEntity(tile);
+                        
+                        
 
                     }
 
 
                 }
             }
-
-
+            
         }
     };
 

@@ -80,7 +80,7 @@ const collision = ({ object1, object2 }) => {
 const PARAMS = {
     DEBUG: true,
     SCALE: 4,
-    BITWIDTH: 16
+    BITWIDTH: 32
 };
 
 // for the parallax 
@@ -88,7 +88,7 @@ let scrollSpeed = 2.5;
 
 // Player physics
 const PHYSIC_SCALE = 3;
-const GRAVITY = 0.5;
+const GRAVITY = 1.5;
 const PLAYER_JUMP = -500;
 const PLAYER_PHYSICS = {
     MAX_WALK: 90 * PHYSIC_SCALE,

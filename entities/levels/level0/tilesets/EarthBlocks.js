@@ -1,17 +1,17 @@
-var GrassBlocks = 
-{ "columns":3,
- "image":"Grass Blocks.png",
- "imageheight":102,
- "imagewidth":102,
- "margin":1,
- "name":"GrassBlocks",
- "spacing":2,
- "tilecount":9,
+var EarthBlocks =
+{ "columns":9,
+ "image":"EarthBlocks.png",
+ "imageheight":264,
+ "imagewidth":297,
+ "margin":0,
+ "name":"EarthBlocks",
+ "spacing":1,
+ "tilecount":72,
  "tiledversion":"1.9.2",
  "tileheight":32,
  "tiles":[
         {
-         "id":0,
+         "id":9,
          "objectgroup":
             {
              "draworder":"index",
@@ -21,12 +21,12 @@ var GrassBlocks =
                     {
                      "class":"BB",
                      "height":32,
-                     "id":7,
+                     "id":1,
                      "name":"",
                      "rotation":0,
                      "visible":true,
-                     "width":32,
-                     "x":0,
+                     "width":31,
+                     "x":1,
                      "y":0
                     }],
              "opacity":1,
@@ -37,33 +37,7 @@ var GrassBlocks =
             }
         }, 
         {
-         "id":1,
-         "objectgroup":
-            {
-             "draworder":"index",
-             "id":2,
-             "name":"",
-             "objects":[
-                    {
-                     "class":"BB",
-                     "height":32,
-                     "id":4,
-                     "name":"",
-                     "rotation":0,
-                     "visible":true,
-                     "width":32,
-                     "x":0,
-                     "y":0
-                    }],
-             "opacity":1,
-             "type":"objectgroup",
-             "visible":true,
-             "x":0,
-             "y":0
-            }
-        }, 
-        {
-         "id":2,
+         "id":10,
          "objectgroup":
             {
              "draworder":"index",
@@ -78,6 +52,32 @@ var GrassBlocks =
                      "rotation":0,
                      "visible":true,
                      "width":32,
+                     "x":0,
+                     "y":0
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            }
+        }, 
+        {
+         "id":11,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "class":"BB",
+                     "height":32,
+                     "id":1,
+                     "name":"",
+                     "rotation":0,
+                     "visible":true,
+                     "width":31,
                      "x":0,
                      "y":0
                     }],

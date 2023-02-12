@@ -64,7 +64,11 @@ class MasterChief {
         this.healthBar = new MasterHealthBar(this, this.game);
         //Why does this get added to the beginning of the entity list when it should be at the
         //end with this syntax???
+        //Update: oh duh, because chief gets declared first smh
         this.game.addEntity(this.healthBar);
+
+//temp delete later
+        this.loop = true;
     };
 
     loadAnimations() {
@@ -312,70 +316,78 @@ class MasterChief {
 
     collisionChecker() {
         let that = this;
-        
-        this.game.entities.forEach(function (entity) {
-            if (entity.BB && that.BB.collide(entity.BB)) {
-                if (that.velocity.y > 0) {
-                    if ((entity instanceof Ground) && that.lastBB.bottom <= entity.BB.top) {
-                        // 46 = player height
-                        that.position.y = entity.BB.top - 46 * that.scale;
+        // console.log(that.velocity.y);
+        //console.log(that.velocity.x);
+
+        this.game.collisionEntities.forEach(entity => {
+            if (this !== entity  && entity.BB && that.BB.collide(entity.BB)) {
+                
+                if (that.velocity.y > 0) { //falling
+                    
+                    if ((entity instanceof Tile) && that.lastBB.bottom <= entity.BB.top) {
+
+                        that.position.y = entity.BB.top - this.BB.height;
                         that.velocity.y = 0;
-                        that.updateBB();
                         that.onGround = true;
+                        that.updateBB();
+
+                        
                     }
 
-                }
-                else if (that.velocity.y < 0) {
+                    
 
-                    if ((entity instanceof Ground) && that.lastBB.top >= entity.BB.bottom) {
+                }
+                if (that.velocity.y < 0) { //Jumping
+
+                    if ((entity instanceof Tile) && that.lastBB.top >= entity.BB.bottom) {
                         // that.position.y = entity.BB.bottom + 46 * that.scale;
                         console.log("colliding with top?");
                         that.velocity.y = 0;
-                        that.position.y = entity.BB.bottom + entity.BB.height;
+                        //that.position.y = entity.BB.bottom + entity.BB.height;
                         that.updateBB();
                         return;
 
                     }
                 }
-                if (that.velocity.x > 0) {
 
-                    if ((entity instanceof Ground) && that.lastBB.right <= entity.BB.left) {
+                if (that.velocity.x > 0) { //Running right
+                        
+                    if ((entity instanceof Tile) && that.lastBB.right <= entity.BB.left) {
                         console.log("Check");
-                        //if (that.BB.collide(entity.leftBB)) {
 
+                        that.position.x = entity.BB.left - this.BB.width;
                         that.velocity.x = 0;
-                        that.position.x = entity.BB.left - (that.scale * 35);
-                        //that.updateBB();
-                        return;
-
-                        //  }
+                        that.updateBB();
+                        //return;
 
                     }
 
-
                 }
-                if (that.velocity.x < 0) {
-                    if (entity instanceof Ground) {
-                        if (that.BB.collide(entity.rightBB)) {
 
-                            that.velocity.x = 0;
+                
+                
+                // if (that.velocity.x < 0) {
+                //     if (entity instanceof Ground) {
+                //         if (that.BB.collide(entity.rightBB)) {
 
-                            that.position.x = entity.BB.right;
-                            that.updateBB();
-                            return;
-                        }
+                //             that.velocity.x = 0;
+
+                //             that.position.x = entity.BB.right;
+                //             that.updateBB();
+                //             return;
+                //         }
 
 
-                    }
+                //     }
 
-
-                }
+                // }
             }
+        });
+        
 
-            //   }
 
-        })
-    }
+
+    };
 
     draw(ctx) {
 

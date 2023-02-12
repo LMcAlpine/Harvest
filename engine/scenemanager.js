@@ -5,21 +5,13 @@ class SceneManager {
         this.game.camera = this;
         //RESET THIS BACK TO 0, JUST FOR TESTING
         this.x = 0;
-        this.y = 800;
+        this.y = 0;
         //Toggle which level to load
         this.level = 0;
 
-        //Declare player/enemies
-        this.startingPosition = { x: 400, y: 1000 };
-        let player = new MasterChief(gameEngine, this.startingPosition, this.collisionBlocks);
-        gameEngine.addEntity(player);
-        gameEngine.player = player;
+        
 
-        this.testPosition = { x: 300, y: 700 };
-        let testEnemy = new Grunt(gameEngine, this.testPosition, this.collisionBlocks);
-        gameEngine.addEntity(testEnemy);
-
-        this.loadLevel()
+        this.loadLevel();
 
     }
 
@@ -28,6 +20,17 @@ class SceneManager {
 
 
     loadLevel() {
+
+        //Declare player/enemies
+        this.startingPosition = { x: 400, y: 0 };
+        let player = new MasterChief(gameEngine, this.startingPosition, this.collisionBlocks);
+        gameEngine.addEntity(player);
+        gameEngine.addCollisionEntity(player);
+        gameEngine.player = player;
+
+        this.testPosition = { x: 300, y: 700 };
+        let testEnemy = new Grunt(gameEngine, this.testPosition, this.collisionBlocks);
+        gameEngine.addEntity(testEnemy);
 
         if (this.level === 0) {
             new Level0Generator(this.game);
@@ -54,31 +57,6 @@ class SceneManager {
 
         //         // 0 - Parse Json file
 
-        //         if (this.visualBlocks[row][column] !== 0) {
-        //             if (this.collisionBlocks[row][column] !== 0) {
-
-        //                 this.game.addEntity(new Ground(
-        //                     this.game, 
-        //                     column * PARAMS.BLOCKWIDTH, 
-        //                     row * PARAMS.BLOCKWIDTH, 
-        //                     PARAMS.BLOCKWIDTH, 
-        //                     PARAMS.BLOCKHEIGHT));
-
-        //             } else {
-
-        //                 // this.game.addEntity(new Ground(
-        //                 //     this.game, 
-        //                 //     column * PARAMS.BLOCKWIDTH, 
-        //                 //     row * PARAMS.BLOCKWIDTH, 
-        //                 //     0, 
-        //                 //     0, 
-        //                 //     0));
-        //             }
-      
-        //         }
-        //     }
-        // }
-
 
 
     }
@@ -90,8 +68,8 @@ class SceneManager {
         let midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.BLOCKWIDTH / 2;
 
         //ACTIVE CAMERA UNCOMMENT THIS
-        //this.x = this.game.player.position.x - midpointX;
-        //this.y = this.game.player.position.y - midpointY;
+        this.x = this.game.player.position.x - midpointX;
+        this.y = this.game.player.position.y - midpointY;
         
 
     }

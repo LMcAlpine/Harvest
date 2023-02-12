@@ -11,10 +11,11 @@ ASSET_MANAGER.queueDownload("./sprites/brute.png");
 
 ASSET_MANAGER.queueDownload("./sprites/bricks.png");
 ASSET_MANAGER.queueDownload("./sprites/Grass Blocks.png");
+ASSET_MANAGER.queueDownload("./sprites/EarthBlocks.png");
 ASSET_MANAGER.queueDownload("./sprites/tree1.png");
 ASSET_MANAGER.queueDownload("./sprites/tree2.png");
 
-
+ASSET_MANAGER.queueDownload("./images/FOREST.png")
 ASSET_MANAGER.queueDownload("./images/cityfar.png")
 ASSET_MANAGER.queueDownload("./images/nightsky.png")
 ASSET_MANAGER.queueDownload("./images/cityclose.png")
@@ -62,12 +63,13 @@ ASSET_MANAGER.downloadAll(() => {
 
 	gameEngine.addEntity(new SceneManager(gameEngine));
 
-	let nightsky = ASSET_MANAGER.getAsset("./images/nightsky.png")
-	let cityclose = ASSET_MANAGER.getAsset("./images/cityclose.png")
+	let nightsky = ASSET_MANAGER.getAsset("./images/nightsky.png");
+	let cityclose = ASSET_MANAGER.getAsset("./images/cityclose.png");
+	let forest = ASSET_MANAGER.getAsset("./images/FOREST.png");
 
 	// for the parallax 
-	// let layer = new Layer(cityclose, 0.1);
-	// gameEngine.addEntity(layer);
+	let layer = new Layer(forest, 0.1);
+	gameEngine.addEntity(layer);
 
 	// layer = new Layer(nightsky, 0);
 	// gameEngine.addEntity(layer)
