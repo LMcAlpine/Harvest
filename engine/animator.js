@@ -33,13 +33,7 @@ class Animator {
             ctx.drawImage(offScreenCanvas,
                 x - 15, y,
                 scale * this.height, scale * this.height); //Why does height work here and not width like when rotating gun?
-
-            // ctx.drawImage(offScreenCanvas,
-            //     this.xStart + frame * (this.width + this.framePadding), this.yStart, //source from sheet
-            //     this.width, this.height,
-            //     x -10, y,
-            //     this.width * scale,
-            //     this.height * scale);
+                
 
         } else {
 
