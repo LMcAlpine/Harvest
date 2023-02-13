@@ -1,15 +1,16 @@
 class Ground {
-    constructor(game, x, y, w, width, height, boundingBoxes) {
-        Object.assign(this, { game, x, y, w, width, height, boundingBoxes });
+    constructor(game, x, y, w, width, height, imgX, imgY) {
+        Object.assign(this, { game, x, y, w, width, height, imgX, imgY });
 
-        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/bricks.png");
-
-
-
+        // this.spritesheet = ASSET_MANAGER.getAsset("./sprites/bricks.png");
+        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/citytiles.png");
 
 
 
-        this.BB = new BoundingBox(this.x, this.y, this.w, PARAMS.BLOCKWIDTH);
+
+
+
+        this.BB = new BoundingBox(this.x, this.y, this.w, this.height);
         this.leftBB = new BoundingBox(this.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH)
         this.rightBB = new BoundingBox(this.x + PARAMS.BLOCKWIDTH, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH)
 
@@ -50,7 +51,7 @@ class Ground {
 
 
         // ctx.fillRect(this.x - this.game.camera.x, this.y, this.width, this.height);
-        ctx.drawImage(this.spritesheet, 0, 0, 16, 16, this.x - this.game.camera.x, this.y - this.game.camera.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
+        ctx.drawImage(this.spritesheet, this.imgX, this.imgY, 32, 32, Math.round(this.x - this.game.camera.x), Math.round(this.y - this.game.camera.y), PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
 
         //  ctx.fillRect(this.x + i * PARAMS.BLOCKWIDTH - this.game.camera.x, this.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
         // ctx.fillRect(this.x + i * PARAMS.BLOCKWIDTH - this.game.camera.x, this.y + PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
@@ -58,7 +59,10 @@ class Ground {
         //  }
         ctx.strokeStyle = 'red';
         // ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
-        ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
+        //  if (this.BB.x !== -1 && this.BB.y !== -1 && this.BB.width !== -1 && this.BB.height !== -1) {
+        // ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
+        // }
+
 
 
 

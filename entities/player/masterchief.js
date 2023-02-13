@@ -34,7 +34,7 @@ class MasterChief {
         this.velocity = { x: 0, y: 0 };
         this.onGround = true;
 
-        
+
 
         this.bodyAnimations = [];
         this.helmetAnimations = [];
@@ -51,7 +51,7 @@ class MasterChief {
         // Health Bar
         this.maxHP = 100;
         this.hp = 90;
-        
+
         // Shield Bar
         this.maxShield = 100;
         this.shield = 25;
@@ -159,10 +159,10 @@ class MasterChief {
     }
 
     update() {
-        if(this.shield < this.maxShield) {
+        if (this.shield < this.maxShield) {
             this.regenShield();
         }
-        
+
         // Updater properties
         const TICK = this.game.clockTick;
 
@@ -249,7 +249,7 @@ class MasterChief {
             this.position.x += 5;
             //console.log('walking right')
         }
-        if(keys[' '].pressed && this.onGround) {
+        if (keys[' '].pressed && this.onGround) {
             this.velocity.y = PLAYER_JUMP;
             this.onGround = false;
             // this.position.y += -PLAYER_JUMP;
@@ -459,7 +459,7 @@ class MasterChief {
     stopShooting() {
         this.isFiring = 0;
     };
-    
+
     findMouseAngle() {
 
         //Calculating angle from mouse
@@ -497,7 +497,7 @@ class MasterChief {
 
     takeDMG() {
         this.regen = 400;
-        if(this.shield != 0) {
+        if (this.shield != 0) {
             //TODO
             // subtract shield
         } else if (this.shield == 0 && this.hp > 0) {
@@ -514,8 +514,8 @@ class MasterChief {
     }
 
     regenShield() {
-        if(this.shield < this.maxShield) {
-            if(this.regen > 0) {
+        if (this.shield < this.maxShield) {
+            if (this.regen > 0) {
                 this.regen--;
             } else {
                 this.shield++;

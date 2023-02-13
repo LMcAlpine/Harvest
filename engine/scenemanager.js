@@ -166,15 +166,91 @@ class SceneManager {
 
         for (var row = 0; row < this.floorCollisions2D.length; row++) {
             for (var column = 0; column < this.floorCollisions2D[row].length; column++) {
-                if (this.floorCollisions2D[row][column] !== 0) {
+                if (this.floorCollisions2D[row][column] === 41) {
                     if (this.solidBlocks[row][column] !== 0) {
-                        this.game.addEntity(new Ground(this.game, column * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH));
+                        this.game.addEntity(new Ground(this.game, column * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, 128, 64));
                     } else {
-                        this.game.addEntity(new Ground(this.game, column * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, 0, 0, 0));
+                        this.game.addEntity(new Ground(this.game, column * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, 0, 0, 0, 0));
                     }
-                    // ctx.fillRect(j * 10, i * 10, 10, 10); // assuming 10 pixels per square
-                    // this.game.addEntity(new Ground(this.game, column * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, this.floorCollisions2D[row].length * PARAMS.BLOCKWIDTH, 32, 32));
-                    //  this.game.addEntity(new Ground(this.game, column * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH));
+
+                }
+                if (this.floorCollisions2D[row][column] === 3) {
+                    if (this.solidBlocks[row][column] !== 0) {
+                        this.game.addEntity(new Ground(this.game, column * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, 64, 0));
+                    } else {
+                        this.game.addEntity(new Ground(this.game, column * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, 0, 0, 0, 0));
+                    }
+
+                }
+
+                if (this.floorCollisions2D[row][column] === 39) {
+                    //   if (this.solidBlocks[row][column] !== 0) {
+                    //  this.game.addEntity(new Ground(this.game, column * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, 64, 0));
+                    //   } else {
+                    this.game.addEntity(new Ground(this.game, column * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, 0, 0, 0, 64, 64));
+                    // }
+
+                }
+
+                if (this.floorCollisions2D[row][column] === 133) {
+                    if (this.solidBlocks[row][column] !== 0) {
+                        this.game.addEntity(new Ground(this.game, column * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, 192, 224));
+                    } else {
+                        this.game.addEntity(new Ground(this.game, column * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, 0, 0, 0, 0));
+                    }
+
+                }
+
+                if (this.floorCollisions2D[row][column] === 97) {
+                    if (this.solidBlocks[row][column] !== 0) {
+                        this.game.addEntity(new Ground(this.game, column * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, 192, 160));
+                    } else {
+                        this.game.addEntity(new Ground(this.game, column * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, 0, 0, 0, 0));
+                    }
+
+                }
+
+                if (this.floorCollisions2D[row][column] === 75) {
+                    if (this.solidBlocks[row][column] !== 0) {
+                        this.game.addEntity(new Ground(this.game, column * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, 64, 128));
+                    } else {
+                        this.game.addEntity(new Ground(this.game, column * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, 0, 0, 0, 0));
+                    }
+
+                }
+
+                if (this.floorCollisions2D[row][column] === 77) {
+                    if (this.solidBlocks[row][column] !== 0) {
+                        this.game.addEntity(new Ground(this.game, column * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, 128, 128));
+                    } else {
+                        this.game.addEntity(new Ground(this.game, column * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, 0, 0, 0, 0));
+                    }
+
+                }
+                if (this.floorCollisions2D[row][column] === 99) {
+                    if (this.solidBlocks[row][column] !== 0) {
+                        this.game.addEntity(new Ground(this.game, column * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, 256, 160));
+                    } else {
+                        this.game.addEntity(new Ground(this.game, column * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, 0, 0, 0, 0));
+                    }
+
+                }
+
+                if (this.floorCollisions2D[row][column] === 37) {
+                    if (this.solidBlocks[row][column] !== 0) {
+                        this.game.addEntity(new Ground(this.game, column * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, 0, 64));
+                    } else {
+                        this.game.addEntity(new Ground(this.game, column * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, 0, 0, 0, 0));
+                    }
+
+                }
+
+                if (this.floorCollisions2D[row][column] === 135) {
+                    if (this.solidBlocks[row][column] !== 0) {
+                        this.game.addEntity(new Ground(this.game, column * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH, 256, 224));
+                    } else {
+                        this.game.addEntity(new Ground(this.game, column * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, 0, 0, 0, 0));
+                    }
 
                 }
             }
@@ -183,22 +259,6 @@ class SceneManager {
 
 
 
-
-
-        // if (this.solidBlocks[row][column] !== 0) {
-        //     this.game.addEntity(new CollisionBlock({ position: { x: column * PARAMS.BLOCKWIDTH, y: row * PARAMS.BLOCKWIDTH }, width: width, height: height }))
-        // }
-
-
-
-
-        let ground = [{ x: 0, y: 16, size: 8 }, { x: 0, y: 14, size: 1 }, { x: 8, y: 14, size: 1 }, { x: 8, y: 12, size: 1 }, { x: 9, y: 11, size: 10 }, { x: 19, y: 12, size: 1 }, { x: 20, y: 13, size: 1 }, { x: 21, y: 13, size: 5 }, { x: 71, y: 14, size: 15 }, { x: 89, y: 14, size: 63 }, { x: 154, y: 14, size: 69 }]
-
-        // for (let i = 0; i < ground.length; i++) {
-
-        //     let groundFloor = ground[i];
-        //     this.game.addEntity(new Ground(this.game, groundFloor.x * PARAMS.BLOCKWIDTH, groundFloor.y * PARAMS.BLOCKWIDTH, groundFloor.size * PARAMS.BLOCKWIDTH))
-        // }
 
     }
 
