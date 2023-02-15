@@ -17,7 +17,7 @@ class Bullet {
 
         this.BB = null;
         this.lastBB = this.BB;
-        
+
         let xDiff = this.targetPos.x - this.firingPos.x;
         let yDiff = this.targetPos.y - this.firingPos.y;
 
@@ -51,8 +51,8 @@ class Bullet {
     update() {
 
         this.position = {
-            x: ( this.position.x + (this.vectorNormalized.x * this.bulletVelocity) ),
-            y: ( this.position.y + (this.vectorNormalized.y * this.bulletVelocity) )
+            x: (this.position.x + (this.vectorNormalized.x * this.bulletVelocity)),
+            y: (this.position.y + (this.vectorNormalized.y * this.bulletVelocity))
         }
 
         this.collisionChecker();
@@ -66,16 +66,16 @@ class Bullet {
         let width = 20;
         let height = 20;
         //this.BB = new BoundingBox(this.bulletPosition.x - (width / 2),  this.bulletPosition.y - (height / 2), width, height);
-        this.BB = new BoundingBox(this.position.x - this.game.camera.x,  this.position.y - this.game.camera.y, width, height);
-        
+        this.BB = new BoundingBox(this.position.x - this.game.camera.x, this.position.y - this.game.camera.y, width, height);
+
     }
 
     collisionChecker() {
 
         this.game.collisionEntities.forEach(entity => {
             //console.log(entity);
-            
-            if(this.BB.collide(entity)) {
+
+            if (this.BB.collide(entity.BB)) {
                 console.log('COLLISION');
             }
 
@@ -99,7 +99,7 @@ class Bullet {
         });
     }
 
-    
+
 
     draw(ctx) {
         //ctx.strokeStyle = 'blue';
@@ -124,7 +124,7 @@ class Bullet {
         }
         this.aliveCounter--;
 
-        
+
 
     };
 

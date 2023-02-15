@@ -35,6 +35,7 @@ class Grunt {
 
 
 
+        this.fallingVelocity = { x: 0, y: 0 };
         this.velocity = unitVector;
         this.onGround = true;
 
@@ -142,11 +143,14 @@ class Grunt {
         //     this.position.x = 0;
         // }
 
-        this.velocity.y += PLAYER_PHYSICS.MAX_FALL * TICK;
-        this.velocity.y += GRAVITY;
+        this.position.y += this.fallingVelocity.y * TICK;
+        this.fallingVelocity.y += ENEMY_PHYSICS.MAX_FALL * TICK;
+        this.fallingVelocity.y += GRAVITY;
 
         // Update the player x and y
+        // if (!this.fallingVelocity.y > 0) { //fa
         this.position.x += this.velocity.x * TICK;
+        //}
         //UNCOMMENT
         // this.position.y += this.velocity.y * TICK;
 
@@ -162,23 +166,23 @@ class Grunt {
         this.game.collisionEntities.forEach(entity => {
             if (this !== entity && entity.BB && this.BB.collide(entity.BB)) { //falling
 
-                if (this.velocity.y > 0) { //falling
+                if (this.fallingVelocity.y > 0) { //falling
 
                     if ((entity instanceof Tile) && this.lastBB.bottom <= entity.BB.top) {
                         this.position.y = entity.BB.top - this.BB.height - this.BBYOffset;
-                        this.velocity.y = 0;
+                        this.fallingVelocity.y = 0;
                         this.onGround = true;
                         this.updateBB();
                         return;
                     }
 
                 }
-                if (this.velocity.y < 0) { //Jumping
+                if (this.fallingVelocity.y < 0) { //Jumping
 
                     if ((entity instanceof Tile) && this.lastBB.top >= entity.BB.bottom) {
                         console.log("Collide top of tile");
                         this.position.y = entity.BB.bottom - this.BBYOffset;
-                        this.velocity.y = 0;
+                        this.fallingVelocity.y = 0;
                         this.updateBB();
                         return;
 

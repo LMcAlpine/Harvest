@@ -293,7 +293,7 @@ class MasterChief {
             //console.log('up')
         }
 
-        //this.checkForHorizontalCollisions();
+  
 
         // Allow the player to fall
 
@@ -306,7 +306,7 @@ class MasterChief {
         //UNCOMMENT
         this.position.y += this.velocity.y * TICK;
 
-        // this.checkForVerticalCollisions();
+
         this.updateBB();
 
         this.collisionChecker();

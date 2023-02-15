@@ -28,7 +28,7 @@ class SceneManager {
         gameEngine.addCollisionEntity(player);
         gameEngine.player = player;
 
-        this.testPosition = { x: 500, y: 2260 };
+        this.testPosition = { x: 500, y: 1900 };
         let testEnemy = new Grunt(gameEngine, this.testPosition, this.collisionBlocks);
         gameEngine.addEntity(testEnemy);
         gameEngine.addCollisionEntity(testEnemy);
