@@ -189,7 +189,8 @@ class MasterChief {
     updateBB() {
         this.lastBB = this.BB;
 
-        this.BB = new BoundingBox(this.position.x + this.BBXOffset, 
+        this.BB = new BoundingBox(
+            this.position.x + this.BBXOffset, 
             this.position.y + this.BBYOffset, 
             (this.width * this.scale) - (18 * this.scale), 
             (this.height * this.scale) - (10 * this.scale));
@@ -486,7 +487,7 @@ class MasterChief {
             2,
             firingPosStatic,
             targetPosStatic,
-            1);
+            35);
 
         this.game.addCollisionEntity(bullet);
         this.game.addEntityToFront(bullet);
@@ -548,16 +549,18 @@ class MasterChief {
         this.helmetAnimations[this.state].reverse = cond;
     };
 
-    takeDMG() {
+    takeDamage(dmg) {
         this.regen = 400;
-        if(this.shield != 0) {
-            //TODO
-            // subtract shield
-        } else if (this.shield == 0 && this.hp > 0) {
-            //TODO
-            // subtract HP
-        } else {
-            // Dead
+
+        if(this.shield > 0) {
+            this.shield -= dmg;
+            if (this.shield <= 0) dmg = Math.abs(this.shield);
+        }
+        if (this.shield <= 0 && this.hp > 0) {
+            this.hp -= dmg;
+        } 
+        if (this.hp <= 0 ) {
+            //DEATH
         }
     }
 

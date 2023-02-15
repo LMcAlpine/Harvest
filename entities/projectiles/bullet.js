@@ -1,22 +1,15 @@
 /*  Class is used to represent a bullet that can be fired by friendlies or enemies.
-   
-    -A circle will be drawn from the firingPos towards the targetPos and will not stop until the aliveCounter
-    reaches 0.
-    -An integer will dictate whether the bullet can penetrate soft targets (enemies):
-        Pen 0: Bullet will not penetrate any enemy
-        Pen 1: Bullet will penetrate enemy if their shields are down.
-        Pen 2: Bullet will penetrate enemy regardless of shield status.
-    -Extra: Bullet loses damage output each penetration.
+
 
 */
 
 class Bullet {
     //gameengine, double, Position, Position, boolean
-    constructor(shooter, game, bulletVelocity, firingPos, targetPos, penetration) {
-        Object.assign(this, { shooter, game, bulletVelocity, firingPos, targetPos, penetration });
+    constructor(shooter, game, bulletVelocity, firingPos, targetPos, bulletDamage) {
+        Object.assign(this, { shooter, game, bulletVelocity, firingPos, targetPos, bulletDamage});
 
-        this.BB = null;
-        this.lastBB = this.BB;
+        //this.BB = null;
+        //this.lastBB = this.BB;
         
         let xDiff = this.targetPos.x - this.firingPos.x;
         let yDiff = this.targetPos.y - this.firingPos.y;
@@ -41,7 +34,7 @@ class Bullet {
         //this.aimRight = shooter.aimRight;
         this.removeFromWorld = false;
         this.radius = 5;
-        this.aliveCounter = 400;
+        this.aliveCounter = 4000;
 
         this.updateBB();
 
@@ -66,7 +59,13 @@ class Bullet {
         let width = 20;
         let height = 20;
         //this.BB = new BoundingBox(this.bulletPosition.x - (width / 2),  this.bulletPosition.y - (height / 2), width, height);
-        this.BB = new BoundingBox(this.position.x - this.game.camera.x,  this.position.y - this.game.camera.y, width, height);
+        // this.BB = new BoundingBox(this.position.x - this.game.camera.x,  this.position.y - this.game.camera.y, width, height);
+
+        this.BB = new BoundingBox(
+            this.position.x, 
+            this.position.y, 
+            width, 
+            height);
         
     }
 
@@ -75,27 +74,26 @@ class Bullet {
         this.game.collisionEntities.forEach(entity => {
             //console.log(entity);
             
-            if(this.BB.collide(entity)) {
-                console.log('COLLISION');
-            }
+            if (this.shooter !== entity && this !== entity && this.BB.collide(entity.BB)) {//Collision
+                if (entity instanceof Tile) { 
+                    this.removeFromWorld = true;
 
-            // if (ent !== this && ent !== this.shooter && this.BB.collide(ent)) {
-            //     console.log('COLLISION');
+                } else if (entity instanceof Grunt) {
+                    
+                    entity.takeDamage(this.bulletDamage);
+                    
+                    
+                } else if (entity instanceof MasterChief) {
+                    console.log("cheese ouch");
+                    entity.takeDamage(this.bulletDamage);
 
-            //     // if (ent instanceof Brute || ent instanceof Elite
-            //     //     || ent instanceof Grunt || ent instanceof Hunter
-            //     //     || ent instanceof Jackal) {
+                    this.removeFromWorld = true;
+                }
 
-
-
-            //     // } else if (ent instanceof MasterChief) {
-
-
-            //     // } else {
-            //     //     this.removeFromWorld = true;
-            //     // }
-
-            // }
+                
+            } 
+                
+                
         });
     }
 
@@ -105,8 +103,8 @@ class Bullet {
         //ctx.strokeStyle = 'blue';
         //ctx.strokeRect(972, 540, 100, 100);
 
-        ctx.strokeStyle = 'cyan';
-        ctx.strokeRect(this.BB.x, this.BB.y, this.BB.width, this.BB.height);
+        ctx.strokeStyle = 'red';
+        ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
 
         //Draw circle representing bullet
         ctx.beginPath();
