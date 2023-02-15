@@ -5,6 +5,7 @@ class MasterChief {
         // Updated the constructor
         Object.assign(this, { game, position, collisionBlocks });
 
+        this.scale = 3;
         //this.game = game;
         this.cache = [];
 
@@ -15,6 +16,8 @@ class MasterChief {
 
         this.lastBB = null;
         this.BB = null;
+        this.BBXOffset = 10 * this.scale; //Offset for adjusting BB
+        this.BBYOffset = 6 * this.scale; //Offset for adjusting BB
 
         //Animation states for chief's head/body
         this.state = 0; // 0 = Idle, 1 = walking
@@ -27,11 +30,11 @@ class MasterChief {
         this.degrees = null;
         this.aimRight = true;
 
-        this.scale = 3;
+        
         this.walkingSpeed = 0.07;
 
-        this.width = 30;
-        this.height = 47;
+        this.width = 40;
+        this.height = 50;
 
         // Added for Jumping
         this.velocity = { x: 0, y: 0 };
@@ -67,8 +70,6 @@ class MasterChief {
         //Update: oh duh, because chief gets declared first smh
         this.game.addEntity(this.healthBar);
 
-//temp delete later
-        this.loop = true;
     };
 
     loadAnimations() {
@@ -187,9 +188,11 @@ class MasterChief {
 
     updateBB() {
         this.lastBB = this.BB;
-        // 35 = player width
-        // 46 = player height
-        this.BB = new BoundingBox(this.position.x + 10, this.position.y, 35 * this.scale, 46 * this.scale);
+
+        this.BB = new BoundingBox(this.position.x + this.BBXOffset, 
+            this.position.y + this.BBYOffset, 
+            (this.width * this.scale) - (18 * this.scale), 
+            (this.height * this.scale) - (10 * this.scale));
     }
 
     update() {
@@ -309,78 +312,63 @@ class MasterChief {
         this.collisionChecker();
     };
 
-    // jump() {
-    //     this.velocity.y -= PLAYER_PHYSICS.JUMP_HEIGHT;
-    //     this.position.y -= PLAYER_PHYSICS.JUMP_HEIGHT;
-    // };
-
     collisionChecker() {
-        let that = this;
-        // console.log(that.velocity.y);
-        //console.log(that.velocity.x);
 
         this.game.collisionEntities.forEach(entity => {
-            if (this !== entity  && entity.BB && that.BB.collide(entity.BB)) {
+            if (this !== entity  && entity.BB && this.BB.collide(entity.BB)) { //falling
                 
-                if (that.velocity.y > 0) { //falling
+                if (this.velocity.y > 0) { //falling
                     
-                    if ((entity instanceof Tile) && that.lastBB.bottom <= entity.BB.top) {
-
-                        that.position.y = entity.BB.top - this.BB.height;
-                        that.velocity.y = 0;
-                        that.onGround = true;
-                        that.updateBB();
-
-                        
+                    if ((entity instanceof Tile) && this.lastBB.bottom <= entity.BB.top) {
+                        this.position.y = entity.BB.top - this.BB.height - this.BBYOffset;
+                        this.velocity.y = 0;
+                        this.onGround = true;
+                        this.updateBB();
+                        return;
                     }
 
-                    
-
                 }
-                if (that.velocity.y < 0) { //Jumping
+                if (this.velocity.y < 0) { //Jumping
 
-                    if ((entity instanceof Tile) && that.lastBB.top >= entity.BB.bottom) {
-                        // that.position.y = entity.BB.bottom + 46 * that.scale;
-                        console.log("colliding with top?");
-                        that.velocity.y = 0;
-                        //that.position.y = entity.BB.bottom + entity.BB.height;
-                        that.updateBB();
+                    if ((entity instanceof Tile) && this.lastBB.top >= entity.BB.bottom) {
+                        console.log("Collide top of tile");
+                        this.position.y = entity.BB.bottom - this.BBYOffset;
+                        this.velocity.y = 0;
+                        this.updateBB();
                         return;
 
                     }
                 }
+  
+                //Other cases for hitting tile
+                if ((entity instanceof Tile)) {
+                    //console.log("Check");
+                    
+                    if (this.BB.left <= entity.BB.right 
+                        && this.BB.bottom > entity.BB.top
+                        && this.velocity.x < 0) { //Touching right side
 
-                if (that.velocity.x > 0) { //Running right
-                        
-                    if ((entity instanceof Tile) && that.lastBB.right <= entity.BB.left) {
-                        console.log("Check");
+                        console.log("Touching right");
+                        this.position.x = entity.BB.right - this.BBXOffset;
 
-                        that.position.x = entity.BB.left - this.BB.width;
-                        that.velocity.x = 0;
-                        that.updateBB();
-                        //return;
-
+                        if (this.velocity.x < 0) this.velocity.x = 0;
                     }
 
+                    if (this.BB.right >= entity.BB.left 
+                        && this.BB.bottom > entity.BB.top 
+                        && this.velocity.x > 0) {  //Touching left side
+
+                        console.log("Touching left");
+                        this.position.x = entity.BB.left - this.BB.width - this.BBXOffset;
+                        
+                        if (this.velocity.x > 0) this.velocity.x = 0;
+                    }
+         
                 }
 
-                
-                
-                // if (that.velocity.x < 0) {
-                //     if (entity instanceof Ground) {
-                //         if (that.BB.collide(entity.rightBB)) {
 
-                //             that.velocity.x = 0;
-
-                //             that.position.x = entity.BB.right;
-                //             that.updateBB();
-                //             return;
-                //         }
-
-
-                //     }
-
-                // }
+//this.BB.top < entity.BB.bottom)
+       
             }
         });
         
@@ -403,8 +391,14 @@ class MasterChief {
 
         this.drawGun(ctx);
 
+        //craw ths BB
         ctx.strokeStyle = 'cyan';
         ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
+
+        //Drawthe lastBB
+        ctx.strokeStyle = 'red';
+        ctx.strokeRect(this.lastBB.x - this.game.camera.x, this.lastBB.y - this.game.camera.y, this.BB.width, this.BB.height);
+
 
 
 
