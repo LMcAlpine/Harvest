@@ -5,7 +5,7 @@ class Level0Generator {
         Object.assign(this, { game });
    
 
-        this.level0Map = HaloMap1;
+        this.level0Map = HaloTestMap;
         this.tileSets = {
             "GrassBlocks" : GrassBlocks,
             "tree1" : tree1,

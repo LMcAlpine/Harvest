@@ -20,6 +20,8 @@ class GameEngine {
         this.keys = {};
         this.playerIndex = null;
 
+        
+
         // Options and the Details
         this.options = options || {
             debugging: false,
@@ -43,6 +45,7 @@ class GameEngine {
 
     startInput() {
 
+
         var that = this;
         const getXandY = e => ({
             x: e.clientX - this.ctx.canvas.getBoundingClientRect().left,
@@ -58,12 +61,27 @@ class GameEngine {
 
         });
 
-        this.ctx.canvas.addEventListener("click", e => {
-            if (this.options.debugging) {
-                console.log("CLICK", getXandY(e));
-            }
-            this.click = getXandY(e);
+        // ClickAndHold.apply(this.ctx.canvas, () => {
+        //     console.log("Mouse Down!");
+        //     //Find chief in the array (Runs every time player shoots, maybe change)
+        //     try {
+        //         this.entities[this.playerIndex].shootGun();
+        //     }
+        //     catch (err) {
+        //         console.log('Chief not found, searching...');
+                
+        //         for (var i = 0; i < this.entities.length; i++) {
+        //             if (this.entities[i] instanceof MasterChief) {
+        //                 this.playerIndex = i;
+        //                 break;
+        //             } 
+        //         }
+        //         this.entities[this.playerIndex].shootGun();
+        //     }
+        // });
 
+        this.ctx.canvas.addEventListener("mousedown", e => {         
+            console.log("Mousedown");
             //Find chief in the array (Runs every time player shoots, maybe change)
             try {
                 this.entities[this.playerIndex].shootGun();
@@ -80,9 +98,10 @@ class GameEngine {
                 this.entities[this.playerIndex].shootGun();
             }
             
-            // for (let i = 0; i < this.entities.length; i++) {
-            //     console.log(this.entities[i]);
-            // }
+        });
+
+        this.ctx.canvas.addEventListener("mouseup", e => {
+            console.log("Mouseup");
             
         });
 
@@ -122,7 +141,7 @@ class GameEngine {
         this.collisionEntities.push(entity);
     };
 
-    //Adds entity after index 1, but for some reason some objects like the MasterHealthBar get put at 0?
+    //Adds entity after index 2
     addEntityToFront(entity) {
         this.entities.splice(2, 0, entity);
  
@@ -154,6 +173,8 @@ class GameEngine {
                 this.entities.splice(i, 1);
             }
         }
+
+        
 
     };
 
