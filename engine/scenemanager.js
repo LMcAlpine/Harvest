@@ -9,7 +9,7 @@ class SceneManager {
         //Toggle which level to load
         this.level = 0;
 
-        
+
 
         this.loadLevel();
 
@@ -22,13 +22,13 @@ class SceneManager {
     loadLevel() {
 
         //Declare player/enemies
-        this.startingPosition = { x: 400, y: 0 };
+        this.startingPosition = { x: 500, y: 1250 };
         let player = new MasterChief(gameEngine, this.startingPosition, this.collisionBlocks);
         gameEngine.addEntity(player);
         gameEngine.addCollisionEntity(player);
         gameEngine.player = player;
 
-        this.testPosition = { x: 300, y: 700 };
+        this.testPosition = { x: 1200, y: 1400 };
         let testEnemy = new Grunt(gameEngine, this.testPosition, this.collisionBlocks);
         gameEngine.addEntity(testEnemy);
 
@@ -70,7 +70,7 @@ class SceneManager {
         //ACTIVE CAMERA UNCOMMENT THIS
         this.x = this.game.player.position.x - midpointX;
         this.y = this.game.player.position.y - midpointY;
-        
+
 
     }
 

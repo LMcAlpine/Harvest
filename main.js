@@ -5,6 +5,8 @@ ASSET_MANAGER.queueDownload("./sprites/tempPlayer.png");
 ASSET_MANAGER.queueDownload("./sprites/ChiefSprites.png");
 ASSET_MANAGER.queueDownload("./sprites/Guns.png");
 
+
+ASSET_MANAGER.queueDownload("./sprites/GruntSprites.png");
 ASSET_MANAGER.queueDownload("./sprites/grunt.png");
 ASSET_MANAGER.queueDownload("./sprites/elite.png");
 ASSET_MANAGER.queueDownload("./sprites/brute.png");
