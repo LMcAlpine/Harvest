@@ -30,7 +30,7 @@ class MasterChief {
         this.degrees = null;
         this.aimRight = true;
 
-        
+
         this.walkingSpeed = 0.07;
 
         this.width = 40;
@@ -167,9 +167,9 @@ class MasterChief {
             21, this.walkingSpeed,
             0,
             false, true);
-         // Helmet: Up Right
-         this.bodyAnimations[1][2] = new Animator(this.SpriteSheet,
-            0, 2*50,
+        // Helmet: Up Right
+        this.bodyAnimations[1][2] = new Animator(this.SpriteSheet,
+            0, 2 * 50,
             40, 50,
             21, this.walkingSpeed,
             0,
@@ -189,9 +189,9 @@ class MasterChief {
     updateBB() {
         this.lastBB = this.BB;
 
-        this.BB = new BoundingBox(this.position.x + this.BBXOffset, 
-            this.position.y + this.BBYOffset, 
-            (this.width * this.scale) - (18 * this.scale), 
+        this.BB = new BoundingBox(this.position.x + this.BBXOffset,
+            this.position.y + this.BBYOffset,
+            (this.width * this.scale) - (18 * this.scale),
             (this.height * this.scale) - (10 * this.scale));
     }
 
@@ -315,10 +315,10 @@ class MasterChief {
     collisionChecker() {
 
         this.game.collisionEntities.forEach(entity => {
-            if (this !== entity  && entity.BB && this.BB.collide(entity.BB)) { //falling
-                
+            if (this !== entity && entity.BB && this.BB.collide(entity.BB)) { //falling
+
                 if (this.velocity.y > 0) { //falling
-                    
+
                     if ((entity instanceof Tile) && this.lastBB.bottom <= entity.BB.top) {
                         this.position.y = entity.BB.top - this.BB.height - this.BBYOffset;
                         this.velocity.y = 0;
@@ -339,12 +339,12 @@ class MasterChief {
 
                     }
                 }
-  
+
                 //Other cases for hitting tile
                 if ((entity instanceof Tile)) {
                     //console.log("Check");
-                    
-                    if (this.BB.left <= entity.BB.right 
+
+                    if (this.BB.left <= entity.BB.right
                         && this.BB.bottom > entity.BB.top
                         && this.velocity.x < 0) { //Touching right side
 
@@ -354,24 +354,24 @@ class MasterChief {
                         if (this.velocity.x < 0) this.velocity.x = 0;
                     }
 
-                    if (this.BB.right >= entity.BB.left 
-                        && this.BB.bottom > entity.BB.top 
+                    if (this.BB.right >= entity.BB.left
+                        && this.BB.bottom > entity.BB.top
                         && this.velocity.x > 0) {  //Touching left side
 
                         console.log("Touching left");
                         this.position.x = entity.BB.left - this.BB.width - this.BBXOffset;
-                        
+
                         if (this.velocity.x > 0) this.velocity.x = 0;
                     }
-         
+
                 }
 
 
-//this.BB.top < entity.BB.bottom)
-       
+                //this.BB.top < entity.BB.bottom)
+
             }
         });
-        
+
 
 
 
@@ -391,11 +391,11 @@ class MasterChief {
 
         this.drawGun(ctx);
 
-        //craw ths BB
+        //draw ths BB
         ctx.strokeStyle = 'cyan';
         ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
 
-        //Drawthe lastBB
+        //Draw the lastBB
         ctx.strokeStyle = 'red';
         ctx.strokeRect(this.lastBB.x - this.game.camera.x, this.lastBB.y - this.game.camera.y, this.BB.width, this.BB.height);
 
@@ -529,9 +529,9 @@ class MasterChief {
             let timeSync = this.bodyAnimations[this.state][this.helmet].elapsedTime;
             //Set helmet animation
             if ((this.degrees <= 90 && this.degrees > 30) || (this.degrees > 90 && this.degrees <= 150)) {
-              
+
                 this.helmet = 2;
-                
+
             } else if ((this.degrees >= 270 && this.degrees < 330) || (this.degrees < 270 && this.degrees > 210)) {
                 this.helmet = 1;
             } else {

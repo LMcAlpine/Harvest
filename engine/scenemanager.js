@@ -28,15 +28,16 @@ class SceneManager {
         gameEngine.addCollisionEntity(player);
         gameEngine.player = player;
 
-        this.testPosition = { x: 1200, y: 1400 };
+        this.testPosition = { x: 500, y: 2260 };
         let testEnemy = new Grunt(gameEngine, this.testPosition, this.collisionBlocks);
         gameEngine.addEntity(testEnemy);
+        gameEngine.addCollisionEntity(testEnemy);
 
         if (this.level === 0) {
             new Level0Generator(this.game);
         }
 
-               
+
         /*
             PLAN: 
             0) Loop through each layer starting with the top layer
