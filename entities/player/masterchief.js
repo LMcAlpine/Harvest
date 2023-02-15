@@ -277,13 +277,13 @@ class MasterChief {
 
         // *** Player Movement ***
         if (keys.a.pressed && lastKey === 'a') {
-            this.velocity.x = -5;
-            this.position.x += -5;
+            this.velocity.x = -3;
+            this.position.x += -3;
             //console.log('walking left')
         }
         if (keys.d.pressed && lastKey === 'd') {
-            this.velocity.x = 5;
-            this.position.x += 5;
+            this.velocity.x = 3;
+            this.position.x += 3;
             //console.log('walking right')
         }
         if (keys[' '].pressed && this.onGround) {
@@ -315,8 +315,8 @@ class MasterChief {
     collisionChecker() {
 
         this.game.collisionEntities.forEach(entity => {
-            if (this !== entity && entity.BB && this.BB.collide(entity.BB)) { //falling
-
+            if (this !== entity  && entity.BB && this.BB.collide(entity.BB)) { //Collision
+                
                 if (this.velocity.y > 0) { //falling
 
                     if ((entity instanceof Tile) && this.lastBB.bottom <= entity.BB.top) {
@@ -366,9 +366,7 @@ class MasterChief {
 
                 }
 
-
-                //this.BB.top < entity.BB.bottom)
-
+       
             }
         });
 
@@ -478,18 +476,19 @@ class MasterChief {
 
         //Capture the static position
         const targetPosStatic = {
-            x: gameEngine.mouse.x - (20 * this.scale),
-            y: gameEngine.mouse.y
+            x: gameEngine.mouse.x - (20 * this.scale) + this.game.camera.x,
+            y: gameEngine.mouse.y + this.game.camera.y
         }
 
         let bullet = new Bullet(
             this,
             this.game,
-            4,
+            2,
             firingPosStatic,
             targetPosStatic,
             1);
 
+        this.game.addCollisionEntity(bullet);
         this.game.addEntityToFront(bullet);
 
     };
