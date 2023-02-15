@@ -1,7 +1,6 @@
 const gameEngine = new GameEngine();
 const ASSET_MANAGER = new AssetManager();
 
-ASSET_MANAGER.queueDownload("./sprites/tempPlayer.png");
 ASSET_MANAGER.queueDownload("./sprites/ChiefSprites.png");
 ASSET_MANAGER.queueDownload("./sprites/Guns.png");
 
@@ -9,7 +8,6 @@ ASSET_MANAGER.queueDownload("./sprites/grunt.png");
 ASSET_MANAGER.queueDownload("./sprites/elite.png");
 ASSET_MANAGER.queueDownload("./sprites/brute.png");
 
-ASSET_MANAGER.queueDownload("./sprites/bricks.png");
 ASSET_MANAGER.queueDownload("./sprites/Grass Blocks.png");
 ASSET_MANAGER.queueDownload("./sprites/EarthBlocks.png");
 ASSET_MANAGER.queueDownload("./sprites/tree1.png");
