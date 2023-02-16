@@ -4,6 +4,8 @@ const ASSET_MANAGER = new AssetManager();
 ASSET_MANAGER.queueDownload("./sprites/ChiefSprites.png");
 ASSET_MANAGER.queueDownload("./sprites/Guns.png");
 
+
+ASSET_MANAGER.queueDownload("./sprites/GruntSprites.png");
 ASSET_MANAGER.queueDownload("./sprites/grunt.png");
 ASSET_MANAGER.queueDownload("./sprites/elite.png");
 ASSET_MANAGER.queueDownload("./sprites/brute.png");
@@ -29,7 +31,7 @@ ASSET_MANAGER.downloadAll(() => {
 	PARAMS.BLOCKWIDTH = PARAMS.BITWIDTH * PARAMS.SCALE;
 	PARAMS.CANVAS_WIDTH = canvas.width;
 	PARAMS.CANVAS_HEIGHT = canvas.height;
-	
+
 
 
 	//document.documentElement.style.cursor = 'none';
