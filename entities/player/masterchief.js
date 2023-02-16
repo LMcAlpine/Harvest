@@ -293,7 +293,7 @@ class MasterChief {
             //console.log('up')
         }
 
-  
+
 
         // Allow the player to fall
 
@@ -315,8 +315,8 @@ class MasterChief {
     collisionChecker() {
 
         this.game.collisionEntities.forEach(entity => {
-            if (this !== entity  && entity.BB && this.BB.collide(entity.BB)) { //Collision
-                
+            if (this !== entity && entity.BB && this.BB.collide(entity.BB)) { //Collision
+
                 if (this.velocity.y > 0) { //falling
 
                     if ((entity instanceof Tile) && this.lastBB.bottom <= entity.BB.top) {
@@ -366,7 +366,7 @@ class MasterChief {
 
                 }
 
-       
+
             }
         });
 
@@ -548,18 +548,21 @@ class MasterChief {
         this.helmetAnimations[this.state].reverse = cond;
     };
 
-    takeDMG() {
+    takeDamage(dmg) {
         this.regen = 400;
-        if (this.shield != 0) {
-            //TODO
-            // subtract shield
-        } else if (this.shield == 0 && this.hp > 0) {
-            //TODO
-            // subtract HP
-        } else {
-            // Dead
+
+        if (this.shield > 0) {
+            this.shield -= dmg;
+            if (this.shield <= 0) dmg = Math.abs(this.shield);
+        }
+        if (this.shield <= 0 && this.hp > 0) {
+            this.hp -= dmg;
+        }
+        if (this.hp <= 0) {
+            this.removeFromWorld = true;
         }
     }
+
 
     addHealth() {
         // Add to Shield
