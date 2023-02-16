@@ -87,7 +87,7 @@ class Bullet {
                     this.removeFromWorld = true;
 
                 } else if (entity instanceof Grunt) {
-                    
+                    this.removeFromWorld = true;
                     entity.takeDamage(this.bulletDamage);
                     
                     

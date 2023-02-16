@@ -59,7 +59,7 @@ class MasterChief {
         // Keeps track of last key pressed
         this.lastKey;
 
-        this.alive = true;
+        this.isAlive = true;
         // Health Bar
         this.maxHP = 100;
         this.hp = 90;
@@ -266,7 +266,7 @@ class MasterChief {
         // Updater properties
         const TICK = this.game.clockTick;
 
-        if (this.alive) {
+        if (this.isAlive) {
 
             if (this.isFiring === 1) {
 
@@ -463,7 +463,7 @@ class MasterChief {
 
     draw(ctx) {
 
-        if (this.alive) {
+        if (this.isAlive) {
             this.findMouseAngle();
 
             if (this.aimRight) {
@@ -651,7 +651,7 @@ class MasterChief {
     }
 
     die() {
-        this.alive = false;
+        this.isAlive = false;
     }
 
 };

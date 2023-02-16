@@ -128,7 +128,7 @@ class Grunt {
 
 
         let distance = getDistance(this.position, this.target);
-        console.log(distance);
+        //console.log(distance);
         this.velocity = { x: (this.target.x - this.position.x) / distance * 100, y: (this.target.y - this.position.y) / distance * 100 };
 
         if (this.velocity.x > 0) {
