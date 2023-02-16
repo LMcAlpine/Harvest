@@ -12,7 +12,7 @@ class Gun {
             [Fire Rate per Tick (0 indicates semi-auto), Bullet Damage, Bullet Velocity]
         */
         this.guns = {
-            "Assault_Rifle": [10, 35, 15],
+            "Assault_Rifle": [6, 20, 15],
             "Sniper": [0, 150, 75],
             "Plasma_Pistol": [0, 20, 7],
             "SMG": [15, 25, 18],

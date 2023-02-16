@@ -29,10 +29,10 @@ class Animator {
                 0, scale,
                 true);
 
-
+            const max = Math.max(this.width, this.height);
             ctx.drawImage(offScreenCanvas,
                 x - 15, y,
-                scale * this.height, scale * this.height); //Why does height work here and not width like when rotating gun?
+                scale * max, scale * max); //Why does height work here and not width like when rotating gun?
                 
 
         } else {

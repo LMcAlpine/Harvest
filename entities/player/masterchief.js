@@ -263,6 +263,9 @@ class MasterChief {
 
     update() {
 
+        // Updater properties
+        const TICK = this.game.clockTick;
+
         if (this.alive) {
 
             if (this.isFiring === 1) {
@@ -285,8 +288,7 @@ class MasterChief {
                 this.regenShield();
             }
             
-            // Updater properties
-            const TICK = this.game.clockTick;
+            
 
             //Calculate if player is aiming to right or left of player model
             if (this.game.mouse !== null) {
@@ -379,7 +381,7 @@ class MasterChief {
             }
 
             // Allow the player to fall
-
+        }
             //UNCOMMENT
             this.velocity.y += PLAYER_PHYSICS.MAX_FALL * TICK;
             this.velocity.y += GRAVITY;
@@ -388,7 +390,7 @@ class MasterChief {
             // this.position.x += this.velocity.x * TICK;
             //UNCOMMENT
             this.position.y += this.velocity.y * TICK;
-        }
+        
         this.updateBB();
 
         this.collisionChecker();
@@ -497,7 +499,7 @@ class MasterChief {
             } else {
                 this.deathAnimation.drawFrame(this.game.clockTick, ctx, 
                     this.position.x - this.game.camera.x, 
-                    this.position.y - this.game.camera.y, 
+                    this.position.y - this.game.camera.y - 30, 
                     this.scale, true);
             }
             
@@ -563,34 +565,6 @@ class MasterChief {
 
 
     };
-
-    // shootGun() {
-
-    //     console.log("shooting gun");
-    //     //Capture 
-    //     const firingPosStatic = {
-    //         x: this.position.x + (20 * this.scale),
-    //         y: this.position.y + (20 * this.scale)
-    //     }
-
-    //     //Capture the static position
-    //     const targetPosStatic = {
-    //         x: gameEngine.mouse.x - (20 * this.scale) + this.game.camera.x,
-    //         y: gameEngine.mouse.y + this.game.camera.y
-    //     }
-
-    //     let bullet = new Bullet(
-    //         this,
-    //         this.game,
-    //         14,
-    //         firingPosStatic,
-    //         targetPosStatic,
-    //         35);
-
-    //     this.game.addCollisionEntity(bullet);
-    //     this.game.addEntityToFront(bullet);
-
-    // };
     
     findMouseAngle() {
 
