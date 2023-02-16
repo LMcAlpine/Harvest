@@ -46,7 +46,6 @@ class GameEngine {
     startInput() {
 
 
-        var that = this;
         const getXandY = e => ({
             x: e.clientX - this.ctx.canvas.getBoundingClientRect().left,
             y: e.clientY - this.ctx.canvas.getBoundingClientRect().top
@@ -61,30 +60,12 @@ class GameEngine {
 
         });
 
-        // ClickAndHold.apply(this.ctx.canvas, () => {
-        //     console.log("Mouse Down!");
-        //     //Find chief in the array (Runs every time player shoots, maybe change)
-        //     try {
-        //         this.entities[this.playerIndex].shootGun();
-        //     }
-        //     catch (err) {
-        //         console.log('Chief not found, searching...');
-                
-        //         for (var i = 0; i < this.entities.length; i++) {
-        //             if (this.entities[i] instanceof MasterChief) {
-        //                 this.playerIndex = i;
-        //                 break;
-        //             } 
-        //         }
-        //         this.entities[this.playerIndex].shootGun();
-        //     }
-        // });
 
         this.ctx.canvas.addEventListener("mousedown", e => {         
             console.log("Mousedown");
             //Find chief in the array (Runs every time player shoots, maybe change)
             try {
-                this.entities[this.playerIndex].shootGun();
+                this.entities[this.playerIndex].isFiring = 1;
             }
             catch (err) {
                 console.log('Chief not found, searching...');
@@ -95,13 +76,14 @@ class GameEngine {
                         break;
                     } 
                 }
-                this.entities[this.playerIndex].shootGun();
+                this.entities[this.playerIndex].isFiring = 1;
             }
             
         });
 
         this.ctx.canvas.addEventListener("mouseup", e => {
             console.log("Mouseup");
+            this.entities[this.playerIndex].isFiring = 0;
             
         });
 

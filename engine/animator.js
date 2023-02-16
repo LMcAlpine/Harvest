@@ -26,7 +26,7 @@ class Animator {
             let offScreenCanvas = rotateImage(this.spritesheet,
                 this.xStart + frame * (this.width + this.framePadding), this.yStart,
                 this.width, this.height,
-                0, 1,
+                0, scale,
                 true);
 
 
@@ -45,10 +45,6 @@ class Animator {
                 this.height * scale);
         }
 
-        if (false) {
-            ctx.strokeStyle = 'Green';
-            ctx.strokeRect(x, y, this.width * scale, this.height * scale);
-        }
     };
 
     currentFrame() {
