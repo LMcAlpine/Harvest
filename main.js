@@ -20,6 +20,8 @@ ASSET_MANAGER.queueDownload("./images/cityfar.png")
 ASSET_MANAGER.queueDownload("./images/nightsky.png")
 ASSET_MANAGER.queueDownload("./images/cityclose.png")
 
+ASSET_MANAGER.queueDownload("./odst.png")
+
 ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");
 	const ctx = canvas.getContext("2d");

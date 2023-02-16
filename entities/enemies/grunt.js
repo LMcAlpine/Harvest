@@ -4,7 +4,7 @@ class Grunt {
         Object.assign(this, { game, position, collisionBlocks });
 
         // Properties
-        this.scale = 3;
+        this.scale = 2.5;
         this.state = 1; //0 = Idle, 1 = Moving
         this.isFiring = 0; // 0 = Not firing, 1 = Firing
         this.SpriteSheet = ASSET_MANAGER.getAsset("./sprites/grunt.png");
@@ -186,7 +186,7 @@ class Grunt {
         if (this.currentState == 'chasing') {
             this.position.x += this.velocity.x * TICK;
             if (distance < 300) {
-               // this.shootGun();
+                // this.shootGun();
             }
 
         }

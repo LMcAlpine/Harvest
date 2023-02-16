@@ -22,7 +22,7 @@ class SceneManager {
     loadLevel() {
 
         //Declare player/enemies
-        this.startingPosition = { x: 1100, y: 2200 };
+        this.startingPosition = { x: 260, y: 2200 };
         let player = new MasterChief(gameEngine, this.startingPosition, this.collisionBlocks);
         gameEngine.addEntity(player);
         gameEngine.addCollisionEntity(player);
@@ -32,6 +32,11 @@ class SceneManager {
         let testEnemy = new Grunt(gameEngine, this.testPosition, this.collisionBlocks);
         gameEngine.addEntity(testEnemy);
         gameEngine.addCollisionEntity(testEnemy);
+
+        let elitePos = { x: 1000, y: 2200 };
+        let elite = new Elite(this.game, elitePos, this.collisionBlocks);
+        gameEngine.addEntity(elite);
+        gameEngine.addCollisionEntity(elite);
 
         if (this.level === 0) {
             new Level0Generator(this.game);
