@@ -9,7 +9,7 @@ class SceneManager {
         //Toggle which level to load
         this.level = 0;
 
-        
+
 
         this.loadLevel();
 
@@ -28,15 +28,16 @@ class SceneManager {
         gameEngine.addCollisionEntity(player);
         gameEngine.player = player;
 
-        this.testPosition = { x: 300, y: 700 };
+        this.testPosition = { x: 500, y: 1900 };
         let testEnemy = new Grunt(gameEngine, this.testPosition, this.collisionBlocks);
         gameEngine.addEntity(testEnemy);
+        gameEngine.addCollisionEntity(testEnemy);
 
         if (this.level === 0) {
             new Level0Generator(this.game);
         }
 
-               
+
         /*
             PLAN: 
             0) Loop through each layer starting with the top layer
@@ -68,7 +69,7 @@ class SceneManager {
         //ACTIVE CAMERA
         this.x = this.game.player.position.x - midpointX;
         this.y = this.game.player.position.y - midpointY;
-        
+
 
     }
 

@@ -33,7 +33,7 @@ class MasterChief {
         this.degrees = null;
         this.aimRight = true;
 
-        
+
         this.walkingSpeed = 0.07;
 
         this.width = 40;
@@ -43,7 +43,7 @@ class MasterChief {
         this.velocity = { x: 0, y: 0 };
         this.onGround = true;
 
-        
+
 
         this.bodyAnimations = [];
         this.helmetAnimations = [];
@@ -63,7 +63,7 @@ class MasterChief {
         // Health Bar
         this.maxHP = 100;
         this.hp = 90;
-        
+
         // Shield Bar
         this.maxShield = 400;
         this.shield = 25;
@@ -399,10 +399,10 @@ class MasterChief {
     collisionChecker() {
 
         this.game.collisionEntities.forEach(entity => {
-            if (this !== entity  && entity.BB && this.BB.collide(entity.BB)) { //Collision
-                
+            if (this !== entity && entity.BB && this.BB.collide(entity.BB)) { //Collision
+
                 if (this.velocity.y > 0) { //falling
-                    
+
                     if ((entity instanceof Tile) && this.lastBB.bottom <= entity.BB.top) {
                         this.position.y = entity.BB.top - this.BB.height - this.BBYOffset;
                         this.velocity.y = 0;
@@ -423,12 +423,12 @@ class MasterChief {
 
                     }
                 }
-  
+
                 //Other cases for hitting tile
                 if ((entity instanceof Tile)) {
                     //console.log("Check");
-                    
-                    if (this.BB.left <= entity.BB.right 
+
+                    if (this.BB.left <= entity.BB.right
                         && this.BB.bottom > entity.BB.top
                         && this.velocity.x < 0) { //Touching right side
 
@@ -438,22 +438,22 @@ class MasterChief {
                         if (this.velocity.x < 0) this.velocity.x = 0;
                     }
 
-                    if (this.BB.right >= entity.BB.left 
-                        && this.BB.bottom > entity.BB.top 
+                    if (this.BB.right >= entity.BB.left
+                        && this.BB.bottom > entity.BB.top
                         && this.velocity.x > 0) {  //Touching left side
 
                         console.log("Touching left");
                         this.position.x = entity.BB.left - this.BB.width - this.BBXOffset;
-                        
+
                         if (this.velocity.x > 0) this.velocity.x = 0;
                     }
-         
+
                 }
 
-       
+
             }
         });
-        
+
 
 
 
@@ -623,9 +623,9 @@ class MasterChief {
             let timeSync = this.bodyAnimations[this.state][this.helmet][this.shieldDamage].elapsedTime;
             //Set helmet animation
             if ((this.degrees <= 90 && this.degrees > 30) || (this.degrees > 90 && this.degrees <= 150)) {
-              
+
                 this.helmet = 2;
-                
+
             } else if ((this.degrees >= 270 && this.degrees < 330) || (this.degrees < 270 && this.degrees > 210)) {
                 this.helmet = 1;
             } else {
@@ -659,13 +659,14 @@ class MasterChief {
         }
     }
 
+
     addHealth() {
         // Add to HP
     }
 
     regenShield() {
-        if(this.shield < this.maxShield) {
-            if(this.regen > 0) {
+        if (this.shield < this.maxShield) {
+            if (this.regen > 0) {
                 this.regen--;
             } else {
                 this.shield += 2;

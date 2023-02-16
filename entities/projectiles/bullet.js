@@ -52,8 +52,8 @@ class Bullet {
     update() {
 
         this.position = {
-            x: ( this.position.x + (this.vectorNormalized.x * this.bulletVelocity) ),
-            y: ( this.position.y + (this.vectorNormalized.y * this.bulletVelocity) )
+            x: (this.position.x + (this.vectorNormalized.x * this.bulletVelocity)),
+            y: (this.position.y + (this.vectorNormalized.y * this.bulletVelocity))
         }
 
         this.collisionChecker();
@@ -105,7 +105,7 @@ class Bullet {
         });
     }
 
-    
+
 
     draw(ctx) {
         //ctx.strokeStyle = 'blue';
@@ -132,7 +132,7 @@ class Bullet {
         }
         this.aliveCounter--;
 
-        
+
 
     };
 
