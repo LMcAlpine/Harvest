@@ -19,6 +19,7 @@ ASSET_MANAGER.queueDownload("./images/FOREST.png")
 ASSET_MANAGER.queueDownload("./images/cityfar.png")
 ASSET_MANAGER.queueDownload("./images/nightsky.png")
 ASSET_MANAGER.queueDownload("./images/cityclose.png")
+ASSET_MANAGER.queueDownload("./images/nightBG.png")
 
 ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");
@@ -66,9 +67,10 @@ ASSET_MANAGER.downloadAll(() => {
 	let nightsky = ASSET_MANAGER.getAsset("./images/nightsky.png");
 	let cityclose = ASSET_MANAGER.getAsset("./images/cityclose.png");
 	let forest = ASSET_MANAGER.getAsset("./images/FOREST.png");
+	let nightForest = ASSET_MANAGER.getAsset("./images/nightBG.png");
 
 	// for the parallax 
-	let layer = new Layer(forest, 0.1);
+	let layer = new Layer(nightForest, 0.1);
 	gameEngine.addEntity(layer);
 
 	// layer = new Layer(nightsky, 0);

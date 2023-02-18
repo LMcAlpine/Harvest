@@ -20,13 +20,13 @@ class MasterChief {
         this.BBYOffset = 6 * this.scale; //Offset for adjusting BB
 
         //Animation states for chief's head/body
-        this.state = 0; // 0 = Idle, 1 = walking
+        this.state = 0; // 0 = Idle, 1 = walking, 2 = jumping
         this.helmet = 0; // 0 = Right, 1 = Down-Right, 2 = Up-Right
         this.shieldDamage = 0; // 0 = Shields not visible, 1 = Shields are visible
 
         //Animation states for chief's arms/gun firing
         this.isFiring = 0; // 0 = Not firing, 1 = Firing
-        this.gunType = 1; // 0 = Sniper Rifle, 1 = Assault Rifle
+        this.gunType = 0; // 0 = Sniper Rifle, 1 = Assault Rifle
         this.gunTypeTranslated = ["Sniper", "Assault_Rifle"];
         this.currentGun = new Gun(this, game, this.gunTypeTranslated[this.gunType]);
 
@@ -59,14 +59,14 @@ class MasterChief {
         // Keeps track of last key pressed
         this.lastKey;
 
-        this.alive = true;
+        this.isAlive = true;
         // Health Bar
         this.maxHP = 100;
-        this.hp = 90;
+        this.hp = 100;
 
         // Shield Bar
-        this.maxShield = 400;
-        this.shield = 25;
+        this.maxShield = 200;
+        this.shield = 200;
         this.regen = 200;
 
         this.healthBar = new MasterHealthBar(this, this.game);
@@ -86,7 +86,7 @@ class MasterChief {
             0,
             false, false);
 
-        for (let i = 0; i <= 1; i++) { // this.state
+        for (let i = 0; i <= 2; i++) { // this.state
             this.bodyAnimations.push([]);
             for (let j = 0; j <= 2; j++) { // this.helmet
                 this.bodyAnimations[i].push([]);
@@ -249,6 +249,60 @@ class MasterChief {
 
 
 
+        // State: Jumping
+        // Helmet: Right
+        // Shields: Not visible
+        this.bodyAnimations[2][0][0] = new Animator(this.SpriteSheet,
+            0, 350,
+            40, 50,
+            1, 0.33,
+            0,
+            false, true);
+        // Helmet: Right
+        // Shields: visible
+        // this.bodyAnimations[2][0][1] = new Animator(this.SpriteSheet,
+        //     0, 450,
+        //     40, 50,
+        //     3, 2,
+        //     0,
+        //     false, true);
+
+        // Helmet: Down Right
+        // Shields: Not visible
+        this.bodyAnimations[2][1][0] = new Animator(this.SpriteSheet,
+            0, 400,
+            40, 50,
+            1, 0.33,
+            0,
+            false, true);
+        // Helmet: Down Right
+        // Shields: Visible
+        // this.bodyAnimations[2][1][1] = new Animator(this.SpriteSheet,
+        //     0, 550,
+        //     40, 50,
+        //     3, this.walkingSpeed,
+        //     0,
+        //     false, true);
+
+         // Helmet: Up Right
+         // Shields: Not visible
+        this.bodyAnimations[2][2][0] = new Animator(this.SpriteSheet,
+            0, 450,
+            40, 50,
+            1, 0.33,
+            0,
+            false, true);
+        // Helmet: Up Right
+         // Shields: Visible
+        // this.bodyAnimations[2][2][1] = new Animator(this.SpriteSheet,
+        //     0, 650,
+        //     40, 50,
+        //     3, this.walkingSpeed,
+        //     0,
+        //     false, true);
+
+
+
     };
 
     updateBB() {
@@ -263,7 +317,10 @@ class MasterChief {
 
     update() {
 
-        if (this.alive) {
+        // Updater properties
+        const TICK = this.game.clockTick;
+
+        if (this.isAlive) {
 
             if (this.isFiring === 1) {
 
@@ -285,8 +342,7 @@ class MasterChief {
                 this.regenShield();
             }
             
-            // Updater properties
-            const TICK = this.game.clockTick;
+            
 
             //Calculate if player is aiming to right or left of player model
             if (this.game.mouse !== null) {
@@ -300,7 +356,7 @@ class MasterChief {
             }
 
             // Movement... kinda
-            if (this.game.keys['d']) {
+            if (this.game.keys['d'] && this.onGround) {
 
                 //Check direction user is aiming to dictate walking forward or reverse
                 if (this.aimRight) {
@@ -316,7 +372,7 @@ class MasterChief {
                 // this.game.keys['d'] === false
             }
 
-            else if (this.game.keys['a']) {
+            else if (this.game.keys['a'] && this.onGround) {
 
                 //Check direction user is aiming to dictate walking forward or reverse
                 if (this.aimRight) {
@@ -334,33 +390,33 @@ class MasterChief {
             //     console.log('UP')
             // }
 
-            else {
+            else if (this.onGround) {
                 this.state = 0;
             }
 
-            // *** Player Movement ***
-            if (keys.a.pressed && lastKey === 'a') {
-                this.velocity.x -= PLAYER_PHYSICS.MAX_WALK;
-                this.position.x += this.velocity.x * TICK;
+            // *** Player Movement 1 ***
+            // if (keys.a.pressed && lastKey === 'a' && this.onGround) {
+            //     this.velocity.x -= PLAYER_PHYSICS.MAX_WALK;
+            //     this.position.x += this.velocity.x * TICK;
 
 
-                if (this.velocity.x < -PLAYER_PHYSICS.MAX_WALK) {
-                    this.velocity.x = 1;
-                }
-            }
-            if (keys.d.pressed && lastKey === 'd') {
-                this.velocity.x += PLAYER_PHYSICS.MAX_WALK;
+            //     if (this.velocity.x < -PLAYER_PHYSICS.MAX_WALK) {
+            //         this.velocity.x = 1;
+            //     }
+            // }
+            // if (keys.d.pressed && lastKey === 'd') {
+            //     this.velocity.x += PLAYER_PHYSICS.MAX_WALK;
 
 
-                this.position.x += this.velocity.x * TICK;;
+            //     this.position.x += this.velocity.x * TICK;;
 
-                if (this.velocity.x > PLAYER_PHYSICS.MAX_WALK) {
-                    this.velocity.x = PLAYER_PHYSICS.MAX_WALK;
-                }
+            //     if (this.velocity.x > PLAYER_PHYSICS.MAX_WALK) {
+            //         this.velocity.x = PLAYER_PHYSICS.MAX_WALK;
+            //     }
 
-            }
+            // }
 
-            // *** Player Movement ***
+            // *** Player Movement 2 ***
             if (keys.a.pressed && lastKey === 'a') {
                 this.velocity.x = -3;
                 this.position.x += -3;
@@ -374,12 +430,16 @@ class MasterChief {
             if(keys[' '].pressed && this.onGround) {
                 this.velocity.y = PLAYER_JUMP;
                 this.onGround = false;
+                this.state = 2;
                 // this.position.y += -PLAYER_JUMP;
                 //console.log('up')
             }
+            if(keys['r'].pressed) {
+                this.currentGun.reloadGun();
+            }
 
             // Allow the player to fall
-
+        }
             //UNCOMMENT
             this.velocity.y += PLAYER_PHYSICS.MAX_FALL * TICK;
             this.velocity.y += GRAVITY;
@@ -388,7 +448,7 @@ class MasterChief {
             // this.position.x += this.velocity.x * TICK;
             //UNCOMMENT
             this.position.y += this.velocity.y * TICK;
-        }
+        
         this.updateBB();
 
         this.collisionChecker();
@@ -461,7 +521,7 @@ class MasterChief {
 
     draw(ctx) {
 
-        if (this.alive) {
+        if (this.isAlive) {
             this.findMouseAngle();
 
             if (this.aimRight) {
@@ -497,8 +557,24 @@ class MasterChief {
             } else {
                 this.deathAnimation.drawFrame(this.game.clockTick, ctx, 
                     this.position.x - this.game.camera.x, 
-                    this.position.y - this.game.camera.y, 
+                    this.position.y - this.game.camera.y - 30, 
                     this.scale, true);
+            }
+
+
+            if (this.deathAnimation.isDone()) { //Draw last frame when death animation completes
+                console.log("DEATH DONE");
+                if (this.aimRight) {
+                    this.deathAnimation.drawSpecificFrame(this.game.clockTick, ctx, 
+                        this.position.x - this.width - this.game.camera.x, 
+                        this.position.y - this.game.camera.y, 
+                        this.scale, false, 4);
+                } else {
+                    this.deathAnimation.drawSpecificFrame(this.game.clockTick, ctx, 
+                        this.position.x - this.game.camera.x, 
+                        this.position.y - this.game.camera.y - 30, 
+                        this.scale, true, 4);
+                }
             }
             
         }
@@ -563,34 +639,6 @@ class MasterChief {
 
 
     };
-
-    // shootGun() {
-
-    //     console.log("shooting gun");
-    //     //Capture 
-    //     const firingPosStatic = {
-    //         x: this.position.x + (20 * this.scale),
-    //         y: this.position.y + (20 * this.scale)
-    //     }
-
-    //     //Capture the static position
-    //     const targetPosStatic = {
-    //         x: gameEngine.mouse.x - (20 * this.scale) + this.game.camera.x,
-    //         y: gameEngine.mouse.y + this.game.camera.y
-    //     }
-
-    //     let bullet = new Bullet(
-    //         this,
-    //         this.game,
-    //         14,
-    //         firingPosStatic,
-    //         targetPosStatic,
-    //         35);
-
-    //     this.game.addCollisionEntity(bullet);
-    //     this.game.addEntityToFront(bullet);
-
-    // };
     
     findMouseAngle() {
 
@@ -677,7 +725,7 @@ class MasterChief {
     }
 
     die() {
-        this.alive = false;
+        this.isAlive = false;
     }
 
 };
@@ -692,7 +740,11 @@ const keys = {
     },
     ' ': { // Up key
         pressed: false
+    },
+    r: { // reload key
+        pressed: false
     }
+     
 }
 
 // *** KeyDown ***
@@ -700,15 +752,18 @@ window.addEventListener('keydown', (event) => {
     switch (event.key) {
         // Player Keys
         case 'd':
-            keys.d.pressed = true
+            keys.d.pressed = true;
             this.lastKey = 'd';
             break
         case 'a':
-            keys.a.pressed = true
+            keys.a.pressed = true;
             this.lastKey = 'a';
             break
         case ' ':
-            keys[' '].pressed = true
+            keys[' '].pressed = true;
+            break
+        case 'r':
+            keys.r.pressed = true;
             break
     }
 })
@@ -725,6 +780,9 @@ window.addEventListener('keyup', (event) => {
             break
         case ' ':
             keys[' '].pressed = false;
+            break
+        case 'r':
+            keys.r.pressed = false;
             break
     }
 })
