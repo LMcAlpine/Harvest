@@ -12,4 +12,13 @@ class BoundingBox {
         if (this.right > oth.left && this.left < oth.right && this.top < oth.bottom && this.bottom > oth.top) return true;
         return false;
     };
+
+    getCenter() {
+        const center = {
+            x: this.x + (this.width / 2),
+            y: this.y + (this.height / 2)
+        }
+
+        return center;
+    }
 };

@@ -3,8 +3,8 @@ class Layer {
         Object.assign(this, { image, speedModifier });
         this.x = 0;
         this.y = 0;
-        this.width = image.width * 3.5;
-        this.height = image.height * 3.5;
+        this.width = image.width * 4;
+        this.height = image.height * 4;
 
         // draw second image where first image ends
         this.x2 = this.width;

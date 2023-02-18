@@ -9,57 +9,89 @@ class Gun {
 
         /* 
             Each gun has an array dictating
-            [Fire Rate per Tick (0 indicates semi-auto), Bullet Damage, Bullet Velocity]
+            [isAutomatic, Max Firerate, Bullet Velocity, bullet damage]
         */
         this.guns = {
-            "Assault_Rifle": [6, 20, 15],
-            "Sniper": [0, 150, 75],
-            "Plasma_Pistol": [0, 20, 7],
-            "SMG": [15, 25, 18],
-            "Needler": [10, 30, 10]
+            "Assault_Rifle": [true, 8, 15, 35],
+            "Sniper": [false, 100, 75, 150],
+            "Plasma_Pistol": [false, 40, 7, 20],
+            "SMG": [true, 15, 18, 30],
+            "Needler": [true, 10, 10, 30]
         }
 
-        this.fireRateCounter = 0;
-        //this.stopShooting = false;
-
-        console.log(gunType);
+        this.fireRateCounter = this.guns[this.gunType][1];
+        this.botCappedFireRate= 0;
 
     }
 
+    //TODO fix this
     shootGun(firingPosStatic, targetPosStatic) {
-        console.log(this.fireRateCounter);
-        let firerate = this.guns[this.gunType][0];
+        
+        //console.log(this.fireRateCounter)
+        let isAuto = this.guns[this.gunType][0];
+        let firerate = this.guns[this.gunType][1];
 
-        if (firerate === 0) { //Semi-auto guns
+        if (firerate === this.fireRateCounter) {
+            
             new Bullet(
                 this.shooter,
                 this.game,
                 firingPosStatic,
                 targetPosStatic,
                 this.guns[this.gunType][2],
-                this.guns[this.gunType][1]);
+                this.guns[this.gunType][3]);
 
-            this.shooter.isFiring = 0;
-    
-        } else { //Automatic guns
-            if (this.fireRateCounter === 0) {
-                console.log("Firing bullet");
-                new Bullet(
-                    this.shooter,
-                    this.game,
-                    firingPosStatic,
-                    targetPosStatic,
-                    this.guns[this.gunType][2],
-                    this.guns[this.gunType][1]);
-                this.fireRateCounter++;
-            } else {
-                this.fireRateCounter++;
-                if (this.fireRateCounter >= this.guns[this.gunType][0]) { //Reset counter when reaching firerate
-                    this.fireRateCounter = 0;
-                }
-            }
             
+
+            this.fireRateCounter--;
+        } else {
+            this.fireRateCounter--;
+            if (this.fireRateCounter <= 0) {
+                this.fireRateCounter = firerate;
+            }
         }
+
+        if (!isAuto && this.shooter instanceof MasterChief) {
+            console.log("CHEK");
+            this.shooter.isFiring = 0;
+            this.fireRateCounter = firerate;
+        }
+            
+        
+
+        // if (!isAuto) { //Semi-auto guns
+        //     if (this.shooter) { //Chief is shooting
+        //         new Bullet(
+        //             this.shooter,
+        //             this.game,
+        //             firingPosStatic,
+        //             targetPosStatic,
+        //             this.guns[this.gunType][2],
+        //             this.guns[this.gunType][1]);
+    
+        //         this.shooter.isFiring = 0; //Stop shooting
+   
+            
+    
+        // } else { //Automatic guns
+        //     if (firerate === this.fireRateCounter) {
+
+        //         new Bullet(
+        //             this.shooter,
+        //             this.game,
+        //             firingPosStatic,
+        //             targetPosStatic,
+        //             this.guns[this.gunType][2],
+        //             this.guns[this.gunType][1]);
+
+        //         this.fireRateCounter--;
+        //     } else {
+        //         if (this.fireRateCounter >= this.guns[this.gunType][0]) { //Reset counter when reaching firerate
+        //             firerate === this.fireRateCounter;
+        //         }
+        //     }
+            
+        // }
 
         
         

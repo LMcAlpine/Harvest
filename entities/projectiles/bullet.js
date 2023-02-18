@@ -87,14 +87,14 @@ class Bullet {
                     this.removeFromWorld = true;
 
                 } else if (entity instanceof Grunt) {
-                    this.removeFromWorld = true;
+                   
                     entity.takeDamage(this.bulletDamage);
+                    this.removeFromWorld = true;
                     
                     
                 } else if (entity instanceof MasterChief) {
                     console.log("cheese ouch");
                     entity.takeDamage(this.bulletDamage);
-
                     this.removeFromWorld = true;
                 }
 

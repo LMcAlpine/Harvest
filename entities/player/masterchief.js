@@ -26,7 +26,7 @@ class MasterChief {
 
         //Animation states for chief's arms/gun firing
         this.isFiring = 0; // 0 = Not firing, 1 = Firing
-        this.gunType = 1; // 0 = Sniper Rifle, 1 = Assault Rifle
+        this.gunType = 0; // 0 = Sniper Rifle, 1 = Assault Rifle
         this.gunTypeTranslated = ["Sniper", "Assault_Rifle"];
         this.currentGun = new Gun(this, game, this.gunTypeTranslated[this.gunType]);
 
@@ -62,11 +62,11 @@ class MasterChief {
         this.isAlive = true;
         // Health Bar
         this.maxHP = 100;
-        this.hp = 90;
+        this.hp = 100;
 
         // Shield Bar
-        this.maxShield = 400;
-        this.shield = 25;
+        this.maxShield = 200;
+        this.shield = 200;
         this.regen = 200;
 
         this.healthBar = new MasterHealthBar(this, this.game);
