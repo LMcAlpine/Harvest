@@ -3,6 +3,8 @@ class Grunt {
     constructor(game, position, collisionBlocks) {
         Object.assign(this, { game, position, collisionBlocks });
 
+        this.hp = 150;
+        this.currentGun = new Gun(this, game, "Plasma_Pistol");
         // Properties
         this.scale = 2.5;
         this.state = 1; //0 = Idle, 1 = Moving
@@ -128,7 +130,7 @@ class Grunt {
 
 
         let distance = getDistance(this.position, this.target);
-        console.log(distance);
+        //console.log(distance);
         this.velocity = { x: (this.target.x - this.position.x) / distance * 100, y: (this.target.y - this.position.y) / distance * 100 };
 
         if (this.velocity.x > 0) {
@@ -185,8 +187,16 @@ class Grunt {
         }
         if (this.currentState == 'chasing') {
             this.position.x += this.velocity.x * TICK;
-            if (distance < 300) {
-                // this.shootGun();
+            if (distance < 1000) {
+                // const firingPosStatic = this.BB.getCenter();
+                const firingPosStatic = {
+                    x: this.BB.getCenter().x ,
+                    y: this.BB.getCenter().y
+                }
+                //Capture the static position
+                const targetPosStatic =  this.game.player.BB.getCenter();
+
+               this.currentGun.shootGun(firingPosStatic, targetPosStatic);
             }
 
         }
@@ -228,34 +238,34 @@ class Grunt {
     }
 
 
-    shootGun() {
+    // shootGun() {
 
-        this.isFiring = 1;
+    //     this.isFiring = 1;
 
-        //Capture 
-        const firingPosStatic = {
-            x: this.position.x + (20 * this.scale),
-            y: this.position.y + (15 * this.scale)
-        }
+    //     //Capture 
+    //     const firingPosStatic = {
+    //         x: this.position.x + (20 * this.scale),
+    //         y: this.position.y + (15 * this.scale)
+    //     }
 
-        //Capture the static position
-        const targetPosStatic = {
-            x: (20 * this.scale) + this.game.camera.x,
-            y: this.game.camera.y
-        }
+    //     //Capture the static position
+    //     const targetPosStatic = {
+    //         x: (20 * this.scale) + this.game.camera.x,
+    //         y: this.game.camera.y
+    //     }
 
-        let bullet = new Bullet(
-            this,
-            this.game,
-            2,
-            firingPosStatic,
-            targetPosStatic,
-            1);
+    //     let bullet = new Bullet(
+    //         this,
+    //         this.game,
+    //         2,
+    //         firingPosStatic,
+    //         targetPosStatic,
+    //         1);
 
-        this.game.addCollisionEntity(bullet);
-        this.game.addEntityToFront(bullet);
+    //     this.game.addCollisionEntity(bullet);
+    //     this.game.addEntityToFront(bullet);
 
-    };
+    // };
 
     stopShooting() {
         this.isFiring = 0;
@@ -327,14 +337,19 @@ class Grunt {
     };
 
     takeDamage(damage) {
-        let health = 100;
-        while (health > 0) {
-            console.log(damage);
-            health -= damage;
+
+        if (this.hp > 0) {
+            console.log();
+            this.hp -= damage;
+        } else {
+            this.hp = 0;
+            this.die();
         }
-        if (health <= 0) {
-            this.removeFromWorld = true;
-        }
+    }
+
+    die() {
+        //Play death animation
+        this.removeFromWorld = true;
     }
 
     draw(ctx) {

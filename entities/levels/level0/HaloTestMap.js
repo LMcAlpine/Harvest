@@ -1,4 +1,4 @@
-var HaloTestMap =
+const HaloTestMap =
 { "compressionlevel":-1,
  "height":30,
  "infinite":false,
