@@ -29,10 +29,10 @@ class Animator {
                 0, scale,
                 true);
 
-            const max = Math.max(this.width, this.height);
+            const max = Math.max(this.width, this.height); //Get max between height and width
             ctx.drawImage(offScreenCanvas,
                 x - 15, y,
-                scale * max, scale * max); //Why does height work here and not width like when rotating gun?
+                scale * max, scale * max); 
                 
 
         } else {
@@ -52,12 +52,37 @@ class Animator {
     };
 
     isDone() {
-        //console.log('Is Done?');
+        
         return (this.elapsedTime >= this.totalTime);
     };
 
     reset() {
         this.elapsedTime -= this.totalTime;
+    }
+
+    drawSpecificFrame(tick, ctx, x, y, scale, flip, frameNumber) {
+        if (flip) {
+            let offScreenCanvas = rotateImage(this.spritesheet,
+                this.xStart + frameNumber * (this.width + this.framePadding), this.yStart,
+                this.width, this.height,
+                0, scale,
+                true);
+
+            const max = Math.max(this.width, this.height); //Get max between height and width
+            ctx.drawImage(offScreenCanvas,
+                x - 15, y,
+                scale * max, scale * max); 
+                
+
+        } else {
+
+            ctx.drawImage(this.spritesheet,
+                this.xStart + frameNumber * (this.width + this.framePadding), this.yStart, //source from sheet
+                this.width, this.height,
+                x, y,
+                this.width * scale,
+                this.height * scale);
+        }
     }
 };
 

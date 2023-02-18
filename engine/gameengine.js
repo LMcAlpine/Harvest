@@ -62,7 +62,7 @@ class GameEngine {
 
 
         this.ctx.canvas.addEventListener("mousedown", e => {         
-            console.log("Mousedown");
+            //console.log("Mousedown");
             //Find chief in the array (Runs every time player shoots, maybe change)
             try {
                 this.entities[this.playerIndex].isFiring = 1;
@@ -82,7 +82,7 @@ class GameEngine {
         });
 
         this.ctx.canvas.addEventListener("mouseup", e => {
-            console.log("Mouseup");
+            //console.log("Mouseup");
             this.entities[this.playerIndex].isFiring = 0;
             
         });

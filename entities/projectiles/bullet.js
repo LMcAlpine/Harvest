@@ -93,7 +93,7 @@ class Bullet {
                     
                     
                 } else if (entity instanceof MasterChief) {
-                    console.log("cheese ouch");
+                    //console.log("cheese ouch");
                     entity.takeDamage(this.bulletDamage);
                     this.removeFromWorld = true;
                 }
