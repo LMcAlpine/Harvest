@@ -1,6 +1,6 @@
 class PlayerHUD {
-    constructor (entity, game) {
-        Object.assign(this, {entity, game});
+    constructor (player, game) {
+        Object.assign(this, {player, game});
         ///this.removeFromWorld = false;
 
         this.hpWidth = 200;
@@ -20,8 +20,8 @@ class PlayerHUD {
     };
 
     drawHealthBar(ctx) {
-        let hpRatio = this.entity.hp / this.entity.maxHP;
-        let shieldRatio = this.entity.shield / this.entity.maxShield;
+        let hpRatio = this.player.hp / this.player.maxHP;
+        let shieldRatio = this.player.shield / this.player.maxShield;
         ctx.strokeStyle = "White";
         ctx.fillStyle = "rgba(134, 254, 255, 0.8)";
         // Shield Bar
@@ -36,7 +36,7 @@ class PlayerHUD {
 
     //TODO
     drawGunBar(ctx) {
-        let gun = this.entity.currentGun;
+        let gun = this.player.currentGun;
         let width = 300;
         let height = 100;
 
@@ -55,6 +55,9 @@ class PlayerHUD {
         offscreenCtx.textBaseline = "top";
         let bulletCount = gun.getCurrentAmmo() + " / " + gun.getMagazineSize();
         offscreenCtx.fillText(bulletCount, 10, 10, width);
+        if (gun.isEmpty()) {
+            offscreenCtx.fillText("(R) - RELOAD", 100, 10, width);
+        }
 
         ctx.drawImage(offscreenCanvas,
             PARAMS.CANVAS_WIDTH - width - 10, 10,

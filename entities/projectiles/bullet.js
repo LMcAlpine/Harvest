@@ -38,7 +38,6 @@ class Bullet {
 
         //this.aimRight = shooter.aimRight;
         this.removeFromWorld = false;
-        this.radius = 5;
         this.aliveCounter = 4000;
 
         this.updateBB();
@@ -114,16 +113,31 @@ class Bullet {
             ctx.strokeStyle = 'red';
             ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
 
+            
+        }
+
+        if (this.bulletType === "BULLET") {
+            //Draw circle representing bullet
+            ctx.beginPath();
+            ctx.fillStyle = "yellow";
+            ctx.arc(
+                this.position.x - this.game.camera.x, //X Position of circle
+                this.position.y - this.game.camera.y, //Y Position of circle
+                2, 0, Math.PI * 2, false);
+            ctx.fill();
+            ctx.closePath();
+        } else if (this.bulletType ===  "PLASMA") {
             //Draw circle representing bullet
             ctx.beginPath();
             ctx.fillStyle = "cyan";
             ctx.arc(
                 this.position.x - this.game.camera.x, //X Position of circle
                 this.position.y - this.game.camera.y, //Y Position of circle
-                this.radius, 0, Math.PI * 2, false);
+                5, 0, Math.PI * 2, false);
             ctx.fill();
             ctx.closePath();
         }
+        
 
         //Loop to kill bullet entity
         if (this.aliveCounter == 0) {

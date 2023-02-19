@@ -87,41 +87,6 @@ class Gun {
                 this.reloadGun();
             }
         }
-
-        // if (!isAuto) { //Semi-auto guns
-        //     if (this.shooter) { //Chief is shooting
-        //         new Bullet(
-        //             this.shooter,
-        //             this.game,
-        //             firingPosStatic,
-        //             targetPosStatic,
-        //             this.guns[this.gunType][2],
-        //             this.guns[this.gunType][1]);
-    
-        //         this.shooter.isFiring = 0; //Stop shooting
-   
-            
-    
-        // } else { //Automatic guns
-        //     if (firerate === this.fireRateCounter) {
-
-        //         new Bullet(
-        //             this.shooter,
-        //             this.game,
-        //             firingPosStatic,
-        //             targetPosStatic,
-        //             this.guns[this.gunType][2],
-        //             this.guns[this.gunType][1]);
-
-        //         this.fireRateCounter--;
-        //     } else {
-        //         if (this.fireRateCounter >= this.guns[this.gunType][0]) { //Reset counter when reaching firerate
-        //             firerate === this.fireRateCounter;
-        //         }
-        //     }
-            
-        // }
-
         
         
     }
