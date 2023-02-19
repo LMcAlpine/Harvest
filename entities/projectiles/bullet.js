@@ -13,8 +13,8 @@ class Bullet {
      * @param {Object} targetPos - Position bullet should travel to
      * @param {Integer} bulletDamage - Damage of bullet if hits target it can damage
      */
-    constructor(shooter, game, firingPos, targetPos, bulletVelocity, bulletDamage) {
-        Object.assign(this, { shooter, game, firingPos, targetPos, bulletVelocity, bulletDamage});
+    constructor(shooter, game, firingPos, targetPos, bulletVelocity, bulletDamage, bulletType) {
+        Object.assign(this, { shooter, game, firingPos, targetPos, bulletVelocity, bulletDamage, bulletType});
         
         let xDiff = this.targetPos.x - this.firingPos.x;
         let yDiff = this.targetPos.y - this.firingPos.y;
@@ -43,7 +43,6 @@ class Bullet {
 
         this.updateBB();
 
-        this.game.addCollisionEntity(this);
         this.game.addEntityToFront(this);
 
     };
@@ -79,10 +78,10 @@ class Bullet {
 
     collisionChecker() {
 
-        this.game.collisionEntities.forEach(entity => {
+        this.game.entities.forEach(entity => {
             //console.log(entity);
             
-            if (this.shooter !== entity && this !== entity && this.BB.collide(entity.BB)) {//Collision
+            if (entity.BB && this.shooter !== entity && this !== entity && this.BB.collide(entity.BB)) {//Collision
                 if (entity instanceof Tile) { 
                     this.removeFromWorld = true;
 

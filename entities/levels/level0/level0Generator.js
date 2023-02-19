@@ -11,6 +11,9 @@ class Level0Generator {
             "tree1" : tree1,
             "tree2" : tree2,
             "EarthBlocks" : EarthBlocks
+
+        
+
         }
 
         //Until we can import JSON correctly, have to copy and paste the JSON file contents
@@ -60,7 +63,7 @@ class Level0Generator {
                     FormattedData.push(rawData.slice(id, id + width));
                 }
                 levelData.push(FormattedData);
-         }
+            }
         }
         return levelData;
 
@@ -100,10 +103,6 @@ class Level0Generator {
 
                         let tile = new Tile(this.game, col * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, tileSet, firstGID, GID);
 
-                        //Check if tile has collision data
-                        if (tile.hasCollisions) {
-                            this.game.addCollisionEntity(tile);
-                        }
                         this.game.addEntity(tile);
                         
                         

@@ -64,14 +64,7 @@ ASSET_MANAGER.downloadAll(() => {
 
 	gameEngine.addEntity(new SceneManager(gameEngine));
 
-	let nightsky = ASSET_MANAGER.getAsset("./images/nightsky.png");
-	let cityclose = ASSET_MANAGER.getAsset("./images/cityclose.png");
-	let forest = ASSET_MANAGER.getAsset("./images/FOREST.png");
-	let nightForest = ASSET_MANAGER.getAsset("./images/nightBG.png");
-
-	// for the parallax 
-	let layer = new Layer(nightForest, 0.1);
-	gameEngine.addEntity(layer);
+	
 
 	// layer = new Layer(nightsky, 0);
 	// gameEngine.addEntity(layer)

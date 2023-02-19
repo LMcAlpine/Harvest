@@ -273,8 +273,8 @@ class Grunt {
 
     collisionChecker() {
 
-        this.game.collisionEntities.forEach(entity => {
-            if (this !== entity && entity.BB && this.BB.collide(entity.BB)) { //falling
+        this.game.entities.forEach(entity => {
+            if (entity.BB && this !== entity && entity.BB && this.BB.collide(entity.BB)) { //falling
 
                 if (this.fallingVelocity.y > 0) { //falling
 
