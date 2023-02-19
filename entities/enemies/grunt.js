@@ -1,7 +1,7 @@
 //
 class Grunt {
-    constructor(game, position, collisionBlocks) {
-        Object.assign(this, { game, position, collisionBlocks });
+    constructor(game, position) {
+        Object.assign(this, { game, position});
 
         this.hp = 150;
         this.currentGun = new Gun(this, game, "Plasma_Pistol");

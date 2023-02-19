@@ -12,8 +12,11 @@ ASSET_MANAGER.queueDownload("./sprites/brute.png");
 
 ASSET_MANAGER.queueDownload("./sprites/Grass Blocks.png");
 ASSET_MANAGER.queueDownload("./sprites/EarthBlocks.png");
+ASSET_MANAGER.queueDownload("./sprites/EarthBlocks2.png");
+ASSET_MANAGER.queueDownload("./sprites/Healthpack.png");
 ASSET_MANAGER.queueDownload("./sprites/tree1.png");
 ASSET_MANAGER.queueDownload("./sprites/tree2.png");
+ASSET_MANAGER.queueDownload("./sprites/BasicTrees.png");
 
 ASSET_MANAGER.queueDownload("./images/FOREST.png")
 ASSET_MANAGER.queueDownload("./images/cityfar.png")

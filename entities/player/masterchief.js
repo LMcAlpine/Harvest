@@ -1,9 +1,9 @@
 class MasterChief {
 
-    constructor(game, position, collisionBlocks) {
+    constructor(game, position) {
 
         // Updated the constructor
-        Object.assign(this, { game, position, collisionBlocks });
+        Object.assign(this, { game, position});
 
         this.scale = 3;
         this.cache = [];
@@ -65,9 +65,6 @@ class MasterChief {
         this.regen = 200;
 
         this.HUD = new PlayerHUD(this, this.game);
-        //Why does this get added to the beginning of the entity list when it should be at the
-        //end with this syntax???
-        //Update: oh duh, because chief gets declared first smh
         this.game.addEntity(this.HUD);
 
     };
@@ -330,6 +327,7 @@ class MasterChief {
                 }
 
                 if (!this.currentGun.isEmpty() && !this.currentGun.reloading){
+
                     this.isFiring = 1;
                     this.currentGun.shootGun(firingPosStatic, targetPosStatic);
                 }

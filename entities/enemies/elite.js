@@ -1,12 +1,12 @@
 //
 class Elite {
-    constructor(game, position, collisionBlocks) {
-        Object.assign(this, { game, position, collisionBlocks });
+    constructor(game, position) {
+        Object.assign(this, { game, position});
 
         this.hp = 150;
         this.currentGun = new Gun(this, game, "Plasma_Pistol");
         // Properties
-        this.scale = 1;
+        this.scale = 3;
         this.state = 1; //0 = Idle, 1 = Moving
         this.isFiring = 0; // 0 = Not firing, 1 = Firing
         this.SpriteSheet = ASSET_MANAGER.getAsset("./sprites/elite.png");
@@ -274,11 +274,11 @@ class Elite {
 
     collisionChecker() {
 
-        this.game.collisionEntities.forEach(entity => {
-            if (this !== entity && entity.BB && this.BB.collide(entity.BB)) { //falling
+        this.game.entities.forEach(entity => {
+            if (entity.BB && this !== entity && entity.BB && this.BB.collide(entity.BB)) { //falling
 
                 if (this.fallingVelocity.y > 0) { //falling
-                    console.log("Touching ground");
+                    //console.log("Touching ground");
                     if ((entity instanceof Tile) && this.lastBB.bottom <= entity.BB.top) {
                         this.position.y = entity.BB.top - this.BB.height;
                         this.fallingVelocity.y = 0;
