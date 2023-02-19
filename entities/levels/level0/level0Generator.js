@@ -70,22 +70,25 @@ class Level0Generator {
                 objects.forEach(object => {
                     if (object["class"] === "Spawn") {
 
-                        //These are positional offsets that convert the map coords from tiled to actual in game coords
-                        let xOffset = 580;
-                        let yOffset = 740;
+                        // //These are positional offsets that convert the map coords from tiled to actual in game coords
+                        let position = {
+                            x: object["x"] * PARAMS.SCALE,
+                            y: object["y"] * PARAMS.SCALE,
+                        }
 
                         if (object["name"] === "MasterChief") {
-                            let position = {x: object["x"] + xOffset, y: object["y"] + yOffset}
+                            console.log("Spawning Master Chief at: " + position.x + ", " + position.y);
                             let player = new MasterChief(gameEngine, position);
                             this.game.addEntity(player);
                             this.game.player = player;
+                            
                         } else if (object["name"] === "Grunt") {
-                            let position = {x: object["x"] + xOffset, y: object["y"] + yOffset}
+                            console.log("Spawning Grunt at: " + position.x + ", " + position.y);
                             let enemy = new Grunt(gameEngine, position);
                             this.game.addEntity(enemy);
 
                         } else if (object["name"] === "Elite") {
-                            let position = {x: object["x"] + xOffset, y: object["y"] + yOffset}
+                            console.log("Spawning Elite at: " + position.x + ", " + position.y);
                             let enemy = new Elite(gameEngine, position);
                             this.game.addEntity(enemy);
 

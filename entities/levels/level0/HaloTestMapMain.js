@@ -1,5 +1,13 @@
 var HaloTestMapMain =
 { "compressionlevel":-1,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"json",
+         "target":"HaloTestMapMain.tmj"
+        }
+    },
  "height":20,
  "infinite":false,
  "layers":[
@@ -172,8 +180,8 @@ var HaloTestMapMain =
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":333.333333333333,
-                 "y":430.666666666667
+                 "x":245.333333333333,
+                 "y":418.67
                 }, 
                 {
                  "class":"Spawn",
@@ -184,8 +192,8 @@ var HaloTestMapMain =
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":1057.33333333333,
-                 "y":456
+                 "x":1060,
+                 "y":409.333333333333
                 }, 
                 {
                  "class":"Spawn",
@@ -196,8 +204,8 @@ var HaloTestMapMain =
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":1437.33333333333,
-                 "y":458.666666666667
+                 "x":1442.66666666667,
+                 "y":409.333333333333
                 }, 
                 {
                  "class":"Spawn",
@@ -208,8 +216,8 @@ var HaloTestMapMain =
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":1245.33333333333,
-                 "y":452
+                 "x":1257.33333333333,
+                 "y":409.333333333333
                 }, 
                 {
                  "class":"Spawn",
@@ -220,8 +228,8 @@ var HaloTestMapMain =
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":937.333333333333,
-                 "y":445.333333333333
+                 "x":918.666666666667,
+                 "y":409.333333333333
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -246,7 +254,7 @@ var HaloTestMapMain =
         }, 
         {
          "firstgid":109,
-         "source":"BasicTrees.tsx"
+         "source":"BasicTrees.tsj"
         }, 
         {
          "firstgid":130,
