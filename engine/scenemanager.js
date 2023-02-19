@@ -21,20 +21,24 @@ class SceneManager {
 
     loadLevel() {
 
-        //Declare player/enemies
-        this.startingPosition = { x: 1100, y: 2200 };
-        let player = new MasterChief(gameEngine, this.startingPosition, this.collisionBlocks);
-        gameEngine.addEntity(player);
-        gameEngine.addCollisionEntity(player);
-        gameEngine.player = player;
-
-        this.testPosition = { x: 500, y: 1900 };
-        let testEnemy = new Grunt(gameEngine, this.testPosition, this.collisionBlocks);
-        gameEngine.addEntity(testEnemy);
-        gameEngine.addCollisionEntity(testEnemy);
-
         if (this.level === 0) {
+
+            //Declare player/enemies
+            // this.startingPosition = { x: 1200, y: 1200 };
+            // let player = new MasterChief(gameEngine, this.startingPosition);
+            // gameEngine.addEntity(player);
+            // gameEngine.player = player;
+
+            // this.testPosition = { x: 2800, y: 1200 };
+            // let testEnemy = new Grunt(gameEngine, this.testPosition);
+            // gameEngine.addEntity(testEnemy);
+
             new Level0Generator(this.game);
+            let nightForest = ASSET_MANAGER.getAsset("./images/nightBG.png");
+
+            // for the parallax 
+            let layer = new Layer(nightForest, 0.1);
+            gameEngine.addEntity(layer);
         }
 
 

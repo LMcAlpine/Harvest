@@ -3,7 +3,7 @@ class Tile {
         Object.assign(this, { game, x, y, tileSet, firstGID, GID});
 
         this.hasCollisions = false;
-
+        
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/" + tileSet["image"]);
 
         this.margin = tileSet["margin"];

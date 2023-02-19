@@ -1,7 +1,7 @@
 //
 class Grunt {
-    constructor(game, position, collisionBlocks) {
-        Object.assign(this, { game, position, collisionBlocks });
+    constructor(game, position) {
+        Object.assign(this, { game, position});
 
         this.hp = 150;
         this.currentGun = new Gun(this, game, "Plasma_Pistol");
@@ -273,8 +273,8 @@ class Grunt {
 
     collisionChecker() {
 
-        this.game.collisionEntities.forEach(entity => {
-            if (this !== entity && entity.BB && this.BB.collide(entity.BB)) { //falling
+        this.game.entities.forEach(entity => {
+            if (entity.BB && this !== entity && entity.BB && this.BB.collide(entity.BB)) { //falling
 
                 if (this.fallingVelocity.y > 0) { //falling
 

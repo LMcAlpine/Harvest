@@ -1,15 +1,12 @@
 class MasterChief {
 
-    constructor(game, position, collisionBlocks) {
+    constructor(game, position) {
 
         // Updated the constructor
-        Object.assign(this, { game, position, collisionBlocks });
+        Object.assign(this, { game, position});
 
         this.scale = 3;
-        //this.game = game;
         this.cache = [];
-
-        this.level = ASSET_MANAGER.getAsset("./img/testmap.png");
 
         this.SpriteSheet = ASSET_MANAGER.getAsset("./sprites/ChiefSprites.png");
         this.GunSpriteSheet = ASSET_MANAGER.getAsset("./sprites/Guns.png");
@@ -26,23 +23,21 @@ class MasterChief {
 
         //Animation states for chief's arms/gun firing
         this.isFiring = 0; // 0 = Not firing, 1 = Firing
-        this.gunType = 0; // 0 = Sniper Rifle, 1 = Assault Rifle
-        this.gunTypeTranslated = ["Sniper", "Assault_Rifle"];
-        this.currentGun = new Gun(this, game, this.gunTypeTranslated[this.gunType]);
+        this.gunType = 1; // 0 = Sniper Rifle, 1 = Assault Rifle
+        //this.gunTypeTranslated = ["Sniper", "Assault_Rifle"];
+        this.currentGun = new Gun(this, game, "Assault_Rifle");
+        this.game.addEntity(this.currentGun);
 
         this.degrees = null;
         this.aimRight = true;
 
-
         this.walkingSpeed = 0.07;
-
         this.width = 40;
         this.height = 50;
 
         // Added for Jumping
         this.velocity = { x: 0, y: 0 };
         this.onGround = true;
-
 
 
         this.bodyAnimations = [];
@@ -69,11 +64,8 @@ class MasterChief {
         this.shield = 200;
         this.regen = 200;
 
-        this.healthBar = new MasterHealthBar(this, this.game);
-        //Why does this get added to the beginning of the entity list when it should be at the
-        //end with this syntax???
-        //Update: oh duh, because chief gets declared first smh
-        this.game.addEntity(this.healthBar);
+        this.HUD = new PlayerHUD(this, this.game);
+        this.game.addEntity(this.HUD);
 
     };
 
@@ -316,13 +308,12 @@ class MasterChief {
     }
 
     update() {
-
         // Updater properties
         const TICK = this.game.clockTick;
 
         if (this.isAlive) {
 
-            if (this.isFiring === 1) {
+            if (this.game.mouseDown) {
 
                 const firingPosStatic = {
                     x: this.position.x + (20 * this.scale),
@@ -335,7 +326,11 @@ class MasterChief {
                     y: gameEngine.mouse.y + this.game.camera.y
                 }
 
-                this.currentGun.shootGun(firingPosStatic, targetPosStatic);
+                if (!this.currentGun.isEmpty() && !this.currentGun.reloading){
+
+                    this.isFiring = 1;
+                    this.currentGun.shootGun(firingPosStatic, targetPosStatic);
+                }
             }
 
             if(this.shield < this.maxShield) {
@@ -456,9 +451,10 @@ class MasterChief {
         
     };
 
+
     collisionChecker() {
 
-        this.game.collisionEntities.forEach(entity => {
+        this.game.entities.forEach(entity => {
             if (this !== entity && entity.BB && this.BB.collide(entity.BB)) { //Collision
 
                 if (this.velocity.y > 0) { //falling
@@ -514,14 +510,11 @@ class MasterChief {
             }
         });
 
-
-
-
     };
 
     draw(ctx) {
 
-        if (this.isAlive) {
+        if (this.isAlive) { //CHIEF IS ALIVE
             this.findMouseAngle();
 
             if (this.aimRight) {
@@ -548,7 +541,7 @@ class MasterChief {
                 ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
             }
 
-        } else {
+        } else { //CHIEF IS DEAD
             if (this.aimRight) {
                 this.deathAnimation.drawFrame(this.game.clockTick, ctx, 
                     this.position.x - this.width - this.game.camera.x, 
@@ -594,10 +587,9 @@ class MasterChief {
                 a.elapsedTime -= a.totalTime;
             }
             else {
-                
                 //Reset animation once complete
                 a.reset();
-
+                this.isFiring = 0;
             }
         }
 
