@@ -113,6 +113,31 @@ class GameEngine {
  
     };
 
+    clearEntities() {
+        
+        let entitiesCount = this.entities.length;
+        console.log("entitiesCount: " + entitiesCount);
+        for (let i = 0; i < entitiesCount; i++) {
+            let entity = this.entities[i];
+            
+            if (!(entity instanceof SceneManager)) {
+                entity.removeFromWorld = true;
+            }
+        }
+
+        let collisionEntitiesCount = this.collisionEntities.length;
+        for (let i = 0; i < collisionEntitiesCount; i++) {
+            let entity = this.collisionEntities[i];
+
+            if (!(entity instanceof SceneManager)) {
+                entity.removeFromWorld = true;
+            }
+        }
+
+        
+
+    }
+
     draw() {
         // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
@@ -140,6 +165,7 @@ class GameEngine {
             }
         }
 
+        //console.log(this.entities);
 
         // let collisionEntitiesCount = this.collisionEntities.length;
         // for (let i = 0; i < collisionEntitiesCount; i++) {
