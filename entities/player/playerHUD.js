@@ -24,6 +24,8 @@ class PlayerHUD {
         let shieldRatio = this.player.shield / this.player.maxShield;
         ctx.strokeStyle = "White";
         ctx.fillStyle = "rgba(134, 254, 255, 0.8)";
+        
+        
         // Shield Bar
         ctx.fillRect(10, 10, this.shieldWidth * shieldRatio, this.shieldHeight);
         ctx.strokeRect(10, 10, this.shieldWidth, this.shieldHeight);
@@ -46,8 +48,10 @@ class PlayerHUD {
         let offscreenCtx = offscreenCanvas.getContext('2d');
         offscreenCtx.imageSmoothingEnabled = false;
 
-        offscreenCtx.strokeStyle = "White";
-        offscreenCtx.strokeRect(0, 0, width, height);
+        if (PARAMS.DEBUG) {
+            offscreenCtx.strokeStyle = "White";
+            offscreenCtx.strokeRect(0, 0, width, height);
+        }
 
         //Display bullet count
         offscreenCtx.fillStyle = "cyan";

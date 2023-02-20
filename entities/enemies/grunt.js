@@ -133,6 +133,8 @@ class Grunt {
         //console.log(distance);
         this.velocity = { x: (this.target.x - this.position.x) / distance * 100, y: (this.target.y - this.position.y) / distance * 100 };
 
+        this.velocity.x = 3;
+
         if (this.velocity.x > 0) {
             this.state = 1;
         }
@@ -273,7 +275,7 @@ class Grunt {
 
     collisionChecker() {
 
-        this.game.entities.forEach(entity => {
+        this.game.collisionEntities.forEach(entity => {
             if (entity.BB && this !== entity && entity.BB && this.BB.collide(entity.BB)) { //falling
 
                 if (this.fallingVelocity.y > 0) { //falling
@@ -307,7 +309,7 @@ class Grunt {
                         && this.BB.bottom > entity.BB.top
                         && this.velocity.x < 0) { //Touching right side
 
-                        console.log("Touching right");
+                        //console.log("Touching right");
                         this.position.x = entity.BB.right - this.BBXOffset;
 
                         if (this.velocity.x < 0) this.velocity.x = 0;
@@ -317,7 +319,7 @@ class Grunt {
                         && this.BB.bottom > entity.BB.top
                         && this.velocity.x > 0) {  //Touching left side
 
-                        console.log("Touching left");
+                        //console.log("Touching left");
                         this.position.x = entity.BB.left - this.BB.width - this.BBXOffset;
 
                         if (this.velocity.x > 0) this.velocity.x = 0;

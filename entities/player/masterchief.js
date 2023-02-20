@@ -313,6 +313,11 @@ class MasterChief {
 
         if (this.isAlive) {
 
+            if (this.position.x > this.endGoal.x) {
+                console.log("GAME WON");
+                this.game.sceneManager.scene = 2;
+            }
+
             if (this.game.mouseDown) {
 
                 const firingPosStatic = {
@@ -454,7 +459,7 @@ class MasterChief {
 
     collisionChecker() {
 
-        this.game.entities.forEach(entity => {
+        this.game.collisionEntities.forEach(entity => {
             if (this !== entity && entity.BB && this.BB.collide(entity.BB)) { //Collision
 
                 if (this.velocity.y > 0) { //falling
@@ -488,7 +493,7 @@ class MasterChief {
                         && this.BB.bottom > entity.BB.top
                         && this.velocity.x < 0) { //Touching right side
 
-                        console.log("Touching right");
+                        //console.log("Touching right");
                         this.position.x = entity.BB.right - this.BBXOffset;
 
                         if (this.velocity.x < 0) this.velocity.x = 0;
@@ -498,7 +503,7 @@ class MasterChief {
                         && this.BB.bottom > entity.BB.top
                         && this.velocity.x > 0) {  //Touching left side
 
-                        console.log("Touching left");
+                        //console.log("Touching left");
                         this.position.x = entity.BB.left - this.BB.width - this.BBXOffset;
 
                         if (this.velocity.x > 0) this.velocity.x = 0;

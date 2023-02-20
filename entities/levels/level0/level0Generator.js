@@ -80,20 +80,33 @@ class Level0Generator {
                             console.log("Spawning Master Chief at: " + position.x + ", " + position.y);
                             let player = new MasterChief(gameEngine, position);
                             this.game.addEntity(player);
+                            this.game.addCollisionEntity(player);
                             this.game.player = player;
                             
                         } else if (object["name"] === "Grunt") {
                             console.log("Spawning Grunt at: " + position.x + ", " + position.y);
                             let enemy = new Grunt(gameEngine, position);
+                            this.game.addCollisionEntity(enemy);
                             this.game.addEntity(enemy);
 
                         } else if (object["name"] === "Elite") {
                             console.log("Spawning Elite at: " + position.x + ", " + position.y);
                             let enemy = new Elite(gameEngine, position);
                             this.game.addEntity(enemy);
+                            this.game.addCollisionEntity(enemy);
 
                         }
                         
+                    } else if (object["class"] === "CheckPoint") {
+
+                        let position = {
+                            x: object["x"] * PARAMS.SCALE,
+                            y: object["y"] * PARAMS.SCALE,
+                        }
+
+                        if (object["name"] === "End") {
+                            this.game.player.endGoal = position;
+                        }
                     }
                 });
             }
@@ -133,9 +146,13 @@ class Level0Generator {
                         let tileSetName = tileSheets[t]["source"];
                         let firstGID = tileSheets[t]["firstgid"];
                         let tileSet = this.tileSets[tileSetName.slice(0,-4)];
-                        console.log("Loading Tileset: " + tileSetName.slice(0,-4));
+                        //console.log("Loading Tileset: " + tileSetName.slice(0,-4));
 
                         let tile = new Tile(this.game, col * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, tileSet, firstGID, GID);
+
+                        if (tile.hasCollisions) {
+                            this.game.addCollisionEntity(tile);
+                        }
 
                         this.game.addEntity(tile);
 

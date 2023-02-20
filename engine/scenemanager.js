@@ -6,39 +6,39 @@ class SceneManager {
         //RESET THIS BACK TO 0, JUST FOR TESTING
         this.x = 0;
         this.y = 0;
+
+        this.levelGenerator = null;
         //Toggle which level to load
-        this.level = 0;
+        this.scene = 1; //0 = Start Screen, 1 = Game, 2 = Win Screen, 3 = Death Screen
 
-
-
-        this.loadLevel();
+        this.update();
 
     }
 
 
-
-
-
     loadLevel() {
 
-        if (this.level === 0) {
+        if (this.scene === 1) {
 
-            //Declare player/enemies
-            // this.startingPosition = { x: 1200, y: 1200 };
-            // let player = new MasterChief(gameEngine, this.startingPosition);
-            // gameEngine.addEntity(player);
-            // gameEngine.player = player;
+            // let position = {
+            //     x: 7000 * PARAMS.SCALE,
+            //     y: 100 * PARAMS.SCALE,
+            // }
+            // console.log("Spawning Master Chief at: " + position.x + ", " + position.y);
+            // let player = new MasterChief(gameEngine, position);
+            // this.game.addEntity(player);
+            // this.game.addCollisionEntity(player);
+            // this.game.player = player;
 
-            // this.testPosition = { x: 2800, y: 1200 };
-            // let testEnemy = new Grunt(gameEngine, this.testPosition);
-            // gameEngine.addEntity(testEnemy);
-
-            new Level0Generator(this.game);
+            this.levelGenerator = new Level0Generator(this.game);
             let nightForest = ASSET_MANAGER.getAsset("./images/nightBG.png");
 
             // for the parallax 
             let layer = new Layer(nightForest, 0.1);
             gameEngine.addEntity(layer);
+
+            
+            
         }
 
 
@@ -66,19 +66,54 @@ class SceneManager {
 
     update() {
 
-        if (this.game.player !== null) {
+        if (this.scene === 1 && this.levelGenerator === null) {
 
-            let midpointX = PARAMS.CANVAS_WIDTH / 2 - PARAMS.BLOCKWIDTH / 2;
-            let midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.BLOCKWIDTH / 2;
+            this.loadLevel();
 
-            //ACTIVE CAMERA
-            this.x = this.game.player.position.x - midpointX;
-            this.y = this.game.player.position.y - midpointY;
         }
+
+
+        let midpointX = PARAMS.CANVAS_WIDTH / 2 - PARAMS.BLOCKWIDTH / 2;
+                let midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.BLOCKWIDTH / 2;
+    
+                //ACTIVE CAMERA
+                this.x = this.game.player.position.x - midpointX;
+                this.y = this.game.player.position.y - midpointY;
+
 
     }
 
     draw(ctx) {
+        if (this.scene === 2) {
+            this.winScreen(ctx);
+        }
+    }
 
+    winScreen(ctx) {
+
+
+        let width = PARAMS.CANVAS_WIDTH;
+        let height = PARAMS.CANVAS_HEIGHT;
+
+        let offscreenCanvas = document.createElement('canvas');
+        offscreenCanvas.width = width;
+        offscreenCanvas.height = height;
+        let offscreenCtx = offscreenCanvas.getContext('2d');
+        offscreenCtx.imageSmoothingEnabled = false;
+
+        ctx.fillStyle = "rgb(0,0,0,.2)";
+        ctx.fillRect(0, 0, width, height);
+        offscreenCtx.fillStyle = "White";
+
+        offscreenCtx.fillStyle = "black";
+        offscreenCtx.font = "bold 50px serif";
+        offscreenCtx.textBaseline = "top";
+        //offscreenCtx.textAlign = "Center";
+        offscreenCtx.fillText("YOU WON", (width / 2) - (width / 16), height / 4);
+        
+        
+        ctx.drawImage(offscreenCanvas,
+            0, 0,
+            width, height);
     }
 }

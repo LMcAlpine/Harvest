@@ -70,7 +70,9 @@ ASSET_MANAGER.downloadAll(() => {
 
 	// Attempt to unlock
 
-	gameEngine.addEntity(new SceneManager(gameEngine));
+	let scene = new SceneManager(gameEngine);
+	gameEngine.sceneManager = scene;
+	gameEngine.addEntityToFront(scene);
 
 	
 
