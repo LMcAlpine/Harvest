@@ -27,5 +27,6 @@ class Layer {
     draw(ctx) {
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
         ctx.drawImage(this.image, this.x + this.width, this.y, this.width, this.height);
+        ctx.drawImage(this.image, this.x + 2 * this.width, this.y, this.width, this.height);
     }
 }

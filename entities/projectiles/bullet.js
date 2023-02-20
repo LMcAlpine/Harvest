@@ -13,9 +13,9 @@ class Bullet {
      * @param {Object} targetPos - Position bullet should travel to
      * @param {Integer} bulletDamage - Damage of bullet if hits target it can damage
      */
-    constructor(shooter, game, firingPos, targetPos, bulletVelocity, bulletDamage) {
-        Object.assign(this, { shooter, game, firingPos, targetPos, bulletVelocity, bulletDamage });
-
+    constructor(shooter, game, firingPos, targetPos, bulletVelocity, bulletDamage, bulletType) {
+        Object.assign(this, { shooter, game, firingPos, targetPos, bulletVelocity, bulletDamage, bulletType});
+        
         let xDiff = this.targetPos.x - this.firingPos.x;
         let yDiff = this.targetPos.y - this.firingPos.y;
 
@@ -38,12 +38,10 @@ class Bullet {
 
         //this.aimRight = shooter.aimRight;
         this.removeFromWorld = false;
-        this.radius = 5;
         this.aliveCounter = 4000;
 
         this.updateBB();
 
-        this.game.addCollisionEntity(this);
         this.game.addEntityToFront(this);
 
     };
@@ -79,11 +77,11 @@ class Bullet {
 
     collisionChecker() {
 
-        this.game.collisionEntities.forEach(entity => {
+        this.game.entities.forEach(entity => {
             //console.log(entity);
-
-            if (this.shooter !== entity && this !== entity && this.BB.collide(entity.BB)) {//Collision
-                if (entity instanceof Tile) {
+            
+            if (entity.BB && this.shooter !== entity && this !== entity && this.BB.collide(entity.BB)) {//Collision
+                if (entity instanceof Tile) { 
                     this.removeFromWorld = true;
 
                 } else if (entity instanceof Grunt) {
@@ -115,16 +113,31 @@ class Bullet {
             ctx.strokeStyle = 'red';
             ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
 
+            
+        }
+
+        if (this.bulletType === "BULLET") {
+            //Draw circle representing bullet
+            ctx.beginPath();
+            ctx.fillStyle = "yellow";
+            ctx.arc(
+                this.position.x - this.game.camera.x, //X Position of circle
+                this.position.y - this.game.camera.y, //Y Position of circle
+                2, 0, Math.PI * 2, false);
+            ctx.fill();
+            ctx.closePath();
+        } else if (this.bulletType ===  "PLASMA") {
             //Draw circle representing bullet
             ctx.beginPath();
             ctx.fillStyle = "cyan";
             ctx.arc(
                 this.position.x - this.game.camera.x, //X Position of circle
                 this.position.y - this.game.camera.y, //Y Position of circle
-                this.radius, 0, Math.PI * 2, false);
+                5, 0, Math.PI * 2, false);
             ctx.fill();
             ctx.closePath();
         }
+        
 
         //Loop to kill bullet entity
         if (this.aliveCounter == 0) {

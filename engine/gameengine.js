@@ -8,13 +8,14 @@ class GameEngine {
 
         // Everything that will be updated and drawn each frame
         this.entities = [];
-        //Every
-        this.collisionEntities = [];
 
+        //this.collisionEntities = [];
+        
 
         // Information on the input
         this.click = null;
         this.mouse = null;
+        this.mouseDown = false;
         this.wheel = null;
         this.space = null;
         this.keys = {};
@@ -61,30 +62,12 @@ class GameEngine {
         });
 
 
-        this.ctx.canvas.addEventListener("mousedown", e => {
-            //console.log("Mousedown");
-            //Find chief in the array (Runs every time player shoots, maybe change)
-            try {
-                this.entities[this.playerIndex].isFiring = 1;
-            }
-            catch (err) {
-                console.log('Chief not found, searching...');
-
-                for (var i = 0; i < this.entities.length; i++) {
-                    if (this.entities[i] instanceof MasterChief) {
-                        this.playerIndex = i;
-                        break;
-                    }
-                }
-                this.entities[this.playerIndex].isFiring = 1;
-            }
-
+        this.ctx.canvas.addEventListener("mousedown", e => {         
+            this.mouseDown = true;
         });
 
         this.ctx.canvas.addEventListener("mouseup", e => {
-            //console.log("Mouseup");
-            this.entities[this.playerIndex].isFiring = 0;
-
+            this.mouseDown = false;
         });
 
         this.ctx.canvas.addEventListener("wheel", e => {
@@ -119,9 +102,9 @@ class GameEngine {
         this.entities.push(entity);
     };
 
-    addCollisionEntity(entity) {
-        this.collisionEntities.push(entity);
-    };
+    // addCollisionEntity(entity) {
+    //     this.collisionEntities.push(entity);
+    // };
 
     //Adds entity after index 2
     addEntityToFront(entity) {

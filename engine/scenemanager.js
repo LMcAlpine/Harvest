@@ -10,11 +10,11 @@ class SceneManager {
         this.level = 0;
 
 
-        this.numWaves = 5;
-        this.enemiesPerWave = [5, 10, 15, 20, 25];
-        this.currentWave = 0;
-        PARAMS.ENEMIES = this.enemiesPerWave[0];
-        this.numEnemies = this.enemiesPerWave[this.currentWave];
+        // this.numWaves = 5;
+        // this.enemiesPerWave = [5, 10, 15, 20, 25];
+        // this.currentWave = 0;
+        // PARAMS.ENEMIES = this.enemiesPerWave[0];
+        // this.numEnemies = this.enemiesPerWave[this.currentWave];
 
 
         this.loadLevel();
@@ -29,7 +29,7 @@ class SceneManager {
     loadLevel() {
 
         //Declare player/enemies
-        this.startingPosition = { x: 1000, y: 2200 };
+        this.startingPosition = { x: 1100, y: 2200 };
         let player = new MasterChief(gameEngine, this.startingPosition, this.collisionBlocks);
         gameEngine.addEntity(player);
         gameEngine.addCollisionEntity(player);
@@ -55,7 +55,23 @@ class SceneManager {
         gameEngine.addCollisionEntity(elite);
 
         if (this.level === 0) {
+
+            //Declare player/enemies
+            // this.startingPosition = { x: 1200, y: 1200 };
+            // let player = new MasterChief(gameEngine, this.startingPosition);
+            // gameEngine.addEntity(player);
+            // gameEngine.player = player;
+
+            // this.testPosition = { x: 2800, y: 1200 };
+            // let testEnemy = new Grunt(gameEngine, this.testPosition);
+            // gameEngine.addEntity(testEnemy);
+
             new Level0Generator(this.game);
+            let nightForest = ASSET_MANAGER.getAsset("./images/nightBG.png");
+
+            // for the parallax 
+            let layer = new Layer(nightForest, 0.1);
+            gameEngine.addEntity(layer);
         }
 
 
@@ -117,7 +133,7 @@ class SceneManager {
     }
 
     draw(ctx) {
-        ctx.font = "50px serif";
+       // ctx.font = "50px serif";
         // ctx.fillText("current wave: " + this.currentWave + "", 0, 300)
 
         // ctx.fillText("enemies remaining: " + PARAMS.ENEMIES + "", 0, 400)

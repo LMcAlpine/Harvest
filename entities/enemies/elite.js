@@ -1,7 +1,7 @@
 //
 class Elite {
-    constructor(game, position, collisionBlocks) {
-        Object.assign(this, { game, position, collisionBlocks });
+    constructor(game, position) {
+        Object.assign(this, { game, position});
 
         this.hp = 150;
         this.currentGun = new Gun(this, game, "Plasma_Pistol");
@@ -16,8 +16,8 @@ class Elite {
         this.walkingSpeed = 0.07;
         this.aimRight = true;
 
-        this.BBXOffset = 10 * this.scale; //Offset for adjusting BB
-        this.BBYOffset = 12 * this.scale; //Offset for adjusting BB
+        //this.BBXOffset = 10 * this.scale; //Offset for adjusting BB
+        //this.BBYOffset = 12 * this.scale; //Offset for adjusting BB
 
         this.width = 64;
         this.height = 64;
@@ -117,10 +117,10 @@ class Elite {
 
     updateBB() {
         this.lastBB = this.BB;
-        this.BB = new BoundingBox(this.position.x + this.BBXOffset,
-            this.position.y + this.BBYOffset,
-            (this.width * this.scale) - ( 20 * this.scale),
-            (this.height * this.scale) - ( 14 * this.scale));
+        this.BB = new BoundingBox(this.position.x,
+            this.position.y,
+            (this.width * this.scale),
+            (this.height * this.scale));
     }
 
     update() {
@@ -186,21 +186,21 @@ class Elite {
                 this.state = 1;
             }
         }
-        if (this.currentState == 'chasing') {
-            this.position.x += this.velocity.x * TICK;
-            if (distance < 1000) {
-                // const firingPosStatic = this.BB.getCenter();
-                const firingPosStatic = {
-                    x: this.BB.getCenter().x ,
-                    y: this.BB.getCenter().y
-                }
-                //Capture the static position
-                const targetPosStatic =  this.game.player.BB.getCenter();
+        // if (this.currentState == 'chasing') {
+        //     this.position.x += this.velocity.x * TICK;
+        //     if (distance < 1000) {
+        //         // const firingPosStatic = this.BB.getCenter();
+        //         const firingPosStatic = {
+        //             x: this.BB.getCenter().x ,
+        //             y: this.BB.getCenter().y
+        //         }
+        //         //Capture the static position
+        //         const targetPosStatic =  this.game.player.BB.getCenter();
 
-               this.currentGun.shootGun(firingPosStatic, targetPosStatic);
-            }
+        //        this.currentGun.shootGun(firingPosStatic, targetPosStatic);
+        //     }
 
-        }
+        // }
         // if (this.currentState == 'waiting') {
         //     if (this.elapsedTime < 3) {
         //         this.elapsedTime += this.game.clockTick;
@@ -274,13 +274,13 @@ class Elite {
 
     collisionChecker() {
 
-        this.game.collisionEntities.forEach(entity => {
-            if (this !== entity && entity.BB && this.BB.collide(entity.BB)) { //falling
+        this.game.entities.forEach(entity => {
+            if (entity.BB && this !== entity && entity.BB && this.BB.collide(entity.BB)) { //falling
 
                 if (this.fallingVelocity.y > 0) { //falling
-
+                    //console.log("Touching ground");
                     if ((entity instanceof Tile) && this.lastBB.bottom <= entity.BB.top) {
-                        this.position.y = entity.BB.top - this.BB.height - this.BBYOffset;
+                        this.position.y = entity.BB.top - this.BB.height;
                         this.fallingVelocity.y = 0;
                         this.onGround = true;
                         this.updateBB();
@@ -292,7 +292,7 @@ class Elite {
 
                     if ((entity instanceof Tile) && this.lastBB.top >= entity.BB.bottom) {
                         console.log("Collide top of tile");
-                        this.position.y = entity.BB.bottom - this.BBYOffset;
+                        this.position.y = entity.BB.bottom;
                         this.fallingVelocity.y = 0;
                         this.updateBB();
                         return;
@@ -309,7 +309,7 @@ class Elite {
                         && this.velocity.x < 0) { //Touching right side
 
                         console.log("Touching right");
-                        this.position.x = entity.BB.right - this.BBXOffset;
+                        this.position.x = entity.BB.right;
 
                         if (this.velocity.x < 0) this.velocity.x = 0;
                     }
@@ -319,7 +319,7 @@ class Elite {
                         && this.velocity.x > 0) {  //Touching left side
 
                         console.log("Touching left");
-                        this.position.x = entity.BB.left - this.BB.width - this.BBXOffset;
+                        this.position.x = entity.BB.left - this.BB.width;
 
                         if (this.velocity.x > 0) this.velocity.x = 0;
                     }
