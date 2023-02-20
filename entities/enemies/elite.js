@@ -1,23 +1,26 @@
 //
 class Elite {
     constructor(game, position, collisionBlocks) {
-
         Object.assign(this, { game, position, collisionBlocks });
+
+        this.hp = 150;
+        this.currentGun = new Gun(this, game, "Plasma_Pistol");
         // Properties
-        // this.x;
-        // this.y;
-        // this.game = game;
-        this.state = 0;
-        this.elite = ASSET_MANAGER.getAsset("./sprites/elite.png");
+        this.scale = 3;
+        this.state = 1; //0 = Idle, 1 = Moving
+        this.isFiring = 0; // 0 = Not firing, 1 = Firing
+        this.SpriteSheet = ASSET_MANAGER.getAsset("./sprites/elite.png");
+        //this.SpriteSheet = ASSET_MANAGER.getAsset("./sprites/GruntSprites.png");
         this.animations = [];
-        this.scale = 2;
+
+        this.walkingSpeed = 0.07;
+        this.aimRight = true;
+
         this.BBXOffset = 10 * this.scale; //Offset for adjusting BB
-        this.BBYOffset = 6 * this.scale; //Offset for adjusting BB
+        this.BBYOffset = 12 * this.scale; //Offset for adjusting BB
 
-        // Load animations
-        // this.loadAnimations();
-
-
+        this.width = 64;
+        this.height = 64;
 
         // keeping track of which path to move towards
         this.targetID = 0;
@@ -52,16 +55,63 @@ class Elite {
         //  game.addEntity(this.currentState);
 
         this.elapsedTime = 0;
+    }
 
+    setState(state) {
+        this.currentState = state;
     }
 
     loadAnimations() {
 
-        // idle
-        this.animations[0] = new Animator(this.elite, 0, 0, 64, 64, 8, 0.095, 0, false, true);
+        //Build array
+        for (let i = 0; i <= 1; i++) { // this.state
+            this.animations.push([]);
+        }
 
-        // Walk
-        this.animations[1] = new Animator(this.elite, 0, 64, 64, 64, 8, 0.095, 0, false, true);
+
+
+        // Luke's test sheet
+        // this.animations[1] = new Animator(this.SpriteSheet,
+        //     0, 0,
+        //     50, 50,
+        //     6, 0.095,
+        //     0,
+        //     false, true);
+
+        // idle
+        this.animations[0] = new Animator(this.SpriteSheet,
+            0, 0,
+            64, 64,
+            1, 1,
+            0,
+            false, true);
+
+
+        // idle right
+        this.animations[3] = new Animator(this.SpriteSheet,
+            0, 0,
+            64, 64,
+            1, 1,
+            0,
+            false, true);
+
+        //   Walk right
+        this.animations[1] = new Animator(this.SpriteSheet,
+            0, 0,
+            64, 64,
+            8, 0.095,
+            0,
+            false, true);
+
+
+        // spritesheet, xStart, yStart, width, height, frameCount, frameDuration, framePadding, reverse, loop) {
+        // Walk left
+        this.animations[2] = new Animator(this.SpriteSheet,
+            0, 0,
+            64, 64,
+            8, 0.095,
+            0,
+            true, true);
 
     }
 
@@ -69,9 +119,10 @@ class Elite {
         this.lastBB = this.BB;
         this.BB = new BoundingBox(this.position.x + this.BBXOffset,
             this.position.y + this.BBYOffset,
-            (64 * this.scale) - (this.scale),
-            (90 * this.scale) - (this.scale));
+            (this.width * this.scale) - ( 20 * this.scale),
+            (this.height * this.scale) - ( 14 * this.scale));
     }
+
     update() {
 
         const TICK = this.game.clockTick;
@@ -80,15 +131,15 @@ class Elite {
 
 
         let distance = getDistance(this.position, this.target);
-        console.log(distance);
+        //console.log(distance);
         this.velocity = { x: (this.target.x - this.position.x) / distance * 100, y: (this.target.y - this.position.y) / distance * 100 };
 
-        // if (this.velocity.x > 0) {
-        //     this.state = 1;
-        // }
-        // else if (this.velocity.x < 0) {
-        //     this.state = 2;
-        // }
+        if (this.velocity.x > 0) {
+            this.state = 1;
+        }
+        else if (this.velocity.x < 0) {
+            this.state = 2;
+        }
 
 
         // if (distance < 300) {
@@ -96,17 +147,17 @@ class Elite {
         // }
 
         if (this.currentState == 'patrolling') {
-            // if (distance < 100) {
-            //     this.setState(this.states.chasing);
-            // }
+            if (distance < 100) {
+                this.setState(this.states.chasing);
+            }
             if (this.patrollingLeft) {
                 this.position.x -= 1;
-                if (this.position.x === 900) {
+                if (this.position.x === 400) {
                     this.patrollingLeft = false;
                     this.flip = false;
                     //   this.setState(this.states.waiting);
 
-                    //  this.state = 0;
+                    this.state = 0;
                     return;
 
                 }
@@ -116,32 +167,40 @@ class Elite {
 
             else {
                 this.position.x += 1;
-                if (this.position.x === 1200) {
+                if (this.position.x === 700) {
                     this.patrollingLeft = true;
 
                     this.flip = true;
 
                     //  this.setState(this.states.waiting);
-                    //this.state = 3;
+                    this.state = 3;
 
                     return;
 
                 }
             }
             if (this.flip) {
-                // this.state = 2;
+                this.state = 2;
             }
             else {
                 this.state = 1;
             }
         }
-        // if (this.currentState == 'chasing') {
-        //     this.position.x += this.velocity.x * TICK;
-        //     if (distance < 300) {
-        //         // this.shootGun();
-        //     }
+        if (this.currentState == 'chasing') {
+            this.position.x += this.velocity.x * TICK;
+            if (distance < 1000) {
+                // const firingPosStatic = this.BB.getCenter();
+                const firingPosStatic = {
+                    x: this.BB.getCenter().x ,
+                    y: this.BB.getCenter().y
+                }
+                //Capture the static position
+                const targetPosStatic =  this.game.player.BB.getCenter();
 
-        // }
+               this.currentGun.shootGun(firingPosStatic, targetPosStatic);
+            }
+
+        }
         // if (this.currentState == 'waiting') {
         //     if (this.elapsedTime < 3) {
         //         this.elapsedTime += this.game.clockTick;
@@ -178,6 +237,40 @@ class Elite {
 
 
     }
+
+
+    // shootGun() {
+
+    //     this.isFiring = 1;
+
+    //     //Capture 
+    //     const firingPosStatic = {
+    //         x: this.position.x + (20 * this.scale),
+    //         y: this.position.y + (15 * this.scale)
+    //     }
+
+    //     //Capture the static position
+    //     const targetPosStatic = {
+    //         x: (20 * this.scale) + this.game.camera.x,
+    //         y: this.game.camera.y
+    //     }
+
+    //     let bullet = new Bullet(
+    //         this,
+    //         this.game,
+    //         2,
+    //         firingPosStatic,
+    //         targetPosStatic,
+    //         1);
+
+    //     this.game.addCollisionEntity(bullet);
+    //     this.game.addEntityToFront(bullet);
+
+    // };
+
+    stopShooting() {
+        this.isFiring = 0;
+    };
 
     collisionChecker() {
 
@@ -243,26 +336,39 @@ class Elite {
 
 
     };
-    setState(state) {
-        this.currentState = state;
-    }
 
     takeDamage(damage) {
-        let health = 100;
-        while (health > 0) {
-            console.log(damage);
-            health -= damage;
-        }
-        if (health <= 0) {
-            this.removeFromWorld = true;
+
+        if (this.hp > 0) {
+            this.hp -= damage;    
+        } 
+        if (this.hp <= 0) {
+            this.hp = 0;
+            this.die();
         }
     }
 
+    die() {
+        //Todo: Play death animation
+        this.removeFromWorld = true;
+    }
 
     draw(ctx) {
-        this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y - this.game.camera.y, PARAMS.SCALE, true);
+        //   this.currentState.update();
+        //   this.currentState.draw(ctx);
 
+
+
+
+
+        this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y - this.game.camera.y, this.scale, false);
+
+        //draw ths BB
         ctx.strokeStyle = 'cyan';
         ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
+
+        //Draw the lastBB
+        //  ctx.strokeStyle = 'red';
+        //  ctx.strokeRect(this.lastBB.x - this.game.camera.x, this.lastBB.y - this.game.camera.y, this.BB.width, this.BB.height);
     }
 }

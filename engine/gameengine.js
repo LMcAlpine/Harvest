@@ -10,7 +10,7 @@ class GameEngine {
         this.entities = [];
         //Every
         this.collisionEntities = [];
-        
+
 
         // Information on the input
         this.click = null;
@@ -20,7 +20,7 @@ class GameEngine {
         this.keys = {};
         this.playerIndex = null;
 
-        
+
 
         // Options and the Details
         this.options = options || {
@@ -54,14 +54,14 @@ class GameEngine {
         this.ctx.canvas.addEventListener("mousemove", e => {
             if (this.options.debugging) {
                 console.log("MOUSE_MOVE: X: ", (getXandY(e).x | 0) +
-                " Y: ", (getXandY(e).y | 0));
+                    " Y: ", (getXandY(e).y | 0));
             }
             this.mouse = getXandY(e);
 
         });
 
 
-        this.ctx.canvas.addEventListener("mousedown", e => {         
+        this.ctx.canvas.addEventListener("mousedown", e => {
             //console.log("Mousedown");
             //Find chief in the array (Runs every time player shoots, maybe change)
             try {
@@ -69,22 +69,22 @@ class GameEngine {
             }
             catch (err) {
                 console.log('Chief not found, searching...');
-                
+
                 for (var i = 0; i < this.entities.length; i++) {
                     if (this.entities[i] instanceof MasterChief) {
                         this.playerIndex = i;
                         break;
-                    } 
+                    }
                 }
                 this.entities[this.playerIndex].isFiring = 1;
             }
-            
+
         });
 
         this.ctx.canvas.addEventListener("mouseup", e => {
             //console.log("Mouseup");
             this.entities[this.playerIndex].isFiring = 0;
-            
+
         });
 
         this.ctx.canvas.addEventListener("wheel", e => {
@@ -95,10 +95,10 @@ class GameEngine {
             this.wheel = e;
         });
 
-        this.ctx.canvas.addEventListener("keydown", function(e) {
+        this.ctx.canvas.addEventListener("keydown", function (e) {
             e.preventDefault();
             this.space = e; // Prevent space bar scrolling
-          })
+        })
 
         this.ctx.canvas.addEventListener("contextmenu", e => {
             if (this.options.debugging) {
@@ -126,7 +126,7 @@ class GameEngine {
     //Adds entity after index 2
     addEntityToFront(entity) {
         this.entities.splice(2, 0, entity);
- 
+
     };
 
     draw() {
@@ -137,6 +137,7 @@ class GameEngine {
         for (let i = this.entities.length - 1; i >= 0; i--) {
             this.entities[i].draw(this.ctx, this);
         }
+        this.camera.draw(this.ctx);
     };
 
     update() {
@@ -150,13 +151,17 @@ class GameEngine {
             }
         }
 
-        for (let i = this.entities.length - 1; i >= 0; --i) {  
+        this.camera.update();
+
+        for (let i = this.entities.length - 1; i >= 0; --i) {
             if (this.entities[i].removeFromWorld) {
                 this.entities.splice(i, 1);
             }
         }
 
-        
+
+
+
 
     };
 

@@ -14,8 +14,8 @@ class Bullet {
      * @param {Integer} bulletDamage - Damage of bullet if hits target it can damage
      */
     constructor(shooter, game, firingPos, targetPos, bulletVelocity, bulletDamage) {
-        Object.assign(this, { shooter, game, firingPos, targetPos, bulletVelocity, bulletDamage});
-        
+        Object.assign(this, { shooter, game, firingPos, targetPos, bulletVelocity, bulletDamage });
+
         let xDiff = this.targetPos.x - this.firingPos.x;
         let yDiff = this.targetPos.y - this.firingPos.y;
 
@@ -66,7 +66,7 @@ class Bullet {
         this.lastBB = this.BB;
         let width = 20;
         let height = 20;
-        this.BB = new BoundingBox(this.position.x - (width / 2),  this.position.y - (height / 2), width, height);
+        this.BB = new BoundingBox(this.position.x - (width / 2), this.position.y - (height / 2), width, height);
         // this.BB = new BoundingBox(this.position.x - this.game.camera.x,  this.position.y - this.game.camera.y, width, height);
 
         // this.BB = new BoundingBox(
@@ -74,34 +74,34 @@ class Bullet {
         //     this.position.y, 
         //     width, 
         //     height);
-        
+
     }
 
     collisionChecker() {
 
         this.game.collisionEntities.forEach(entity => {
             //console.log(entity);
-            
+
             if (this.shooter !== entity && this !== entity && this.BB.collide(entity.BB)) {//Collision
-                if (entity instanceof Tile) { 
+                if (entity instanceof Tile) {
                     this.removeFromWorld = true;
 
                 } else if (entity instanceof Grunt) {
-                   
+
                     entity.takeDamage(this.bulletDamage);
                     this.removeFromWorld = true;
-                    
-                    
+
+
                 } else if (entity instanceof MasterChief) {
                     //console.log("cheese ouch");
                     entity.takeDamage(this.bulletDamage);
                     this.removeFromWorld = true;
                 }
 
-                
-            } 
-                
-                
+
+            }
+
+
         });
     }
 

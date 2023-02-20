@@ -31,7 +31,7 @@ class MasterChief {
 
         //Animation states for chief's arms/gun firing
         this.isFiring = 0; // 0 = Not firing, 1 = Firing
-        this.gunType = 0; // 0 = Sniper Rifle, 1 = Assault Rifle
+        this.gunType = 1; // 0 = Sniper Rifle, 1 = Assault Rifle
         this.gunTypeTranslated = ["Sniper", "Assault_Rifle"];
         this.currentGun = new Gun(this, game, this.gunTypeTranslated[this.gunType]);
 
@@ -324,10 +324,7 @@ class MasterChief {
 
     update() {
 
-        if (this.x2 > 1920) {
-            this.x2 = 0;
-        }
-        this.x2 += 150 * this.game.clockTick;
+
 
 
         //this.position.x += 350 * this.game.clockTick
@@ -435,42 +432,45 @@ class MasterChief {
             if (keys.a.pressed && lastKey === 'a') {
                 this.velocity.x = -3;
                 this.position.x += -3;
-
-                // }
-                // if (keys.d.pressed && lastKey === 'd') {
-                //     this.velocity.x = 3;
-                //     this.position.x += 3;
-
-                // }
-                if (keys[' '].pressed && this.onGround) {
-                    this.velocity.y = PLAYER_JUMP;
-                    this.onGround = false;
-                    this.state = 2;
-                    // this.position.y += -PLAYER_JUMP;
-                    //console.log('up')
-                }
-                if (keys['r'].pressed) {
-                    this.currentGun.reloadGun();
-                }
-
-                // Allow the player to fall
             }
-            //UNCOMMENT
-            this.velocity.y += PLAYER_PHYSICS.MAX_FALL * TICK;
-            this.velocity.y += GRAVITY;
-
-            // Update the player x and y
-            // this.position.x += this.velocity.x * TICK;
-            //UNCOMMENT
-            this.position.y += this.velocity.y * TICK;
-
-            this.updateBB();
-
-            this.collisionChecker();
 
 
-        };
-    }
+            if (keys.d.pressed && lastKey === 'd') {
+                this.velocity.x = 3;
+                this.position.x += 3;
+
+            }
+            if (keys[' '].pressed && this.onGround) {
+                this.velocity.y = PLAYER_JUMP;
+                this.onGround = false;
+                this.state = 2;
+                // this.position.y += -PLAYER_JUMP;
+                //console.log('up')
+            }
+            if (keys['r'].pressed) {
+                this.currentGun.reloadGun();
+            }
+        }
+
+        // Allow the player to fall
+
+        //UNCOMMENT
+        this.velocity.y += PLAYER_PHYSICS.MAX_FALL * TICK;
+        this.velocity.y += GRAVITY;
+
+        // Update the player x and y
+        // this.position.x += this.velocity.x * TICK;
+        //UNCOMMENT
+        this.position.y += this.velocity.y * TICK;
+
+        this.updateBB();
+
+        this.collisionChecker();
+
+
+    };
+
+
 
     collisionChecker() {
 
@@ -536,12 +536,15 @@ class MasterChief {
     };
 
     draw(ctx) {
-        this.odst.drawFrame(this.game.clockTick, ctx, this.x2, 740, 3);
+        //   this.odst.drawFrame(this.game.clockTick, ctx, this.x2, 740, 3);
         // this.bodyAnimations[1][this.helmet][this.shieldDamage].drawFrame(
         //     this.game.clockTick, ctx,
         //     this.x2,
         //     700,
         //     this.scale, false);
+        ctx.fillStyle = 'red';
+        ctx.font = "50px serif";
+        ctx.fillText("ammo: " + this.currentGun.ammoCount, 0, 700);
 
         if (this.isAlive) {
             this.findMouseAngle();

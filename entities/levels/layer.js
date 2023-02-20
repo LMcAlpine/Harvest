@@ -4,7 +4,7 @@ class Layer {
         this.x = 0;
         this.y = 0;
         this.width = image.width * 4;
-        this.height = image.height * 4;
+        this.height = image.height *2;
 
         // draw second image where first image ends
         this.x2 = this.width;

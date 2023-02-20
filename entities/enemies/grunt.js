@@ -6,7 +6,7 @@ class Grunt {
         this.hp = 150;
         this.currentGun = new Gun(this, game, "Plasma_Pistol");
         // Properties
-        this.scale = 2.5;
+        this.scale = 3;
         this.state = 1; //0 = Idle, 1 = Moving
         this.isFiring = 0; // 0 = Not firing, 1 = Firing
         this.SpriteSheet = ASSET_MANAGER.getAsset("./sprites/grunt.png");
@@ -133,6 +133,7 @@ class Grunt {
         //console.log(distance);
         this.velocity = { x: (this.target.x - this.position.x) / distance * 100, y: (this.target.y - this.position.y) / distance * 100 };
 
+        console.log("X Velocity = " + (this.velocity.x | 0));
         if (this.velocity.x > 0) {
             this.state = 1;
         }
@@ -144,62 +145,62 @@ class Grunt {
         // if (distance < 300) {
         //     this.setState(this.states.chasing);
         // }
+        this.position.x += 1;
+        // if (this.currentState == 'patrolling') {
+        //     if (distance < 100) {
+        //         this.setState(this.states.chasing);
+        //     }
+        //     if (this.patrollingLeft) {
+        //         this.position.x -= 1;
+        //         if (this.position.x === 400) {
+        //             this.patrollingLeft = false;
+        //             this.flip = false;
+        //             //   this.setState(this.states.waiting);
 
-        if (this.currentState == 'patrolling') {
-            if (distance < 100) {
-                this.setState(this.states.chasing);
-            }
-            if (this.patrollingLeft) {
-                this.position.x -= 1;
-                if (this.position.x === 400) {
-                    this.patrollingLeft = false;
-                    this.flip = false;
-                    //   this.setState(this.states.waiting);
+        //             this.state = 0;
+        //             return;
 
-                    this.state = 0;
-                    return;
-
-                }
+        //         }
 
 
-            }
+        //     }
 
-            else {
-                this.position.x += 1;
-                if (this.position.x === 700) {
-                    this.patrollingLeft = true;
+        //     else {
+        //         this.position.x += 1;
+        //         if (this.position.x === 700) {
+        //             this.patrollingLeft = true;
 
-                    this.flip = true;
+        //             this.flip = true;
 
-                    //  this.setState(this.states.waiting);
-                    this.state = 3;
+        //             //  this.setState(this.states.waiting);
+        //             this.state = 3;
 
-                    return;
+        //             return;
 
-                }
-            }
-            if (this.flip) {
-                this.state = 2;
-            }
-            else {
-                this.state = 1;
-            }
-        }
-        if (this.currentState == 'chasing') {
-            this.position.x += this.velocity.x * TICK;
-            if (distance < 1000) {
-                // const firingPosStatic = this.BB.getCenter();
-                const firingPosStatic = {
-                    x: this.BB.getCenter().x ,
-                    y: this.BB.getCenter().y
-                }
-                //Capture the static position
-                const targetPosStatic =  this.game.player.BB.getCenter();
+        //         }
+        //     }
+        //     if (this.flip) {
+        //         this.state = 2;
+        //     }
+        //     else {
+        //         this.state = 1;
+        //     }
+        // }
+        // if (this.currentState == 'chasing') {
+        //     this.position.x += this.velocity.x * TICK;
+        //     if (distance < 1000) {
+        //         // const firingPosStatic = this.BB.getCenter();
+        //         const firingPosStatic = {
+        //             x: this.BB.getCenter().x ,
+        //             y: this.BB.getCenter().y
+        //         }
+        //         //Capture the static position
+        //         const targetPosStatic =  this.game.player.BB.getCenter();
 
-               this.currentGun.shootGun(firingPosStatic, targetPosStatic);
-            }
+        //        this.currentGun.shootGun(firingPosStatic, targetPosStatic);
+        //     }
 
-        }
+        // }
         // if (this.currentState == 'waiting') {
         //     if (this.elapsedTime < 3) {
         //         this.elapsedTime += this.game.clockTick;
@@ -309,7 +310,7 @@ class Grunt {
 
                         console.log("Touching right");
                         this.position.x = entity.BB.right - this.BBXOffset;
-
+                        //this.velocity.x = 0;
                         if (this.velocity.x < 0) this.velocity.x = 0;
                     }
 
@@ -319,7 +320,7 @@ class Grunt {
 
                         console.log("Touching left");
                         this.position.x = entity.BB.left - this.BB.width - this.BBXOffset;
-
+                        //this.velocity.x = 0;
                         if (this.velocity.x > 0) this.velocity.x = 0;
                     }
 
@@ -339,16 +340,16 @@ class Grunt {
     takeDamage(damage) {
 
         if (this.hp > 0) {
-            console.log();
             this.hp -= damage;
-        } else {
+        }
+        if (this.hp <= 0) {
             this.hp = 0;
             this.die();
         }
     }
 
     die() {
-        //Play death animation
+        //Todo: Play death animation
         this.removeFromWorld = true;
     }
 

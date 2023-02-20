@@ -10,8 +10,15 @@ class SceneManager {
         this.level = 0;
 
 
+        this.numWaves = 5;
+        this.enemiesPerWave = [5, 10, 15, 20, 25];
+        this.currentWave = 0;
+        PARAMS.ENEMIES = this.enemiesPerWave[0];
+        this.numEnemies = this.enemiesPerWave[this.currentWave];
+
 
         this.loadLevel();
+        // this.generateWave();
 
     }
 
@@ -22,7 +29,7 @@ class SceneManager {
     loadLevel() {
 
         //Declare player/enemies
-        this.startingPosition = { x: 260, y: 2200 };
+        this.startingPosition = { x: 1000, y: 2200 };
         let player = new MasterChief(gameEngine, this.startingPosition, this.collisionBlocks);
         gameEngine.addEntity(player);
         gameEngine.addCollisionEntity(player);
@@ -33,7 +40,16 @@ class SceneManager {
         gameEngine.addEntity(testEnemy);
         gameEngine.addCollisionEntity(testEnemy);
 
-        let elitePos = { x: 1000, y: 2200 };
+
+
+
+
+
+
+
+
+
+        let elitePos = { x: 700, y: 2100 };
         let elite = new Elite(this.game, elitePos, this.collisionBlocks);
         gameEngine.addEntity(elite);
         gameEngine.addCollisionEntity(elite);
@@ -65,6 +81,26 @@ class SceneManager {
 
     }
 
+    // generateWave() {
+    //     for (let i = 0; i < this.numEnemies; i++) {
+    //         this.testPosition = { x: 100 * i, y: 1900 + i };
+    //         let testEnemy = new Grunt(gameEngine, this.testPosition, this.collisionBlocks);
+    //         gameEngine.addEntity(testEnemy);
+    //         gameEngine.addCollisionEntity(testEnemy);
+    //     }
+    //     PARAMS.ENEMIES = this.numEnemies;
+    // }
+
+    // checkWave() {
+    //     //  this.enemiesRemaining = 0;
+    //     if (this.currentWave < this.numWaves && PARAMS.ENEMIES === 0) {
+    //         this.currentWave++;
+    //         this.generateWave();
+    //     }
+
+    // }
+
+
     update() {
 
 
@@ -75,10 +111,15 @@ class SceneManager {
         this.x = this.game.player.position.x - midpointX;
         this.y = this.game.player.position.y - midpointY;
 
+        //  this.checkWave();
+
 
     }
 
     draw(ctx) {
+        ctx.font = "50px serif";
+        // ctx.fillText("current wave: " + this.currentWave + "", 0, 300)
 
+        // ctx.fillText("enemies remaining: " + PARAMS.ENEMIES + "", 0, 400)
     }
 }

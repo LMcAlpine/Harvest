@@ -35,6 +35,7 @@ ASSET_MANAGER.downloadAll(() => {
 	PARAMS.CANVAS_WIDTH = canvas.width;
 	PARAMS.CANVAS_HEIGHT = canvas.height;
 
+	PARAMS.ENEMIES = 0;
 
 
 	//document.documentElement.style.cursor = 'none';
@@ -64,7 +65,9 @@ ASSET_MANAGER.downloadAll(() => {
 
 	// Attempt to unlock
 
-	gameEngine.addEntity(new SceneManager(gameEngine));
+	let scenemanager = new SceneManager(gameEngine);
+	//gameEngine.addEntity(scenemanager);
+	//gameEngine.scenemanager = scenemanager;
 
 	let nightsky = ASSET_MANAGER.getAsset("./images/nightsky.png");
 	let cityclose = ASSET_MANAGER.getAsset("./images/cityclose.png");
@@ -72,8 +75,8 @@ ASSET_MANAGER.downloadAll(() => {
 	let nightForest = ASSET_MANAGER.getAsset("./images/nightBG.png");
 
 	// for the parallax 
-	let layer = new Layer(nightForest, 0.1);
-	gameEngine.addEntity(layer);
+	// let layer = new Layer(nightForest, 0.1);
+	// gameEngine.addEntity(layer);
 
 	// layer = new Layer(nightsky, 0);
 	// gameEngine.addEntity(layer)
