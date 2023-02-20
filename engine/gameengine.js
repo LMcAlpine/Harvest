@@ -10,7 +10,7 @@ class GameEngine {
         this.entities = [];
 
         //this.collisionEntities = [];
-        
+
 
         // Information on the input
         this.click = null;
@@ -62,7 +62,7 @@ class GameEngine {
         });
 
 
-        this.ctx.canvas.addEventListener("mousedown", e => {         
+        this.ctx.canvas.addEventListener("mousedown", e => {
             this.mouseDown = true;
         });
 

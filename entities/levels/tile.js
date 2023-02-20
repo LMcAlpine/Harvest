@@ -1,9 +1,9 @@
 class Tile {
     constructor(game, x, y, tileSet, firstGID, GID) {
-        Object.assign(this, { game, x, y, tileSet, firstGID, GID});
+        Object.assign(this, { game, x, y, tileSet, firstGID, GID });
 
         this.hasCollisions = false;
-        
+
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/" + tileSet["image"]);
 
         this.margin = tileSet["margin"];
@@ -31,7 +31,7 @@ class Tile {
                 }
             }
         }
-        
+
         this.idRow = row;
         this.idCol = col;
 
@@ -39,20 +39,21 @@ class Tile {
         this.BB;
 
         this.generateCollision();
-        
+
 
     };
 
 
     update() {
-        
+
         this.updateBB();
-        
+
     }
 
     updateBB() {
         this.lastBB = this.BB;
         this.BB = new BoundingBox(this.x + this.bbX, this.y + this.bbY, this.tileWidth * PARAMS.SCALE, this.tileHeight * PARAMS.SCALE);
+        //  this.leftBB = new BoundingBox(this.x, this.y, this.tileWidth * PARAMS.SCALE, this.tileHeight * PARAMS.SCALE);
         //console.log("BB X: " + this.BB.x + "BB Y: " + this.BB.y);
     }
 
@@ -99,7 +100,7 @@ class Tile {
                 }
             }
         }
-        
+
     }
 
 };

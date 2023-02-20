@@ -1,7 +1,6 @@
-//
 class Grunt {
     constructor(game, position) {
-        Object.assign(this, { game, position});
+        Object.assign(this, { game, position });
 
         this.hp = 150;
         this.currentGun = new Gun(this, game, "Plasma_Pistol");
@@ -131,21 +130,72 @@ class Grunt {
 
         let distance = getDistance(this.position, this.target);
         //console.log(distance);
-        this.velocity = { x: (this.target.x - this.position.x) / distance * 100, y: (this.target.y - this.position.y) / distance * 100 };
 
-        console.log("X Velocity = " + (this.velocity.x | 0));
-        if (this.velocity.x > 0) {
+
+        this.direction = { x: (this.target.x - this.position.x) / distance * 100, y: (this.target.y - this.position.y) / distance * 100 };
+
+        if (this.direction.x > 0) {
+            this.velocity.x = 3;
             this.state = 1;
+            this.position.x += 1;
         }
-        else if (this.velocity.x < 0) {
+        else if (this.direction.x < 0) {
+            this.velocity.x = -3;
             this.state = 2;
+            this.position.x -= 1;
+
+
+
+            // if (this.currentState == 'patrolling') {
+            //     if (distance < 100) {
+            //         this.setState(this.states.chasing);
+            //     }
+            //     if (this.patrollingLeft) {
+            //         this.position.x -= 1;
+            //         if (this.position.x === 400) {
+            //             this.patrollingLeft = false;
+            //             this.flip = false;
+            //             //   this.setState(this.states.waiting);
+
+            //             this.state = 0;
+            //             return;
+
+            //         }
+
+
+            //     }
+
+            //     else {
+            //         this.position.x += 1;
+            //         if (this.position.x === 700) {
+            //             this.patrollingLeft = true;
+
+            //             this.flip = true;
+
+            //             //  this.setState(this.states.waiting);
+            //             this.state = 3;
+
+            //             return;
+
+            //         }
+            //     }
+            // }
+
+
         }
 
-
-        // if (distance < 300) {
-        //     this.setState(this.states.chasing);
+        // if (this.velocity.x > 0) {
+        //     this.state = 1;
         // }
-        this.position.x += 1;
+        // else if (this.velocity.x < 0) {
+        //     this.state = 2;
+        // }
+
+
+        // // if (distance < 300) {
+        // //     this.setState(this.states.chasing);
+        // // }
+
         // if (this.currentState == 'patrolling') {
         //     if (distance < 100) {
         //         this.setState(this.states.chasing);
@@ -191,17 +241,17 @@ class Grunt {
         //     if (distance < 1000) {
         //         // const firingPosStatic = this.BB.getCenter();
         //         const firingPosStatic = {
-        //             x: this.BB.getCenter().x ,
+        //             x: this.BB.getCenter().x,
         //             y: this.BB.getCenter().y
         //         }
         //         //Capture the static position
-        //         const targetPosStatic =  this.game.player.BB.getCenter();
+        //         const targetPosStatic = this.game.player.BB.getCenter();
 
-        //        this.currentGun.shootGun(firingPosStatic, targetPosStatic);
+        //         this.currentGun.shootGun(firingPosStatic, targetPosStatic);
         //     }
 
         // }
-        // if (this.currentState == 'waiting') {
+        // // if (this.currentState == 'waiting') {
         //     if (this.elapsedTime < 3) {
         //         this.elapsedTime += this.game.clockTick;
         //         //  this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y - this.game.camera.y, this.scale, false);
@@ -310,7 +360,7 @@ class Grunt {
 
                         console.log("Touching right");
                         this.position.x = entity.BB.right - this.BBXOffset;
-                        //this.velocity.x = 0;
+
                         if (this.velocity.x < 0) this.velocity.x = 0;
                     }
 
@@ -320,7 +370,7 @@ class Grunt {
 
                         console.log("Touching left");
                         this.position.x = entity.BB.left - this.BB.width - this.BBXOffset;
-                        //this.velocity.x = 0;
+
                         if (this.velocity.x > 0) this.velocity.x = 0;
                     }
 
@@ -340,16 +390,16 @@ class Grunt {
     takeDamage(damage) {
 
         if (this.hp > 0) {
+            console.log();
             this.hp -= damage;
-        }
-        if (this.hp <= 0) {
+        } else {
             this.hp = 0;
             this.die();
         }
     }
 
     die() {
-        //Todo: Play death animation
+        //Play death animation
         this.removeFromWorld = true;
     }
 
