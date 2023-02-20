@@ -12,7 +12,7 @@ class Gun {
             [isAutomatic, Max Firerate, Bullet Velocity, Bullet Damage, Magazine Size, projectileType]
         */
         this.guns = {
-            "Assault_Rifle": [true, 10, 15, 35, 36, "BULLET"],
+            "Assault_Rifle": [true, 10, 10, 35, 36, "BULLET"],
             "Sniper": [false, 100, 75, 150, 4, "BULLET"],
             "Plasma_Pistol": [false, 40, 7, 20, 1000, "PLASMA"],
             "SMG": [true, 15, 18, 30, 30, "BULLET"],
