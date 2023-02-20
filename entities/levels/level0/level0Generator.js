@@ -4,8 +4,8 @@ class Level0Generator {
     constructor(game) {
         Object.assign(this, { game });
    
-
-        this.level0Map = HaloTestMapMain;
+        this.level0Map = HaloMap;
+        
         this.tileSets = {
             "GrassBlocks" : GrassBlocks,
             "tree1" : tree1,
@@ -13,14 +13,14 @@ class Level0Generator {
             "BasicTrees" : BasicTrees,
             "Healthpack" : Healthpack,
             "EarthBlocks" : EarthBlocks,
-            "EarthBlocks2" : EarthBlocks2
-        
-
+            "EarthBlocks2" : EarthBlocks2,
+            "EarthBlocks3" : EarthBlocks3,
+            "BuildingBlocks" : BuildingBlocks,
+            "BuildingDoor" : BuildingDoor,
+            "HaloPod1" : HaloPod1,
+            "HaloPod2" : HaloPod2
         }
 
-        //Until we can import JSON correctly, have to copy and paste the JSON file contents
-        //this.loadInData();
-        
 
     /*
         //             PLAN: 
@@ -38,13 +38,11 @@ class Level0Generator {
         //             7) Repeat steps for every layer down
         //         
     */
-        //Sorted level data per layer
-        //this.levelData = [];
-        
+
         let levelData = this.formatLevelData();
-        
+        console.log("Map data formatted");
         this.parseLevelData(levelData);
-        //console.log(this.game.collisionEntities);
+
 
     };
 
@@ -57,7 +55,6 @@ class Level0Generator {
             
             if (layer["type"] === "tilelayer"){ //Used to draw map and collisions
                 let width = layer["width"];
-                let height = layer["height"];
                 let rawData = layer["data"];
                 
                 let FormattedData = [];
@@ -67,33 +64,49 @@ class Level0Generator {
                 levelData.push(FormattedData);
             } else if (layer["type"] === "objectgroup"){ //Used for spawn points / world events
                 let objects = layer["objects"];
+                console.log(objects);
                 objects.forEach(object => {
-                    if (object["class"] === "Spawn") {
-
+                    if (object["class"] === "SpawnPoint") {
+                        
                         // //These are positional offsets that convert the map coords from tiled to actual in game coords
                         let position = {
                             x: object["x"] * PARAMS.SCALE,
                             y: object["y"] * PARAMS.SCALE,
                         }
 
+                        console.log(position);
+
                         if (object["name"] === "MasterChief") {
                             console.log("Spawning Master Chief at: " + position.x + ", " + position.y);
                             let player = new MasterChief(gameEngine, position);
                             this.game.addEntity(player);
+                            this.game.addCollisionEntity(player);
                             this.game.player = player;
                             
                         } else if (object["name"] === "Grunt") {
                             console.log("Spawning Grunt at: " + position.x + ", " + position.y);
                             let enemy = new Grunt(gameEngine, position);
+                            this.game.addCollisionEntity(enemy);
                             this.game.addEntity(enemy);
 
                         } else if (object["name"] === "Elite") {
                             console.log("Spawning Elite at: " + position.x + ", " + position.y);
                             let enemy = new Elite(gameEngine, position);
                             this.game.addEntity(enemy);
+                            this.game.addCollisionEntity(enemy);
 
                         }
                         
+                    } else if (object["class"] === "CheckPoint") {
+
+                        let position = {
+                            x: object["x"] * PARAMS.SCALE,
+                            y: object["y"] * PARAMS.SCALE,
+                        }
+
+                        if (object["name"] === "End") {
+                            this.game.player.endGoal = position;
+                        }
                     }
                 });
             }
@@ -133,12 +146,15 @@ class Level0Generator {
                         let tileSetName = tileSheets[t]["source"];
                         let firstGID = tileSheets[t]["firstgid"];
                         let tileSet = this.tileSets[tileSetName.slice(0,-4)];
-                        console.log("Loading Tileset: " + tileSetName.slice(0,-4));
+                        //console.log("Loading Tileset: " + tileSetName.slice(0,-4));
+
                         let tile = new Tile(this.game, col * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, tileSet, firstGID, GID);
 
+                        if (tile.hasCollisions) {
+                            this.game.addCollisionEntity(tile);
+                        }
+
                         this.game.addEntity(tile);
-                        
-                        
 
                     }
 

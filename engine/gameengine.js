@@ -8,6 +8,7 @@ class GameEngine {
 
         // Everything that will be updated and drawn each frame
         this.entities = [];
+        this.collisionEntities = [];
 
         //this.collisionEntities = [];
         
@@ -21,7 +22,7 @@ class GameEngine {
         this.keys = {};
         this.playerIndex = null;
 
-        
+        this.sceneManager = null;
 
         // Options and the Details
         this.options = options || {
@@ -102,9 +103,9 @@ class GameEngine {
         this.entities.push(entity);
     };
 
-    // addCollisionEntity(entity) {
-    //     this.collisionEntities.push(entity);
-    // };
+    addCollisionEntity(entity) {
+        this.collisionEntities.push(entity);
+    };
 
     //Adds entity after index 2
     addEntityToFront(entity) {
@@ -123,6 +124,7 @@ class GameEngine {
     };
 
     update() {
+        
         let entitiesCount = this.entities.length;
 
         for (let i = 0; i < entitiesCount; i++) {
@@ -132,13 +134,27 @@ class GameEngine {
                 entity.update();
             }
         }
-
         for (let i = this.entities.length - 1; i >= 0; --i) {  
             if (this.entities[i].removeFromWorld) {
                 this.entities.splice(i, 1);
             }
         }
 
+
+        // let collisionEntitiesCount = this.collisionEntities.length;
+        // for (let i = 0; i < collisionEntitiesCount; i++) {
+        //     let entity = this.collisionEntities[i];
+
+        //     if (!entity.removeFromWorld) {
+        //         entity.update();
+        //     }
+        // }
+
+        // for (let i = this.collisionEntities.length - 1; i >= 0; --i) {  
+        //     if (this.collisionEntitiess[i].removeFromWorld) {
+        //         this.collisionEntities.splice(i, 1);
+        //     }
+        // }
         
 
     };
