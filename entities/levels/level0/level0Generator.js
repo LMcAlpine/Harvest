@@ -4,7 +4,6 @@ class Level0Generator {
     constructor(game) {
         Object.assign(this, { game });
    
-        console.log(HaloMap);
         this.level0Map = HaloMap;
         
         this.tileSets = {
@@ -17,12 +16,11 @@ class Level0Generator {
             "EarthBlocks2" : EarthBlocks2,
             "EarthBlocks3" : EarthBlocks3,
             "BuildingBlocks" : BuildingBlocks,
-            "BuildingDoor" : BuildingDoor
+            "BuildingDoor" : BuildingDoor,
+            "HaloPod1" : HaloPod1,
+            "HaloPod2" : HaloPod2
         }
 
-        //Until we can import JSON correctly, have to copy and paste the JSON file contents
-        //this.loadInData();
-        
 
     /*
         //             PLAN: 
@@ -40,13 +38,11 @@ class Level0Generator {
         //             7) Repeat steps for every layer down
         //         
     */
-        //Sorted level data per layer
-        //this.levelData = [];
-        
+
         let levelData = this.formatLevelData();
-        
+        console.log("Map data formatted");
         this.parseLevelData(levelData);
-        //console.log(this.game.collisionEntities);
+
 
     };
 
@@ -59,7 +55,6 @@ class Level0Generator {
             
             if (layer["type"] === "tilelayer"){ //Used to draw map and collisions
                 let width = layer["width"];
-                let height = layer["height"];
                 let rawData = layer["data"];
                 
                 let FormattedData = [];
@@ -69,14 +64,17 @@ class Level0Generator {
                 levelData.push(FormattedData);
             } else if (layer["type"] === "objectgroup"){ //Used for spawn points / world events
                 let objects = layer["objects"];
+                console.log(objects);
                 objects.forEach(object => {
-                    if (object["class"] === "Spawn") {
-
+                    if (object["class"] === "SpawnPoint") {
+                        
                         // //These are positional offsets that convert the map coords from tiled to actual in game coords
                         let position = {
                             x: object["x"] * PARAMS.SCALE,
                             y: object["y"] * PARAMS.SCALE,
                         }
+
+                        console.log(position);
 
                         if (object["name"] === "MasterChief") {
                             console.log("Spawning Master Chief at: " + position.x + ", " + position.y);
@@ -136,11 +134,10 @@ class Level0Generator {
                         let firstGID = tileSheets[t]["firstgid"];
                         let tileSet = this.tileSets[tileSetName.slice(0,-4)];
                         console.log("Loading Tileset: " + tileSetName.slice(0,-4));
+
                         let tile = new Tile(this.game, col * PARAMS.BLOCKWIDTH, row * PARAMS.BLOCKWIDTH, tileSet, firstGID, GID);
 
                         this.game.addEntity(tile);
-                        
-                        
 
                     }
 

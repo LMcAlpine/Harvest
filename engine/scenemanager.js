@@ -66,14 +66,15 @@ class SceneManager {
 
     update() {
 
+        if (this.game.player !== null) {
 
-        let midpointX = PARAMS.CANVAS_WIDTH / 2 - PARAMS.BLOCKWIDTH / 2;
-        let midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.BLOCKWIDTH / 2;
+            let midpointX = PARAMS.CANVAS_WIDTH / 2 - PARAMS.BLOCKWIDTH / 2;
+            let midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.BLOCKWIDTH / 2;
 
-        //ACTIVE CAMERA
-        this.x = this.game.player.position.x - midpointX;
-        this.y = this.game.player.position.y - midpointY;
-
+            //ACTIVE CAMERA
+            this.x = this.game.player.position.x - midpointX;
+            this.y = this.game.player.position.y - midpointY;
+        }
 
     }
 

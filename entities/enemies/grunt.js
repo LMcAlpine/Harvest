@@ -23,12 +23,12 @@ class Grunt {
 
         // keeping track of which path to move towards
         this.targetID = 0;
-        this.target = { x: game.player.position.x, y: game.player.position.y };
+        this.target = null;
 
 
-        let distance = getDistance(this.position, this.target);
+        //let distance = getDistance(this.position, this.target);
         // direction from enemy to target
-        let unitVector = { x: (this.target.x - this.position.x) / distance * 100, y: (this.target.y - this.position.y) / distance * 100 };
+        //let unitVector = { x: (this.target.x - this.position.x) / distance * 100, y: (this.target.y - this.position.y) / distance * 100 };
 
 
         // Added for Jumping
@@ -38,7 +38,7 @@ class Grunt {
 
 
         this.fallingVelocity = { x: 0, y: 0 };
-        this.velocity = unitVector;
+        this.velocity = 0;
         this.onGround = true;
 
 

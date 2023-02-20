@@ -1,14 +1,49 @@
 var BuildingBlocks =
-{ "columns":3,
- "image":"..\/BuildingBlocks.png",
- "imageheight":96,
- "imagewidth":96,
- "margin":0,
+{ "columns":11,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"json",
+         "target":"BuildingBlocks.tsj"
+        }
+    },
+ "image":"BuildingBlocks.png",
+ "imageheight":228,
+ "imagewidth":367,
+ "margin":1,
  "name":"BuildingBlocks",
- "spacing":0,
- "tilecount":9,
+ "spacing":1,
+ "tilecount":77,
  "tiledversion":"1.9.2",
  "tileheight":32,
+ "tiles":[
+        {
+         "id":22,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "class":"BB",
+                     "height":32,
+                     "id":1,
+                     "name":"",
+                     "rotation":0,
+                     "visible":true,
+                     "width":31,
+                     "x":0,
+                     "y":0
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            }
+        }],
  "tilewidth":32,
  "type":"tileset",
  "version":"1.9"

@@ -1,10 +1,10 @@
-var BuildingDoor =
+var HaloPod2 = 
 { "columns":2,
- "image":"BuildingDoor.png",
+ "image":"HaloPod2.png",
  "imageheight":64,
  "imagewidth":64,
  "margin":0,
- "name":"BuildingDoor",
+ "name":"HaloPod2",
  "spacing":0,
  "tilecount":4,
  "tiledversion":"1.9.2",

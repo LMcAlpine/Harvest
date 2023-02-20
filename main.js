@@ -17,6 +17,8 @@ ASSET_MANAGER.queueDownload("./sprites/EarthBlocks3.png");
 ASSET_MANAGER.queueDownload("./sprites/BuildingBlocks.png");
 ASSET_MANAGER.queueDownload("./sprites/BuildingDoor.png");
 ASSET_MANAGER.queueDownload("./sprites/Healthpack.png");
+ASSET_MANAGER.queueDownload("./sprites/HaloPod1.png");
+ASSET_MANAGER.queueDownload("./sprites/HaloPod2.png");
 ASSET_MANAGER.queueDownload("./sprites/tree1.png");
 ASSET_MANAGER.queueDownload("./sprites/tree2.png");
 ASSET_MANAGER.queueDownload("./sprites/BasicTrees.png");
