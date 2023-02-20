@@ -29,8 +29,6 @@ ASSET_MANAGER.queueDownload("./images/nightsky.png")
 ASSET_MANAGER.queueDownload("./images/cityclose.png")
 ASSET_MANAGER.queueDownload("./images/nightBG.png")
 
-ASSET_MANAGER.queueDownload("./odst.png")
-
 ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");
 	const ctx = canvas.getContext("2d");
@@ -43,7 +41,6 @@ ASSET_MANAGER.downloadAll(() => {
 	PARAMS.CANVAS_WIDTH = canvas.width;
 	PARAMS.CANVAS_HEIGHT = canvas.height;
 
-	PARAMS.ENEMIES = 0;
 
 
 	//document.documentElement.style.cursor = 'none';
@@ -77,7 +74,7 @@ ASSET_MANAGER.downloadAll(() => {
 	gameEngine.sceneManager = scene;
 	gameEngine.addEntityToFront(scene);
 
-	
+
 
 	// layer = new Layer(nightsky, 0);
 	// gameEngine.addEntity(layer)

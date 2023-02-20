@@ -31,13 +31,13 @@ class Grunt {
 
 
         // Added for Jumping
-        // this.velocity = { x: 0, y: 0 };
+        this.velocity = { x: 0, y: 0 };
 
 
 
 
         this.fallingVelocity = { x: 0, y: 0 };
-        this.velocity = 0;
+        //    this.velocity = 0;
         this.onGround = true;
 
 
@@ -47,7 +47,7 @@ class Grunt {
 
         //   this.states = { patrolling: new PatrollingState(this), waiting: new WaitingState(this), chasing: new ChasingState(this) };
         this.states = { patrolling: "patrolling", waiting: "waiting", chasing: "chasing" };
-        this.currentState = this.states.patrolling;
+        this.currentState = this.states.chasing;
 
         this.patrollingLeft = false;
         //  game.addEntity(this.currentState);
@@ -138,6 +138,63 @@ class Grunt {
             this.velocity.x = 3;
             this.state = 1;
             this.position.x += 1;
+
+
+            // if (this.currentState == 'patrolling') {
+            //     if (distance < 100) {
+            //         this.setState(this.states.chasing);
+            //     }
+            //     if (this.patrollingLeft) {
+            //         this.position.x -= 1;
+            //         // if (this.position.x === 400) {
+            //         //     this.patrollingLeft = false;
+            //         //     this.flip = false;
+            //         //     //   this.setState(this.states.waiting);
+
+            //         //     this.state = 0;
+            //         //     return;
+
+            //         // }
+
+
+            //     }
+
+            //     else {
+            //         this.position.x += 1;
+            //         // if (this.position.x === 700) {
+            //         //     this.patrollingLeft = true;
+
+            //         //     this.flip = true;
+
+            //         //     //  this.setState(this.states.waiting);
+            //         //     this.state = 3;
+
+            //         //     return;
+
+            //         // }
+            //     }
+            //     if (this.flip) {
+            //         this.state = 2;
+            //     }
+            //     else {
+            //         this.state = 1;
+            //     }
+            // }
+            if (this.currentState == 'chasing') {
+                this.position.x += this.velocity.x * TICK;
+                if (distance < 1000) {
+                    // const firingPosStatic = this.BB.getCenter();
+                    const firingPosStatic = {
+                        x: this.BB.getCenter().x,
+                        y: this.BB.getCenter().y
+                    }
+                    //Capture the static position
+                    const targetPosStatic = this.game.player.BB.getCenter();
+
+                    this.currentGun.shootGun(firingPosStatic, targetPosStatic);
+                }
+
+            }
         }
         else if (this.direction.x < 0) {
             this.velocity.x = -3;
@@ -202,32 +259,32 @@ class Grunt {
         //     }
         //     if (this.patrollingLeft) {
         //         this.position.x -= 1;
-        //         if (this.position.x === 400) {
-        //             this.patrollingLeft = false;
-        //             this.flip = false;
-        //             //   this.setState(this.states.waiting);
+        //         // if (this.position.x === 400) {
+        //         //     this.patrollingLeft = false;
+        //         //     this.flip = false;
+        //         //     //   this.setState(this.states.waiting);
 
-        //             this.state = 0;
-        //             return;
+        //         //     this.state = 0;
+        //         //     return;
 
-        //         }
+        //         // }
 
 
         //     }
 
         //     else {
         //         this.position.x += 1;
-        //         if (this.position.x === 700) {
-        //             this.patrollingLeft = true;
+        //         // if (this.position.x === 700) {
+        //         //     this.patrollingLeft = true;
 
-        //             this.flip = true;
+        //         //     this.flip = true;
 
-        //             //  this.setState(this.states.waiting);
-        //             this.state = 3;
+        //         //     //  this.setState(this.states.waiting);
+        //         //     this.state = 3;
 
-        //             return;
+        //         //     return;
 
-        //         }
+        //         // }
         //     }
         //     if (this.flip) {
         //         this.state = 2;
@@ -236,21 +293,21 @@ class Grunt {
         //         this.state = 1;
         //     }
         // }
-        // if (this.currentState == 'chasing') {
-        //     this.position.x += this.velocity.x * TICK;
-        //     if (distance < 1000) {
-        //         // const firingPosStatic = this.BB.getCenter();
-        //         const firingPosStatic = {
-        //             x: this.BB.getCenter().x,
-        //             y: this.BB.getCenter().y
-        //         }
-        //         //Capture the static position
-        //         const targetPosStatic = this.game.player.BB.getCenter();
+        if (this.currentState == 'chasing') {
+            this.position.x += this.velocity.x * TICK;
+            if (distance < 1000) {
+                // const firingPosStatic = this.BB.getCenter();
+                const firingPosStatic = {
+                    x: this.BB.getCenter().x,
+                    y: this.BB.getCenter().y
+                }
+                //Capture the static position
+                const targetPosStatic = this.game.player.BB.getCenter();
 
-        //         this.currentGun.shootGun(firingPosStatic, targetPosStatic);
-        //     }
+                this.currentGun.shootGun(firingPosStatic, targetPosStatic);
+            }
 
-        // }
+        }
         // // if (this.currentState == 'waiting') {
         //     if (this.elapsedTime < 3) {
         //         this.elapsedTime += this.game.clockTick;

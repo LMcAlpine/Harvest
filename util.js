@@ -91,7 +91,7 @@ const PHYSIC_SCALE = 3;
 const GRAVITY = 5;
 const PLAYER_JUMP = -700;
 const PLAYER_PHYSICS = {
-    MAX_WALK: 60 * PHYSIC_SCALE,
+    MAX_WALK: 90 * PHYSIC_SCALE,
     MAX_RUN: 180 * PHYSIC_SCALE,
     ACC_WALK: 180 * PHYSIC_SCALE,
     ACC_RUN: 400 * PHYSIC_SCALE,
@@ -144,6 +144,3 @@ function rotateImage(spritesheet, xStart, yStart, width, height, theta, scale, f
     return offscreenCanvas;
 
 };
-
-
-

@@ -3,7 +3,7 @@ class MasterChief {
     constructor(game, position) {
 
         // Updated the constructor
-        Object.assign(this, { game, position});
+        Object.assign(this, { game, position });
 
         this.scale = 3;
         this.cache = [];
@@ -12,9 +12,9 @@ class MasterChief {
         this.GunSpriteSheet = ASSET_MANAGER.getAsset("./sprites/Guns.png");
 
 
-        this.odstCharacter = ASSET_MANAGER.getAsset("./odst.png");
+        // this.odstCharacter = ASSET_MANAGER.getAsset("./odst.png");
 
-        this.odst = new Animator(this.odstCharacter, 0, 0, 64, 64, 8, 0.095, 0, false, true);
+        // this.odst = new Animator(this.odstCharacter, 0, 0, 64, 64, 8, 0.095, 0, false, true);
 
         this.lastBB = null;
         this.BB = null;
@@ -72,7 +72,7 @@ class MasterChief {
         this.HUD = new PlayerHUD(this, this.game);
         this.game.addEntity(this.HUD);
 
-       // this.x2 = 260;
+        // this.x2 = 260;
 
     };
 
@@ -339,7 +339,7 @@ class MasterChief {
                     y: gameEngine.mouse.y + this.game.camera.y
                 }
 
-                if (!this.currentGun.isEmpty() && !this.currentGun.reloading){
+                if (!this.currentGun.isEmpty() && !this.currentGun.reloading) {
 
                     this.isFiring = 1;
                     this.currentGun.shootGun(firingPosStatic, targetPosStatic);
@@ -535,9 +535,9 @@ class MasterChief {
         //     this.x2,
         //     700,
         //     this.scale, false);
-      //  ctx.fillStyle = 'red';
-      //  ctx.font = "50px serif";
-     //   ctx.fillText("ammo: " + this.currentGun.ammoCount, 0, 700);
+        //  ctx.fillStyle = 'red';
+        //  ctx.font = "50px serif";
+        //   ctx.fillText("ammo: " + this.currentGun.ammoCount, 0, 700);
 
         if (this.isAlive) { //CHIEF IS ALIVE
             this.findMouseAngle();
