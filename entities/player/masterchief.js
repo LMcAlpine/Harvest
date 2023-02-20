@@ -418,13 +418,13 @@ class MasterChief {
 
             // *** Player Movement 2 ***
             if (keys.a.pressed && lastKey === 'a') {
-                this.velocity.x = -3;
-                this.position.x += -3;
+                this.velocity.x = -4;
+                this.position.x += -4;
 
             }
             if (keys.d.pressed && lastKey === 'd') {
-                this.velocity.x = 3;
-                this.position.x += 3;
+                this.velocity.x = 4;
+                this.position.x += 4;
 
             }
             if(keys[' '].pressed && this.onGround) {
