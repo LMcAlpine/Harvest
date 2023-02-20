@@ -32,13 +32,13 @@ class SceneManager {
         this.startingPosition = { x: 1100, y: 2200 };
         let player = new MasterChief(gameEngine, this.startingPosition, this.collisionBlocks);
         gameEngine.addEntity(player);
-        gameEngine.addCollisionEntity(player);
+        //gameEngine.addCollisionEntity(player);
         gameEngine.player = player;
 
         this.testPosition = { x: 500, y: 1900 };
         let testEnemy = new Grunt(gameEngine, this.testPosition, this.collisionBlocks);
         gameEngine.addEntity(testEnemy);
-        gameEngine.addCollisionEntity(testEnemy);
+        // gameEngine.addCollisionEntity(testEnemy);
 
 
 
@@ -52,7 +52,7 @@ class SceneManager {
         let elitePos = { x: 700, y: 2100 };
         let elite = new Elite(this.game, elitePos, this.collisionBlocks);
         gameEngine.addEntity(elite);
-        gameEngine.addCollisionEntity(elite);
+        // gameEngine.addCollisionEntity(elite);
 
         if (this.level === 0) {
 
@@ -133,7 +133,7 @@ class SceneManager {
     }
 
     draw(ctx) {
-       // ctx.font = "50px serif";
+        // ctx.font = "50px serif";
         // ctx.fillText("current wave: " + this.currentWave + "", 0, 300)
 
         // ctx.fillText("enemies remaining: " + PARAMS.ENEMIES + "", 0, 400)
