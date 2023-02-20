@@ -359,9 +359,6 @@ class Grunt {
         //   this.currentState.draw(ctx);
 
 
-
-
-
         this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y - this.game.camera.y, this.scale, false);
 
         if (PARAMS.DEBUG) {
