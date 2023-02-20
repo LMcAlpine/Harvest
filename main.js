@@ -13,7 +13,12 @@ ASSET_MANAGER.queueDownload("./sprites/brute.png");
 ASSET_MANAGER.queueDownload("./sprites/Grass Blocks.png");
 ASSET_MANAGER.queueDownload("./sprites/EarthBlocks.png");
 ASSET_MANAGER.queueDownload("./sprites/EarthBlocks2.png");
+ASSET_MANAGER.queueDownload("./sprites/EarthBlocks3.png");
+ASSET_MANAGER.queueDownload("./sprites/BuildingBlocks.png");
+ASSET_MANAGER.queueDownload("./sprites/BuildingDoor.png");
 ASSET_MANAGER.queueDownload("./sprites/Healthpack.png");
+ASSET_MANAGER.queueDownload("./sprites/HaloPod1.png");
+ASSET_MANAGER.queueDownload("./sprites/HaloPod2.png");
 ASSET_MANAGER.queueDownload("./sprites/tree1.png");
 ASSET_MANAGER.queueDownload("./sprites/tree2.png");
 ASSET_MANAGER.queueDownload("./sprites/BasicTrees.png");
@@ -68,9 +73,9 @@ ASSET_MANAGER.downloadAll(() => {
 
 	// Attempt to unlock
 
-	let scenemanager = new SceneManager(gameEngine);
-	//gameEngine.addEntity(scenemanager);
-	//gameEngine.scenemanager = scenemanager;
+	let scene = new SceneManager(gameEngine);
+	gameEngine.sceneManager = scene;
+	gameEngine.addEntityToFront(scene);
 
 	
 

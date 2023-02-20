@@ -87,9 +87,9 @@ const PARAMS = {
 let scrollSpeed = 2.5;
 
 // Player physics
-const PHYSIC_SCALE = 4;
-const GRAVITY = 4;
-const PLAYER_JUMP = -500;
+const PHYSIC_SCALE = 3;
+const GRAVITY = 5;
+const PLAYER_JUMP = -700;
 const PLAYER_PHYSICS = {
     MAX_WALK: 60 * PHYSIC_SCALE,
     MAX_RUN: 180 * PHYSIC_SCALE,

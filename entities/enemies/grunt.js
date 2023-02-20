@@ -22,12 +22,12 @@ class Grunt {
 
         // keeping track of which path to move towards
         this.targetID = 0;
-        this.target = { x: game.player.position.x, y: game.player.position.y };
+        this.target = null;
 
 
-        let distance = getDistance(this.position, this.target);
+        //let distance = getDistance(this.position, this.target);
         // direction from enemy to target
-        let unitVector = { x: (this.target.x - this.position.x) / distance * 100, y: (this.target.y - this.position.y) / distance * 100 };
+        //let unitVector = { x: (this.target.x - this.position.x) / distance * 100, y: (this.target.y - this.position.y) / distance * 100 };
 
 
         // Added for Jumping
@@ -37,7 +37,7 @@ class Grunt {
 
 
         this.fallingVelocity = { x: 0, y: 0 };
-        this.velocity = unitVector;
+        this.velocity = 0;
         this.onGround = true;
 
 
@@ -324,7 +324,7 @@ class Grunt {
 
     collisionChecker() {
 
-        this.game.entities.forEach(entity => {
+        this.game.collisionEntities.forEach(entity => {
             if (entity.BB && this !== entity && entity.BB && this.BB.collide(entity.BB)) { //falling
 
                 if (this.fallingVelocity.y > 0) { //falling
@@ -358,7 +358,7 @@ class Grunt {
                         && this.BB.bottom > entity.BB.top
                         && this.velocity.x < 0) { //Touching right side
 
-                        console.log("Touching right");
+                        //console.log("Touching right");
                         this.position.x = entity.BB.right - this.BBXOffset;
 
                         if (this.velocity.x < 0) this.velocity.x = 0;
@@ -368,7 +368,7 @@ class Grunt {
                         && this.BB.bottom > entity.BB.top
                         && this.velocity.x > 0) {  //Touching left side
 
-                        console.log("Touching left");
+                        //console.log("Touching left");
                         this.position.x = entity.BB.left - this.BB.width - this.BBXOffset;
 
                         if (this.velocity.x > 0) this.velocity.x = 0;
@@ -408,15 +408,13 @@ class Grunt {
         //   this.currentState.draw(ctx);
 
 
-
-
-
         this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y - this.game.camera.y, this.scale, false);
 
-        //draw ths BB
-        ctx.strokeStyle = 'cyan';
-        ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
-
+        if (PARAMS.DEBUG) {
+            //draw ths BB
+            ctx.strokeStyle = 'cyan';
+            ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
+        }
         //Draw the lastBB
         //  ctx.strokeStyle = 'red';
         //  ctx.strokeRect(this.lastBB.x - this.game.camera.x, this.lastBB.y - this.game.camera.y, this.BB.width, this.BB.height);

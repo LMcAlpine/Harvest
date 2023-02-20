@@ -119,7 +119,7 @@ class Bullet {
         if (this.bulletType === "BULLET") {
             //Draw circle representing bullet
             ctx.beginPath();
-            ctx.fillStyle = "yellow";
+            ctx.fillStyle = "gold";
             ctx.arc(
                 this.position.x - this.game.camera.x, //X Position of circle
                 this.position.y - this.game.camera.y, //Y Position of circle
