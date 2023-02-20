@@ -20,19 +20,17 @@ class SceneManager {
 
         if (this.scene === 1) {
 
-        //Declare player/enemies
-        this.startingPosition = { x: 1100, y: 2200 };
-        let player = new MasterChief(gameEngine, this.startingPosition, this.collisionBlocks);
-        gameEngine.addEntity(player);
-        //gameEngine.addCollisionEntity(player);
-        gameEngine.player = player;
+            //Declare player/enemies
+            this.startingPosition = { x: 1100, y: 2200 };
+            let player = new MasterChief(gameEngine, this.startingPosition, this.collisionBlocks);
+            gameEngine.addEntity(player);
+            //gameEngine.addCollisionEntity(player);
+            gameEngine.player = player;
 
-        this.testPosition = { x: 500, y: 1900 };
-        let testEnemy = new Grunt(gameEngine, this.testPosition, this.collisionBlocks);
-        gameEngine.addEntity(testEnemy);
-        // gameEngine.addCollisionEntity(testEnemy);
-
-
+            this.testPosition = { x: 500, y: 1900 };
+            let testEnemy = new Grunt(gameEngine, this.testPosition, this.collisionBlocks);
+            gameEngine.addEntity(testEnemy);
+            // gameEngine.addCollisionEntity(testEnemy);
 
 
 
@@ -41,55 +39,58 @@ class SceneManager {
 
 
 
-        let elitePos = { x: 700, y: 2100 };
-        let elite = new Elite(this.game, elitePos, this.collisionBlocks);
-        gameEngine.addEntity(elite);
-        // gameEngine.addCollisionEntity(elite);
 
-        if (this.scene === 1) {
 
-            // let position = {
-            //     x: 7000 * PARAMS.SCALE,
-            //     y: 100 * PARAMS.SCALE,
-            // }
-            // console.log("Spawning Master Chief at: " + position.x + ", " + position.y);
-            // let player = new MasterChief(gameEngine, position);
-            // this.game.addEntity(player);
-            // this.game.addCollisionEntity(player);
-            // this.game.player = player;
+            let elitePos = { x: 700, y: 2100 };
+            let elite = new Elite(this.game, elitePos, this.collisionBlocks);
+            gameEngine.addEntity(elite);
+            // gameEngine.addCollisionEntity(elite);
 
-            this.levelGenerator = new Level0Generator(this.game);
-            let nightForest = ASSET_MANAGER.getAsset("./images/nightBG.png");
+            if (this.scene === 1) {
 
-            // for the parallax 
-            let layer = new Layer(nightForest, 0.1);
-            gameEngine.addEntity(layer);
+                // let position = {
+                //     x: 7000 * PARAMS.SCALE,
+                //     y: 100 * PARAMS.SCALE,
+                // }
+                // console.log("Spawning Master Chief at: " + position.x + ", " + position.y);
+                // let player = new MasterChief(gameEngine, position);
+                // this.game.addEntity(player);
+                // this.game.addCollisionEntity(player);
+                // this.game.player = player;
 
-            
-            
+                this.levelGenerator = new Level0Generator(this.game);
+                let nightForest = ASSET_MANAGER.getAsset("./images/nightBG.png");
+
+                // for the parallax 
+                let layer = new Layer(nightForest, 0.1);
+                gameEngine.addEntity(layer);
+
+
+
+            }
+
+
+            /*
+                PLAN: 
+                0) Loop through each layer starting with the top layer
+                1) Loop through and get block GID. 
+                2) Check The Map JSON: Search through 'tilesets' for matching firstGID
+                    will need to compare these values to find which firstGID the GID fits into
+                    as firstGID's range from firstGID to the last tile in the tileset
+                3) With the source tileset found, open the JSON file
+                4) Create new tile class, pass in the name of the image json file, the GID, and the firstGID
+                5) Tile class will use math to find the right tile in the image, thus displaying the image (Take spacing/margin into account)
+                6) Check json file for collision objects using ID, each object marked "BoundingBox" should have a new bounding box created under it's Tile object,
+                this bounding box will be added to a global collision array where all bounding boxes will be tracked.  This will eliminate the issue of every single
+                entity being checked for collisions.
+                7) Repeat steps for every layer down
+            */
+
+            // 0 - Parse Json file
+
+
+
         }
-
-
-        /*
-            PLAN: 
-            0) Loop through each layer starting with the top layer
-            1) Loop through and get block GID. 
-            2) Check The Map JSON: Search through 'tilesets' for matching firstGID
-                will need to compare these values to find which firstGID the GID fits into
-                as firstGID's range from firstGID to the last tile in the tileset
-            3) With the source tileset found, open the JSON file
-            4) Create new tile class, pass in the name of the image json file, the GID, and the firstGID
-            5) Tile class will use math to find the right tile in the image, thus displaying the image (Take spacing/margin into account)
-            6) Check json file for collision objects using ID, each object marked "BoundingBox" should have a new bounding box created under it's Tile object,
-            this bounding box will be added to a global collision array where all bounding boxes will be tracked.  This will eliminate the issue of every single
-            entity being checked for collisions.
-            7) Repeat steps for every layer down
-        */
-
-        // 0 - Parse Json file
-
-
-
     }
 
 
@@ -105,11 +106,11 @@ class SceneManager {
 
 
         let midpointX = PARAMS.CANVAS_WIDTH / 2 - PARAMS.BLOCKWIDTH / 2;
-                let midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.BLOCKWIDTH / 2;
-    
-                //ACTIVE CAMERA
-                this.x = this.game.player.position.x - midpointX;
-                this.y = this.game.player.position.y - midpointY;
+        let midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.BLOCKWIDTH / 2;
+
+        //ACTIVE CAMERA
+        this.x = this.game.player.position.x - midpointX;
+        this.y = this.game.player.position.y - midpointY;
 
         //  this.checkWave();
 
@@ -143,12 +144,11 @@ class SceneManager {
         offscreenCtx.textBaseline = "top";
         //offscreenCtx.textAlign = "Center";
         offscreenCtx.fillText("YOU WON", (width / 2) - (width / 16), height / 4);
-        
-        
+
+
         ctx.drawImage(offscreenCanvas,
             0, 0,
             width, height);
     }
+}
 
-}
-}
