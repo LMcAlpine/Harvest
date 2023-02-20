@@ -4,8 +4,9 @@ class Level0Generator {
     constructor(game) {
         Object.assign(this, { game });
    
-
-        this.level0Map = HaloTestMapMain;
+        console.log(HaloMap);
+        this.level0Map = HaloMap;
+        
         this.tileSets = {
             "GrassBlocks" : GrassBlocks,
             "tree1" : tree1,
@@ -13,9 +14,10 @@ class Level0Generator {
             "BasicTrees" : BasicTrees,
             "Healthpack" : Healthpack,
             "EarthBlocks" : EarthBlocks,
-            "EarthBlocks2" : EarthBlocks2
-        
-
+            "EarthBlocks2" : EarthBlocks2,
+            "EarthBlocks3" : EarthBlocks3,
+            "BuildingBlocks" : BuildingBlocks,
+            "BuildingDoor" : BuildingDoor
         }
 
         //Until we can import JSON correctly, have to copy and paste the JSON file contents
