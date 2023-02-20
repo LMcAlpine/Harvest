@@ -364,10 +364,11 @@ class Grunt {
 
         this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y - this.game.camera.y, this.scale, false);
 
-        //draw ths BB
-        ctx.strokeStyle = 'cyan';
-        ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
-
+        if (PARAMS.DEBUG) {
+            //draw ths BB
+            ctx.strokeStyle = 'cyan';
+            ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
+        }
         //Draw the lastBB
         //  ctx.strokeStyle = 'red';
         //  ctx.strokeRect(this.lastBB.x - this.game.camera.x, this.lastBB.y - this.game.camera.y, this.BB.width, this.BB.height);
