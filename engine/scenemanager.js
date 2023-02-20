@@ -11,14 +11,14 @@ class SceneManager {
         //Toggle which level to load
         this.scene = 1; //0 = Start Screen, 1 = Game, 2 = Win Screen, 3 = Death Screen
 
-        this.update();
+        this.loadLevel();
 
     }
 
 
     loadLevel() {
 
-        if (this.scene === 1) {
+        this.scene === 1;
 
             // let position = {
             //     x: 7000 * PARAMS.SCALE,
@@ -39,7 +39,7 @@ class SceneManager {
 
             
             
-        }
+        //}
 
 
         /*
@@ -66,19 +66,13 @@ class SceneManager {
 
     update() {
 
-        if (this.scene === 1 && this.levelGenerator === null) {
-
-            this.loadLevel();
-
-        }
-
 
         let midpointX = PARAMS.CANVAS_WIDTH / 2 - PARAMS.BLOCKWIDTH / 2;
-                let midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.BLOCKWIDTH / 2;
-    
-                //ACTIVE CAMERA
-                this.x = this.game.player.position.x - midpointX;
-                this.y = this.game.player.position.y - midpointY;
+        let midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.BLOCKWIDTH / 2;
+
+        //ACTIVE CAMERA
+        this.x = this.game.player.position.x - midpointX;
+        this.y = this.game.player.position.y - midpointY;
 
 
     }
@@ -87,10 +81,12 @@ class SceneManager {
         if (this.scene === 2) {
             this.winScreen(ctx);
         }
+        else if (this.scene === 3) {
+            this.gameOverScreen(ctx);
+        }
     }
 
     winScreen(ctx) {
-
 
         let width = PARAMS.CANVAS_WIDTH;
         let height = PARAMS.CANVAS_HEIGHT;
@@ -106,10 +102,37 @@ class SceneManager {
         offscreenCtx.fillStyle = "White";
 
         offscreenCtx.fillStyle = "black";
-        offscreenCtx.font = "bold 50px serif";
+        offscreenCtx.font = "bold 50px Ariel";
         offscreenCtx.textBaseline = "top";
         //offscreenCtx.textAlign = "Center";
         offscreenCtx.fillText("YOU WON", (width / 2) - (width / 16), height / 4);
+        
+        
+        ctx.drawImage(offscreenCanvas,
+            0, 0,
+            width, height);
+    }
+
+    gameOverScreen(ctx) {
+
+        let width = PARAMS.CANVAS_WIDTH;
+        let height = PARAMS.CANVAS_HEIGHT;
+
+        let offscreenCanvas = document.createElement('canvas');
+        offscreenCanvas.width = width;
+        offscreenCanvas.height = height;
+        let offscreenCtx = offscreenCanvas.getContext('2d');
+        offscreenCtx.imageSmoothingEnabled = false;
+
+        ctx.fillStyle = "rgb(0,0,0,.2)";
+        ctx.fillRect(0, 0, width, height);
+        offscreenCtx.fillStyle = "White";
+
+        offscreenCtx.fillStyle = "black";
+        offscreenCtx.font = "bold 50px Ariel";
+        offscreenCtx.textBaseline = "top";
+        //offscreenCtx.textAlign = "Center";
+        offscreenCtx.fillText("YOU LOST: Press SPACE to Reset", (width / 2), height / 4);
         
         
         ctx.drawImage(offscreenCanvas,

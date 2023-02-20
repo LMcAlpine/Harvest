@@ -438,8 +438,16 @@ class MasterChief {
                 this.currentGun.reloadGun();
             }
 
-            // Allow the player to fall
+            
+        } else { //Chief is dead
+            if(keys[' '].pressed) {
+                this.game.clearEntities();
+                this.game.sceneManager.loadLevel();
+            }
         }
+
+
+            // Allow the player to fall
             //UNCOMMENT
             this.velocity.y += PLAYER_PHYSICS.MAX_FALL * TICK;
             this.velocity.y += GRAVITY;
@@ -723,6 +731,7 @@ class MasterChief {
 
     die() {
         this.isAlive = false;
+        this.game.sceneManager.scene = 3;
     }
 
 };
