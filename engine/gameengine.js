@@ -149,7 +149,7 @@ class GameEngine {
     };
 
     update() {
-        
+        //Why should we update the BB of entities without collisions?
         let entitiesCount = this.entities.length;
 
         for (let i = 0; i < entitiesCount; i++) {
@@ -164,24 +164,7 @@ class GameEngine {
                 this.entities.splice(i, 1);
             }
         }
-
-        //console.log(this.entities);
-
-        // let collisionEntitiesCount = this.collisionEntities.length;
-        // for (let i = 0; i < collisionEntitiesCount; i++) {
-        //     let entity = this.collisionEntities[i];
-
-        //     if (!entity.removeFromWorld) {
-        //         entity.update();
-        //     }
-        // }
-
-        // for (let i = this.collisionEntities.length - 1; i >= 0; --i) {  
-        //     if (this.collisionEntitiess[i].removeFromWorld) {
-        //         this.collisionEntities.splice(i, 1);
-        //     }
-        // }
-        
+    
 
     };
 

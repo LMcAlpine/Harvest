@@ -20,21 +20,21 @@ class SceneManager {
 
         this.scene = 1;
 
-        // let position = {
-        //     x: 7000 * PARAMS.SCALE,
-        //     y: 100 * PARAMS.SCALE,
-        // }
-        // console.log("Spawning Master Chief at: " + position.x + ", " + position.y);
-        // let player = new MasterChief(gameEngine, position);
-        // this.game.addEntity(player);
-        // this.game.addCollisionEntity(player);
-        // this.game.player = player;
+        let position = {
+            x: 400 * PARAMS.SCALE,
+            y: 100 * PARAMS.SCALE,
+        }
+        console.log("Spawning Master Chief at: " + position.x + ", " + position.y);
+        let player = new MasterChief(gameEngine, position);
+        this.game.addEntity(player);
+        this.game.addCollisionEntity(player);
+        this.game.player = player;
 
         this.levelGenerator = new Level0Generator(this.game);
         let nightForest = ASSET_MANAGER.getAsset("./images/nightBG.png");
 
         // for the parallax 
-        let layer = new Layer(nightForest, 0.1);
+        let layer = new Layer(nightForest, this.game);
         gameEngine.addEntity(layer);
 
             
@@ -84,6 +84,14 @@ class SceneManager {
         else if (this.scene === 3) {
             this.gameOverScreen(ctx);
         }
+        let fps = Math.round(1 / this.game.clockTick);
+        //Display bullet count
+        ctx.fillStyle = "orange";
+        ctx.font = "bold 25px serif";
+        ctx.textBaseline = "top";
+        if (fps < 40)
+        console.log("UNDER");
+        ctx.fillText(fps, PARAMS.CANVAS_WIDTH /2, 0);
     }
 
     winScreen(ctx) {

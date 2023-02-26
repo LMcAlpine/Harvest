@@ -77,18 +77,19 @@ class Level0Generator {
                         console.log(position);
 
                         if (object["name"] === "MasterChief") {
-                            console.log("Spawning Master Chief at: " + position.x + ", " + position.y);
-                            let player = new MasterChief(gameEngine, position);
-                            this.game.addEntity(player);
-                            this.game.addCollisionEntity(player);
-                            this.game.player = player;
+                            // console.log("Spawning Master Chief at: " + position.x + ", " + position.y);
+                            // let player = new MasterChief(gameEngine, position);
+                            // this.game.addEntity(player);
+                            // this.game.addCollisionEntity(player);
+                            // this.game.player = player;
                             
                         } else if (object["name"] === "Grunt") {
-                            console.log("Spawning Grunt at: " + position.x + ", " + position.y);
-                            let enemy = new Grunt(gameEngine, position);
-                            this.game.addCollisionEntity(enemy);
-                            this.game.addEntity(enemy);
-
+                            if (PARAMS.GRUNTS) {
+                                console.log("Spawning Grunt at: " + position.x + ", " + position.y);
+                                let enemy = new Grunt(gameEngine, position);
+                                this.game.addCollisionEntity(enemy);
+                                this.game.addEntity(enemy);
+                            }
                         } else if (object["name"] === "Elite") {
                             console.log("Spawning Elite at: " + position.x + ", " + position.y);
                             let enemy = new Elite(gameEngine, position);

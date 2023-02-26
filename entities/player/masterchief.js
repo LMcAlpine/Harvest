@@ -6,7 +6,14 @@ class MasterChief {
         Object.assign(this, { game, position});
 
         this.scale = 3;
-        this.cache = [];
+        this.endGoal = null;
+
+        /* Cache is 2d array that holds an offscreencanvas for varying gun angles, this is to avoid
+        constantly creating offscreen canvases to rotate chief arm/gun and instead store previously
+        created canvases into a cache.
+        */
+        this.cache = []; //For tracking this.angle
+        //this.cache.push([]); //For tracking this.isFiring
 
         this.SpriteSheet = ASSET_MANAGER.getAsset("./sprites/ChiefSprites.png");
         this.GunSpriteSheet = ASSET_MANAGER.getAsset("./sprites/Guns.png");
@@ -48,9 +55,6 @@ class MasterChief {
         //Loads animations into array
         this.loadAnimations();
 
-        //anytime we move we should call updateBB
-        this.updateBB();
-
         // Keeps track of last key pressed
         this.lastKey;
 
@@ -66,6 +70,9 @@ class MasterChief {
 
         this.HUD = new PlayerHUD(this, this.game);
         this.game.addEntity(this.HUD);
+
+        //anytime we move we should call updateBB
+        this.updateBB();
 
     };
 
@@ -308,14 +315,18 @@ class MasterChief {
     }
 
     update() {
+
+        //console.log(this.hasCollisions);
         // Updater properties
         const TICK = this.game.clockTick;
 
         if (this.isAlive) {
 
-            if (this.position.x > this.endGoal.x) {
-                console.log("GAME WON");
-                this.game.sceneManager.scene = 2;
+            if (this.endGoal !== null) {
+                if (this.position.x > this.endGoal.x) {
+                    console.log("GAME WON");
+                    this.game.sceneManager.scene = 2;
+                }
             }
 
             if (this.game.mouseDown) {
@@ -439,6 +450,7 @@ class MasterChief {
             }
 
             
+            
         } else { //Chief is dead
             if(keys[' '].pressed) {
                 this.game.clearEntities();
@@ -482,7 +494,7 @@ class MasterChief {
 
                 }
                 if (this.velocity.y < 0) { //Jumping
-
+                    
                     if ((entity instanceof Tile) && this.lastBB.top >= entity.BB.bottom) {
                         console.log("Collide top of tile");
                         this.position.y = entity.BB.bottom - this.BBYOffset;
@@ -501,20 +513,22 @@ class MasterChief {
                         && this.BB.bottom > entity.BB.top
                         && this.velocity.x < 0) { //Touching right side
 
-                        //console.log("Touching right");
+                        console.log("Touching right");
                         this.position.x = entity.BB.right - this.BBXOffset;
 
                         if (this.velocity.x < 0) this.velocity.x = 0;
+                        
                     }
 
                     if (this.BB.right >= entity.BB.left
                         && this.BB.bottom > entity.BB.top
                         && this.velocity.x > 0) {  //Touching left side
 
-                        //console.log("Touching left");
+                        console.log("Touching left");
                         this.position.x = entity.BB.left - this.BB.width - this.BBXOffset;
 
                         if (this.velocity.x > 0) this.velocity.x = 0;
+                        
                     }
 
                 }
@@ -528,7 +542,7 @@ class MasterChief {
     draw(ctx) {
 
         if (this.isAlive) { //CHIEF IS ALIVE
-            this.findMouseAngle();
+            
 
             if (this.aimRight) {
                 this.bodyAnimations[this.state][this.helmet][this.shieldDamage].drawFrame(
@@ -589,44 +603,52 @@ class MasterChief {
 
     };
 
+    /**
+     * Method will rotate chief's arm/gun and draw it depending on the direction
+     * the player is aiming.
+     * @param {*} ctx 
+     */
     drawGun(ctx) {
 
+        this.findMouseAngle(); //Get angle in degrees player is aiming, sets to global this.degrees
+
+        //Grabs animator object for gun, manually resets to first frame (idle, not shooting) once animation completes.
         let a = this.gunAnimations[this.gunType][this.isFiring];
-
         a.elapsedTime += this.game.clockTick;
-
-        if (a.isDone()) {
-            if (a.loop) {
-                a.elapsedTime -= a.totalTime;
+            if (a.isDone()) {
+                if (a.loop) {
+                    a.elapsedTime -= a.totalTime;
+                }
+                else {
+                    //Reset animation once complete
+                    a.reset();
+                    this.isFiring = 0; //After firing one bullet, firing animation returns to idle
+                }
             }
-            else {
-                //Reset animation once complete
-                a.reset();
-                this.isFiring = 0;
-            }
-        }
-
         let frame = a.currentFrame();
         if (a.reverse) frame = a.frameCount - frame - 1;
 
-        let radians = -this.degrees / 360 * 2 * Math.PI;
+        // Will only draw a new offscreencanvas if the gun was never drawn at this.degrees and the animator frame prior
+        if (!this.cache[ [this.degrees, frame] ]) { 
 
-        if (this.aimRight) {
+            let radians = -this.degrees / 360 * 2 * Math.PI; //Convert degrees to radians
 
-            var offscreenCanvas = rotateImage(a.spritesheet,
-                a.xStart + frame * (a.width + a.framePadding), a.yStart,
-                a.width, a.height,
-                radians, 5,
-                false);
-
-        } else {
-
-            var offscreenCanvas = rotateImage(a.spritesheet,
-                a.xStart + frame * (a.width + a.framePadding), a.yStart,
-                a.width, a.height,
-                -radians - Math.PI, 5,
-                true);
-
+            //Offscreen canvas conversions depend on direction player is aiming
+            if (this.aimRight) {
+                var offscreenCanvas = rotateImage(a.spritesheet,
+                    a.xStart + frame * (a.width + a.framePadding), a.yStart,
+                    a.width, a.height,
+                    radians, 5,
+                    false);
+            } else {
+                var offscreenCanvas = rotateImage(a.spritesheet,
+                    a.xStart + frame * (a.width + a.framePadding), a.yStart,
+                    a.width, a.height,
+                    -radians - Math.PI, 5,
+                    true);
+            }
+            this.cache[[this.degrees, frame]] = offscreenCanvas; //Cache the offscreen canvas to avoid redrawing in the future
+            
         }
 
 
@@ -638,7 +660,9 @@ class MasterChief {
         }
         var armYOffset = (72 * this.scale);
 
-        ctx.drawImage(offscreenCanvas,
+        
+        //Draw the gun/arm
+        ctx.drawImage(this.cache[[this.degrees, frame]],
             (this.position.x - this.game.camera.x) - armXOffset, (this.position.y - this.game.camera.y) - armYOffset,
             this.scale * a.width, this.scale * a.width);
 
@@ -672,13 +696,15 @@ class MasterChief {
                 this.degrees += 360;
             }
 
+            /* This code will change the angle of chief's helmet depending on where he is aiming (low, normal, high).
+            *  The animation time is captured as changing states rapidly like this leads to animations between the body
+            *  parts to desync.  timeSync is used to sychronize body/head animations.
+            */
             //Record the current elapsed time of animation state
             let timeSync = this.bodyAnimations[this.state][this.helmet][this.shieldDamage].elapsedTime;
             //Set helmet animation
             if ((this.degrees <= 90 && this.degrees > 30) || (this.degrees > 90 && this.degrees <= 150)) {
-
                 this.helmet = 2;
-
             } else if ((this.degrees >= 270 && this.degrees < 330) || (this.degrees < 270 && this.degrees > 210)) {
                 this.helmet = 1;
             } else {
@@ -691,9 +717,17 @@ class MasterChief {
 
     };
 
+    /**
+     * Sets animation reverse flag to cond. Mainly used to reverse walking animation when walking
+     * backwards.
+     * @param {boolean} cond 
+     */
+
     reverseMovement(cond) {
         this.bodyAnimations[this.state][this.helmet][this.shieldDamage].reverse = cond;
     };
+
+
 
     takeDamage(dmg) {
         this.regen = 200;

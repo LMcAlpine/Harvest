@@ -51,9 +51,12 @@ class Tile {
     }
 
     updateBB() {
-        this.lastBB = this.BB;
-        this.BB = new BoundingBox(this.x + this.bbX, this.y + this.bbY, this.tileWidth * PARAMS.SCALE, this.tileHeight * PARAMS.SCALE);
-        //console.log("BB X: " + this.BB.x + "BB Y: " + this.BB.y);
+
+        if (this.hasCollisions) {
+            this.lastBB = this.BB;
+            this.BB = new BoundingBox(this.x + this.bbX, this.y + this.bbY, this.tileWidth * PARAMS.SCALE, this.tileHeight * PARAMS.SCALE);
+            //console.log("BB X: " + this.BB.x + "BB Y: " + this.BB.y);
+        }
     }
 
     draw(ctx) {
@@ -64,7 +67,7 @@ class Tile {
         ctx.drawImage(this.spritesheet, spriteX, spriteY, this.tileWidth, this.tileHeight, this.x - this.game.camera.x, this.y - this.game.camera.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
 
         //Draw Bounding box
-        if (PARAMS.DEBUG) {
+        if (PARAMS.DEBUG && this.hasCollisions) {
             ctx.strokeStyle = 'blue';
             ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
         }
