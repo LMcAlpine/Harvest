@@ -144,6 +144,3 @@ function rotateImage(spritesheet, xStart, yStart, width, height, theta, scale, f
     return offscreenCanvas;
 
 };
-
-
-

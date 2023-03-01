@@ -1,7 +1,7 @@
 //
 class Elite {
     constructor(game, position) {
-        Object.assign(this, { game, position});
+        Object.assign(this, { game, position });
 
         this.hp = 150;
         this.currentGun = new Gun(this, game, "Plasma_Pistol");
@@ -340,8 +340,8 @@ class Elite {
     takeDamage(damage) {
 
         if (this.hp > 0) {
-            this.hp -= damage;    
-        } 
+            this.hp -= damage;
+        }
         if (this.hp <= 0) {
             this.hp = 0;
             this.die();

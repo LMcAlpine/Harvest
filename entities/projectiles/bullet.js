@@ -64,7 +64,7 @@ class Bullet {
         this.lastBB = this.BB;
         let width = 20;
         let height = 20;
-        this.BB = new BoundingBox(this.position.x - (width / 2),  this.position.y - (height / 2), width, height);
+        this.BB = new BoundingBox(this.position.x - (width / 2), this.position.y - (height / 2), width, height);
         // this.BB = new BoundingBox(this.position.x - this.game.camera.x,  this.position.y - this.game.camera.y, width, height);
 
         // this.BB = new BoundingBox(
@@ -72,7 +72,7 @@ class Bullet {
         //     this.position.y, 
         //     width, 
         //     height);
-        
+
     }
 
     collisionChecker() {
@@ -85,21 +85,21 @@ class Bullet {
                     this.removeFromWorld = true;
 
                 } else if (entity instanceof Grunt) {
-                   
+
                     entity.takeDamage(this.bulletDamage);
                     this.removeFromWorld = true;
-                    
-                    
+
+
                 } else if (entity instanceof MasterChief) {
                     //console.log("cheese ouch");
                     entity.takeDamage(this.bulletDamage);
                     this.removeFromWorld = true;
                 }
 
-                
-            } 
-                
-                
+
+            }
+
+
         });
     }
 

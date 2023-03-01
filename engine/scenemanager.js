@@ -106,8 +106,8 @@ class SceneManager {
         offscreenCtx.textBaseline = "top";
         //offscreenCtx.textAlign = "Center";
         offscreenCtx.fillText("YOU WON", (width / 2) - (width / 16), height / 4);
-        
-        
+
+
         ctx.drawImage(offscreenCanvas,
             0, 0,
             width, height);
