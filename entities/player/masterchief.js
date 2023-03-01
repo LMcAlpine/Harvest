@@ -363,97 +363,45 @@ class MasterChief {
                 }
             }
 
-            // Movement... kinda
-            if (this.game.keys['d'] && this.onGround) {
-
-                //Check direction user is aiming to dictate walking forward or reverse
-                if (this.aimRight) {
-                    this.reverseMovement(false);
-                } else {
-                    this.reverseMovement(true);
-                }
-
-                this.state = 1;
-                //this.x += 3;
-                // this.velocity.x += PLAYER_PHYSICS.MAX_RUN * TICK;
-                // this.position.x += this.velocity.x * TICK;
-                // this.game.keys['d'] === false
-            }
-
-            else if (this.game.keys['a'] && this.onGround) {
-
-                //Check direction user is aiming to dictate walking forward or reverse
-                if (this.aimRight) {
-                    this.reverseMovement(true);
-                } else {
-                    this.reverseMovement(false);
-                }
-
-                this.state = 1;
-            }
-
-
-            // else if (this.game.keys[' '] || this.game.keys['Space']) { // Jumping TODO: JUMP WHILE RUNNING!
-            //     this.velocity.y -= 4;
-            //     console.log('UP')
-            // }
-
-            else if (this.onGround) {
-                this.state = 0;
-            }
-
-            // *** Player Movement 1 ***
-            // if (keys.a.pressed && lastKey === 'a' && this.onGround) {
-            //     this.velocity.x -= PLAYER_PHYSICS.MAX_WALK;
-            //     this.position.x += this.velocity.x * TICK;
-
-
-            //     if (this.velocity.x < -PLAYER_PHYSICS.MAX_WALK) {
-            //         this.velocity.x = 1;
-            //     }
-            // }
-            // if (keys.d.pressed && lastKey === 'd') {
-            //     this.velocity.x += PLAYER_PHYSICS.MAX_WALK;
-
-
-            //     this.position.x += this.velocity.x * TICK;;
-
-            //     if (this.velocity.x > PLAYER_PHYSICS.MAX_WALK) {
-            //         this.velocity.x = PLAYER_PHYSICS.MAX_WALK;
-            //     }
-
-            // }
 
             // *** Player Movement 2 ***
             if (keys.a.pressed && lastKey === 'a') {
                 this.velocity.x = -4;
-                this.position.x += -4;
-
-            }
-
-
-            if (keys.d.pressed && lastKey === 'd') {
+                this.position.x -= PLAYER_PHYSICS.MAX_RUN;
+                this.state = 1;
+            } else if (keys.d.pressed && lastKey === 'd') {
                 this.velocity.x = 4;
-                this.position.x += 4;
-
+                this.position.x += PLAYER_PHYSICS.MAX_RUN;
+                this.state = 1;
+            } else if (this.onGround) {
+                this.state = 0;
             }
-            if (keys[' '].pressed && this.onGround) {
+    
+
+            if(keys[' '].pressed && this.onGround) {
                 this.velocity.y = PLAYER_JUMP;
                 this.onGround = false;
                 this.state = 2;
                 // this.position.y += -PLAYER_JUMP;
-                //console.log('up')
             }
             if (keys['r'].pressed) {
                 this.currentGun.reloadGun();
             }
         }
 
-        // Allow the player to fall
+            
+        } else { //Chief is dead
+            if(keys[' '].pressed) {
+                this.game.clearEntities();
+                this.game.sceneManager.loadLevel();
+            }
+        }
 
-        //UNCOMMENT
-        this.velocity.y += PLAYER_PHYSICS.MAX_FALL * TICK;
-        this.velocity.y += GRAVITY;
+
+            // Allow the player to fall
+            //UNCOMMENT
+            this.velocity.y += PLAYER_PHYSICS.MAX_FALL * TICK;
+            this.velocity.y += GRAVITY;
 
         // Update the player x and y
         // this.position.x += this.velocity.x * TICK;
@@ -743,6 +691,7 @@ class MasterChief {
 
     die() {
         this.isAlive = false;
+        this.game.sceneManager.scene = 3;
     }
 
 }
