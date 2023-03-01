@@ -3,18 +3,13 @@ class MasterChief {
     constructor(game, position) {
 
         // Updated the constructor
-        Object.assign(this, { game, position });
+        Object.assign(this, { game, position});
 
         this.scale = 3;
         this.cache = [];
 
         this.SpriteSheet = ASSET_MANAGER.getAsset("./sprites/ChiefSprites.png");
         this.GunSpriteSheet = ASSET_MANAGER.getAsset("./sprites/Guns.png");
-
-
-        // this.odstCharacter = ASSET_MANAGER.getAsset("./odst.png");
-
-        // this.odst = new Animator(this.odstCharacter, 0, 0, 64, 64, 8, 0.095, 0, false, true);
 
         this.lastBB = null;
         this.BB = null;
@@ -72,8 +67,6 @@ class MasterChief {
         this.HUD = new PlayerHUD(this, this.game);
         this.game.addEntity(this.HUD);
 
-        // this.x2 = 260;
-
     };
 
     loadAnimations() {
@@ -91,7 +84,7 @@ class MasterChief {
                 this.bodyAnimations[i].push([]);
                 for (let k = 0; k <= 1; k++) { // this.shield
                     this.bodyAnimations[i][j].push([]);
-
+    
                 }
             }
         }
@@ -229,8 +222,8 @@ class MasterChief {
             0,
             false, true);
 
-        // Helmet: Up Right
-        // Shields: Not visible
+         // Helmet: Up Right
+         // Shields: Not visible
         this.bodyAnimations[1][2][0] = new Animator(this.SpriteSheet,
             0, 2 * 50,
             40, 50,
@@ -238,7 +231,7 @@ class MasterChief {
             0,
             false, true);
         // Helmet: Up Right
-        // Shields: Visible
+         // Shields: Visible
         this.bodyAnimations[1][2][1] = new Animator(this.SpriteSheet,
             0, 5 * 50,
             40, 50,
@@ -283,8 +276,8 @@ class MasterChief {
         //     0,
         //     false, true);
 
-        // Helmet: Up Right
-        // Shields: Not visible
+         // Helmet: Up Right
+         // Shields: Not visible
         this.bodyAnimations[2][2][0] = new Animator(this.SpriteSheet,
             0, 450,
             40, 50,
@@ -292,7 +285,7 @@ class MasterChief {
             0,
             false, true);
         // Helmet: Up Right
-        // Shields: Visible
+         // Shields: Visible
         // this.bodyAnimations[2][2][1] = new Animator(this.SpriteSheet,
         //     0, 650,
         //     40, 50,
@@ -308,14 +301,13 @@ class MasterChief {
         this.lastBB = this.BB;
 
         this.BB = new BoundingBox(
-            this.position.x + this.BBXOffset,
-            this.position.y + this.BBYOffset,
-            (this.width * this.scale) - (18 * this.scale),
+            this.position.x + this.BBXOffset, 
+            this.position.y + this.BBYOffset, 
+            (this.width * this.scale) - (18 * this.scale), 
             (this.height * this.scale) - (10 * this.scale));
     }
 
     update() {
-
         // Updater properties
         const TICK = this.game.clockTick;
 
@@ -339,18 +331,18 @@ class MasterChief {
                     y: gameEngine.mouse.y + this.game.camera.y
                 }
 
-                if (!this.currentGun.isEmpty() && !this.currentGun.reloading) {
+                if (!this.currentGun.isEmpty() && !this.currentGun.reloading){
 
                     this.isFiring = 1;
                     this.currentGun.shootGun(firingPosStatic, targetPosStatic);
                 }
             }
 
-            if (this.shield < this.maxShield) {
+            if(this.shield < this.maxShield) {
                 this.regenShield();
             }
-
-
+            
+            
 
             //Calculate if player is aiming to right or left of player model
             if (this.game.mouse !== null) {
@@ -384,10 +376,9 @@ class MasterChief {
                 this.state = 2;
                 // this.position.y += -PLAYER_JUMP;
             }
-            if (keys['r'].pressed) {
+            if(keys['r'].pressed) {
                 this.currentGun.reloadGun();
             }
-        }
 
             
         } else { //Chief is dead
@@ -403,16 +394,16 @@ class MasterChief {
             this.velocity.y += PLAYER_PHYSICS.MAX_FALL * TICK;
             this.velocity.y += GRAVITY;
 
-        // Update the player x and y
-        // this.position.x += this.velocity.x * TICK;
-        //UNCOMMENT
-        this.position.y += this.velocity.y * TICK;
-
+            // Update the player x and y
+            // this.position.x += this.velocity.x * TICK;
+            //UNCOMMENT
+            this.position.y += this.velocity.y * TICK;
+        
         this.updateBB();
 
         this.collisionChecker();
 
-
+        
     };
 
 
@@ -477,31 +468,22 @@ class MasterChief {
     };
 
     draw(ctx) {
-        //   this.odst.drawFrame(this.game.clockTick, ctx, this.x2, 740, 3);
-        // this.bodyAnimations[1][this.helmet][this.shieldDamage].drawFrame(
-        //     this.game.clockTick, ctx,
-        //     this.x2,
-        //     700,
-        //     this.scale, false);
-        //  ctx.fillStyle = 'red';
-        //  ctx.font = "50px serif";
-        //   ctx.fillText("ammo: " + this.currentGun.ammoCount, 0, 700);
 
         if (this.isAlive) { //CHIEF IS ALIVE
             this.findMouseAngle();
 
             if (this.aimRight) {
                 this.bodyAnimations[this.state][this.helmet][this.shieldDamage].drawFrame(
-                    this.game.clockTick, ctx,
-                    this.position.x - this.game.camera.x,
-                    this.position.y - this.game.camera.y,
+                    this.game.clockTick, ctx, 
+                    this.position.x - this.game.camera.x, 
+                    this.position.y - this.game.camera.y, 
                     this.scale, false);
 
             } else {
                 this.bodyAnimations[this.state][this.helmet][this.shieldDamage].drawFrame(
-                    this.game.clockTick, ctx,
-                    this.position.x - this.game.camera.x,
-                    this.position.y - this.game.camera.y,
+                    this.game.clockTick, ctx, 
+                    this.position.x - this.game.camera.x, 
+                    this.position.y - this.game.camera.y, 
                     this.scale, true);
 
             }
@@ -516,14 +498,14 @@ class MasterChief {
 
         } else { //CHIEF IS DEAD
             if (this.aimRight) {
-                this.deathAnimation.drawFrame(this.game.clockTick, ctx,
-                    this.position.x - this.width - this.game.camera.x,
-                    this.position.y - this.game.camera.y,
+                this.deathAnimation.drawFrame(this.game.clockTick, ctx, 
+                    this.position.x - this.width - this.game.camera.x, 
+                    this.position.y - this.game.camera.y, 
                     this.scale, false);
             } else {
-                this.deathAnimation.drawFrame(this.game.clockTick, ctx,
-                    this.position.x - this.game.camera.x,
-                    this.position.y - this.game.camera.y - 30,
+                this.deathAnimation.drawFrame(this.game.clockTick, ctx, 
+                    this.position.x - this.game.camera.x, 
+                    this.position.y - this.game.camera.y - 30, 
                     this.scale, true);
             }
 
@@ -531,18 +513,18 @@ class MasterChief {
             if (this.deathAnimation.isDone()) { //Draw last frame when death animation completes
                 console.log("DEATH DONE");
                 if (this.aimRight) {
-                    this.deathAnimation.drawSpecificFrame(this.game.clockTick, ctx,
-                        this.position.x - this.width - this.game.camera.x,
-                        this.position.y - this.game.camera.y,
+                    this.deathAnimation.drawSpecificFrame(this.game.clockTick, ctx, 
+                        this.position.x - this.width - this.game.camera.x, 
+                        this.position.y - this.game.camera.y, 
                         this.scale, false, 4);
                 } else {
-                    this.deathAnimation.drawSpecificFrame(this.game.clockTick, ctx,
-                        this.position.x - this.game.camera.x,
-                        this.position.y - this.game.camera.y - 30,
+                    this.deathAnimation.drawSpecificFrame(this.game.clockTick, ctx, 
+                        this.position.x - this.game.camera.x, 
+                        this.position.y - this.game.camera.y - 30, 
                         this.scale, true, 4);
                 }
             }
-
+            
         }
 
 
@@ -604,7 +586,7 @@ class MasterChief {
 
 
     };
-
+    
     findMouseAngle() {
 
         //Calculating angle from mouse
@@ -658,15 +640,15 @@ class MasterChief {
     takeDamage(dmg) {
         this.regen = 200;
 
-        if (this.shield > 0) {
+        if(this.shield > 0) {
             this.shield -= dmg;
             if (this.shield <= 0) dmg = Math.abs(this.shield);
         }
         if (this.shield <= 0 && this.hp > 0) {
             this.shield = 0;
             this.hp -= dmg;
-        }
-        if (this.hp <= 0) {
+        } 
+        if (this.hp <= 0 ) {
             this.hp = 0;
             this.die();
         }
@@ -694,8 +676,7 @@ class MasterChief {
         this.game.sceneManager.scene = 3;
     }
 
-}
-
+};
 
 // *** Keys ***
 const keys = {
@@ -711,7 +692,7 @@ const keys = {
     r: { // reload key
         pressed: false
     }
-
+     
 }
 
 // *** KeyDown ***
