@@ -375,31 +375,73 @@ class MasterChief {
 
 
             // *** Player Movement 2 ***
-            if (keys.a.pressed && lastKey === 'a') {
-                this.velocity.x = -4;
-                this.position.x -= PLAYER_PHYSICS.MAX_RUN;
-                this.state = 1;
-            } else if (keys.d.pressed && lastKey === 'd') {
-                this.velocity.x = 4;
-                this.position.x += PLAYER_PHYSICS.MAX_RUN;
-                this.state = 1;
-            } else if (this.onGround) {
-                this.state = 0;
-            }
+            // if (keys.a.pressed && lastKey === 'a') {
+            //     this.velocity.x = -4;
+            //     this.position.x -= PLAYER_PHYSICS.MAX_RUN;
+            //     this.state = 1;
+            // } else if (keys.d.pressed && lastKey === 'd') {
+            //     this.velocity.x = 4;
+            //     this.position.x += PLAYER_PHYSICS.MAX_RUN;
+            //     this.state = 1;
+            // } else if (this.onGround) {
+            //     this.state = 0;
+            // }
     
 
             if(keys[' '].pressed && this.onGround) {
                 this.velocity.y = PLAYER_JUMP;
                 this.onGround = false;
                 this.state = 2;
+
                 // this.position.y += -PLAYER_JUMP;
             }
             if(keys['r'].pressed) {
                 this.currentGun.reloadGun();
             }
 
+
+             // *** Player Movement 3 ***
+
+            // horizontal physics
+            if (keys.d.pressed && !keys.a.pressed && this.onGround) { //Moving right
+                if (Math.abs(this.velocity.x) > PLAYER_PHYSICS.MAX_WALK) {
+                    this.velocity.x += PLAYER_PHYSICS.ACC_RUN * TICK;
+                } else {
+                    this.velocity.x += PLAYER_PHYSICS.ACC_WALK * TICK;
+                }
+
+                if (this.aimRight) this.reverseMovement(false);
+                else this.reverseMovement(true);
+                this.state = 1;
+            } else if (keys.a.pressed && !keys.d.pressed && this.onGround) { //Moving left
+                if (Math.abs(this.velocity.x) > PLAYER_PHYSICS.MAX_WALK) {
+                    this.velocity.x -= PLAYER_PHYSICS.ACC_RUN * TICK;
+                } else this.velocity.x -= PLAYER_PHYSICS.ACC_WALK * TICK;
+                
+                if (this.aimRight) this.reverseMovement(true);
+                else this.reverseMovement(false);
+                this.state = 1;
+            } else {
+                if (this.onGround) {
+                    this.state = 0;
+                    this.velocity.x = 0;
+                } else {
+                    console.log("Adjusting");
+                    if(this.velocity.x > 0) {
+                        this.velocity.x -= PLAYER_PHYSICS.ACC_RUN / 4 * TICK;
+                    } else {
+                        this.velocity.x += PLAYER_PHYSICS.ACC_RUN / 4 * TICK;
+                    }
+                }
+            }
             
-            
+            // max speed calculation
+            if (this.velocity.x >= PLAYER_PHYSICS.MAX_RUN) this.velocity.x = PLAYER_PHYSICS.MAX_RUN;
+            if (this.velocity.x <= -PLAYER_PHYSICS.MAX_RUN) this.velocity.x = -PLAYER_PHYSICS.MAX_RUN;
+            // if (this.velocity.x >= PLAYER_PHYSICS.MAX_WALK) this.velocity.x = PLAYER_PHYSICS.MAX_WALK;
+            // if (this.velocity.x <= -PLAYER_PHYSICS.MAX_WALK) this.velocity.x = -PLAYER_PHYSICS.MAX_WALK;
+
+
         } else { //Chief is dead
             if(keys[' '].pressed) {
                 this.game.clearEntities();
@@ -408,16 +450,25 @@ class MasterChief {
         }
 
 
-            // Allow the player to fall
-            //UNCOMMENT
-            this.velocity.y += PLAYER_PHYSICS.MAX_FALL * TICK;
-            this.velocity.y += GRAVITY;
-
-            // Update the player x and y
-            // this.position.x += this.velocity.x * TICK;
-            //UNCOMMENT
-            this.position.y += this.velocity.y * TICK;
         
+
+
+        // Allow the player to fall
+        //UNCOMMENT
+        // this.velocity.y += PLAYER_PHYSICS.MAX_FALL * TICK;
+        // this.velocity.y += GRAVITY;
+        this.velocity.y += PLAYER_PHYSICS.ACC_FALL * TICK;
+
+        // max speed calculation for vertical
+        if (this.velocity.y >= PLAYER_PHYSICS.MAX_FALL) this.velocity.y = PLAYER_PHYSICS.MAX_FALL;
+        if (this.velocity.y <= -PLAYER_PHYSICS.MAX_FALL) this.velocity.y = -PLAYER_PHYSICS.MAX_FALL;
+
+        // update position
+        this.position.x += this.velocity.x * TICK * PARAMS.SCALE;
+        this.position.y += this.velocity.y * TICK * PARAMS.SCALE;
+        
+        console.log(this.velocity.x);
+
         this.updateBB();
 
         this.collisionChecker();
@@ -469,7 +520,7 @@ class MasterChief {
                         console.log("Touching right");
                         this.position.x = entity.BB.right - this.BBXOffset;
 
-                        this.velocity.x = 0;
+                        if (this.velocity.x < 0) this.velocity.x = -PLAYER_PHYSICS.MAX_RUN / 4;
                         
                     }
 
@@ -491,7 +542,7 @@ class MasterChief {
                         console.log("Touching left");
                         this.position.x = entity.BB.left - this.BB.width - this.BBXOffset;
 
-                        if (this.velocity.x > 0) this.velocity.x = 0;
+                        if (this.velocity.x > 0) this.velocity.x = PLAYER_PHYSICS.MAX_RUN / 4;
                         
                     }
 

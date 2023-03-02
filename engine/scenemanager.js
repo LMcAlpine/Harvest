@@ -65,7 +65,6 @@ class SceneManager {
     }
 
     update() {
-        console.log("Camera X = " + this.x);
 
         let midpointX = PARAMS.CANVAS_WIDTH / 2 - PARAMS.BLOCKWIDTH / 2;
         let midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.BLOCKWIDTH / 2;

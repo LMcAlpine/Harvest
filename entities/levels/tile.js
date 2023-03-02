@@ -74,7 +74,6 @@ class Tile {
             if (PARAMS.DEBUG && this.hasCollisions) {
                 if (this.collisionActive) { //Used for debugging, makes color of BB red for identifying collisions
                     ctx.strokeStyle = 'red';
-                    console.log("x = " + this.x);
                 } else {
                     ctx.strokeStyle = 'blue';
                 }
