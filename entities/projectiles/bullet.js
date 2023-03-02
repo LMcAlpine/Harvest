@@ -77,7 +77,7 @@ class Bullet {
 
     collisionChecker() {
 
-        this.game.entities.forEach(entity => {
+        this.game.collisionEntities.forEach(entity => {
             //console.log(entity);
             
             if (entity.BB && this.shooter !== entity && this !== entity && this.BB.collide(entity.BB)) {//Collision

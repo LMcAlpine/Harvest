@@ -78,9 +78,11 @@ const collision = ({ object1, object2 }) => {
 
 
 const PARAMS = {
-    DEBUG: false,
+    DEBUG: true,
     SCALE: 3,
-    BITWIDTH: 32
+    BITWIDTH: 32,
+    GRUNTS: false, //Toggles spawning of grunts off
+    ELITES: true //Toggles spawning of elites off
 };
 
 // for the parallax 
@@ -88,17 +90,16 @@ let scrollSpeed = 2.5;
 
 // Player physics
 const PHYSIC_SCALE = 3;
-const GRAVITY = 5;
-const PLAYER_JUMP = -700;
+const GRAVITY = -2;
+const PLAYER_JUMP = -300;
 const PLAYER_PHYSICS = {
-    MAX_WALK: 90 * PHYSIC_SCALE,
-    MAX_RUN: 4 * PHYSIC_SCALE,
+    MAX_WALK: 60 * PHYSIC_SCALE,
+    MAX_RUN: 80 * PHYSIC_SCALE,
     ACC_WALK: 180 * PHYSIC_SCALE,
-    ACC_RUN: 400 * PHYSIC_SCALE,
+    ACC_RUN: 140 * PHYSIC_SCALE,
     CROUCH_SPEED: 50 * PHYSIC_SCALE,
     JUMP_HEIGHT: PLAYER_JUMP,
-    DOUBLE_JUMP_HEIGHT: PLAYER_JUMP * .25,
-    MAX_FALL: 150 * PHYSIC_SCALE,
+    MAX_FALL: 200 * PHYSIC_SCALE,
     ACC_FALL: PLAYER_JUMP * GRAVITY
 };
 
@@ -110,7 +111,6 @@ const ENEMY_PHYSICS = {
     ACC_RUN: 400 * PHYSIC_SCALE,
     CROUCH_SPEED: 50 * PHYSIC_SCALE,
     JUMP_HEIGHT: PLAYER_JUMP,
-    DOUBLE_JUMP_HEIGHT: PLAYER_JUMP * .25,
     MAX_FALL: 150 * PHYSIC_SCALE,
     ACC_FALL: PLAYER_JUMP * GRAVITY
 };
@@ -144,3 +144,10 @@ function rotateImage(spritesheet, xStart, yStart, width, height, theta, scale, f
     return offscreenCanvas;
 
 };
+
+function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+  }
+
+
+
