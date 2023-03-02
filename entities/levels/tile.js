@@ -3,6 +3,7 @@ class Tile {
         Object.assign(this, { game, x, y, tileSet, firstGID, GID});
 
         this.hasCollisions = false;
+        this.collisionActive = false; //used for debugging
         
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/" + tileSet["image"]);
 
@@ -61,16 +62,27 @@ class Tile {
 
     draw(ctx) {
 
-        let spriteX = (this.margin + (this.tileWidth + this.spacing) * this.idCol);
-        let spriteY = (this.margin + (this.tileHeight + this.spacing) * this.idRow);
+        //Will only draw tiles within camera view!
+        if (this.x > this.game.camera.x - PARAMS.BLOCKWIDTH && this.x < (this.game.camera.x + PARAMS.CANVAS_WIDTH)) {
 
-        ctx.drawImage(this.spritesheet, spriteX, spriteY, this.tileWidth, this.tileHeight, this.x - this.game.camera.x, this.y - this.game.camera.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
+            let spriteX = (this.margin + (this.tileWidth + this.spacing) * this.idCol);
+            let spriteY = (this.margin + (this.tileHeight + this.spacing) * this.idRow);
 
-        //Draw Bounding box
-        if (PARAMS.DEBUG && this.hasCollisions) {
-            ctx.strokeStyle = 'blue';
-            ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
+            ctx.drawImage(this.spritesheet, spriteX, spriteY, this.tileWidth, this.tileHeight, this.x - this.game.camera.x, this.y - this.game.camera.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
+
+            //Draw Bounding box
+            if (PARAMS.DEBUG && this.hasCollisions) {
+                if (this.collisionActive) { //Used for debugging, makes color of BB red for identifying collisions
+                    ctx.strokeStyle = 'red';
+                    console.log("x = " + this.x);
+                } else {
+                    ctx.strokeStyle = 'blue';
+                }
+                ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
+                this.collisionActive = false;
+            }
         }
+
     }
 
     generateCollision() {

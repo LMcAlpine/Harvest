@@ -81,7 +81,8 @@ const PARAMS = {
     DEBUG: true,
     SCALE: 3,
     BITWIDTH: 32,
-    GRUNTS: true //Toggles spawning of grunts off
+    GRUNTS: false, //Toggles spawning of grunts off
+    ELITES: true //Toggles spawning of elites off
 };
 
 // for the parallax 
@@ -145,6 +146,10 @@ function rotateImage(spritesheet, xStart, yStart, width, height, theta, scale, f
     return offscreenCanvas;
 
 };
+
+function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+  }
 
 
 

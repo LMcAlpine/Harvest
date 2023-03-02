@@ -20,15 +20,15 @@ class SceneManager {
 
         this.scene = 1;
 
-        let position = {
-            x: 400 * PARAMS.SCALE,
-            y: 100 * PARAMS.SCALE,
-        }
-        console.log("Spawning Master Chief at: " + position.x + ", " + position.y);
-        let player = new MasterChief(gameEngine, position);
-        this.game.addEntity(player);
-        this.game.addCollisionEntity(player);
-        this.game.player = player;
+        // let position = {
+        //     x: 400 * PARAMS.SCALE,
+        //     y: 100 * PARAMS.SCALE,
+        // }
+        // console.log("Spawning Master Chief at: " + position.x + ", " + position.y);
+        // let player = new MasterChief(gameEngine, position);
+        // this.game.addEntity(player);
+        // this.game.addCollisionEntity(player);
+        // this.game.player = player;
 
         this.levelGenerator = new Level0Generator(this.game);
         let nightForest = ASSET_MANAGER.getAsset("./images/nightBG.png");
@@ -65,7 +65,7 @@ class SceneManager {
     }
 
     update() {
-
+        console.log("Camera X = " + this.x);
 
         let midpointX = PARAMS.CANVAS_WIDTH / 2 - PARAMS.BLOCKWIDTH / 2;
         let midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.BLOCKWIDTH / 2;
@@ -89,9 +89,8 @@ class SceneManager {
         ctx.fillStyle = "orange";
         ctx.font = "bold 25px serif";
         ctx.textBaseline = "top";
-        if (fps < 40)
-        console.log("UNDER");
-        ctx.fillText(fps, PARAMS.CANVAS_WIDTH /2, 0);
+        // if (fps < 40)
+        ctx.fillText(fps, PARAMS.CANVAS_WIDTH / 2, 0);
     }
 
     winScreen(ctx) {

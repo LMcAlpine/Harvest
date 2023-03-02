@@ -38,7 +38,7 @@ class MasterChief {
         this.degrees = null;
         this.aimRight = true;
 
-        this.walkingSpeed = 0.07;
+        this.walkingSpeed = 0.05;
         this.width = 40;
         this.height = 50;
 
@@ -322,6 +322,7 @@ class MasterChief {
 
         if (this.isAlive) {
 
+            //Check if endGoal is reached
             if (this.endGoal !== null) {
                 if (this.position.x > this.endGoal.x) {
                     console.log("GAME WON");
@@ -329,6 +330,12 @@ class MasterChief {
                 }
             }
 
+            //Check if chief falls out of bounds
+            if (this.position.y > PARAMS.BITWIDTH * 50) {
+                this.die();
+            }
+
+            //Check if shooting
             if (this.game.mouseDown) {
 
                 const firingPosStatic = {
@@ -342,17 +349,17 @@ class MasterChief {
                     y: gameEngine.mouse.y + this.game.camera.y
                 }
 
+                //Shoot gun if gun is not empty and not reloading
                 if (!this.currentGun.isEmpty() && !this.currentGun.reloading){
-
                     this.isFiring = 1;
                     this.currentGun.shootGun(firingPosStatic, targetPosStatic);
                 }
             }
 
+            //Regen shield if shield is not maxed
             if(this.shield < this.maxShield) {
                 this.regenShield();
             }
-            
             
 
             //Calculate if player is aiming to right or left of player model
@@ -482,47 +489,62 @@ class MasterChief {
         this.game.collisionEntities.forEach(entity => {
             if (this !== entity && entity.BB && this.BB.collide(entity.BB)) { //Collision
 
-                if (this.velocity.y > 0) { //falling
+                if (entity instanceof Tile) {
+                    entity.collisionActive = true; //COLLIDING WITH TILE
 
-                    if ((entity instanceof Tile) && this.lastBB.bottom <= entity.BB.top) {
-                        this.position.y = entity.BB.top - this.BB.height - this.BBYOffset;
-                        this.velocity.y = 0;
-                        this.onGround = true;
-                        this.updateBB();
-                        return;
+                    //FALLING
+                    if (this.velocity.y > 0) { 
+
+                        if (this.lastBB.bottom <= entity.BB.top) {
+                            this.position.y = entity.BB.top - this.BB.height - this.BBYOffset;
+                            this.velocity.y = 0;
+                            this.onGround = true;
+                            this.updateBB();
+                            return;
+                        }
+    
                     }
 
-                }
-                if (this.velocity.y < 0) { //Jumping
+                    //JUMPING
+                    if (this.velocity.y < 0) { //Jumping
+                        
+                        if (this.lastBB.top >= entity.BB.bottom) {
+                            console.log("Collide top of tile");
+                            this.position.y = entity.BB.bottom - this.BBYOffset;
+                            this.velocity.y = 0;
+                            this.updateBB();
+                            return;
+    
+                        }
+                    }
+
                     
-                    if ((entity instanceof Tile) && this.lastBB.top >= entity.BB.bottom) {
-                        console.log("Collide top of tile");
-                        this.position.y = entity.BB.bottom - this.BBYOffset;
-                        this.velocity.y = 0;
-                        this.updateBB();
-                        return;
-
-                    }
-                }
-
-                //Other cases for hitting tile
-                if ((entity instanceof Tile)) {
-                    //console.log("Check");
-
+                    //TOUCHING RIGHTSIDE OF TILE
                     if (this.BB.left <= entity.BB.right
-                        && this.BB.bottom > entity.BB.top
-                        && this.velocity.x < 0) { //Touching right side
+                        //&& this.BB.bottom > entity.BB.top
+                        && this.velocity.x < 0) { 
 
                         console.log("Touching right");
                         this.position.x = entity.BB.right - this.BBXOffset;
 
-                        if (this.velocity.x < 0) this.velocity.x = 0;
+                        this.velocity.x = 0;
                         
                     }
 
+                    // if(entity.BB.left <= this.BB.left + this.width / 2 && this.BB.left + this.width / 2 <= entity.BB.right
+                    // && this.BB.bottom > entity.BB.top
+                    // && this.velocity.x < 0) {
+                        
+                    //     console.log("Touching right");
+                    //     this.position.x = entity.BB.right - this.BBXOffset;
+
+                    //     if (this.velocity.x < 0) this.velocity.x = 0;
+                    // }
+
+                    //TOUCHING LEFT SIDE OF TILE
                     if (this.BB.right >= entity.BB.left
                         && this.BB.bottom > entity.BB.top
-                        && this.velocity.x > 0) {  //Touching left side
+                        && this.velocity.x > 0) { 
 
                         console.log("Touching left");
                         this.position.x = entity.BB.left - this.BB.width - this.BBXOffset;
@@ -531,9 +553,11 @@ class MasterChief {
                         
                     }
 
+                
+                    
                 }
 
-
+                
             }
         });
 
@@ -542,7 +566,6 @@ class MasterChief {
     draw(ctx) {
 
         if (this.isAlive) { //CHIEF IS ALIVE
-            
 
             if (this.aimRight) {
                 this.bodyAnimations[this.state][this.helmet][this.shieldDamage].drawFrame(
