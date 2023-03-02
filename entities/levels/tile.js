@@ -1,6 +1,6 @@
 class Tile {
     constructor(game, x, y, tileSet, firstGID, GID) {
-        Object.assign(this, { game, x, y, tileSet, firstGID, GID});
+        Object.assign(this, { game, x, y, tileSet, firstGID, GID });
 
         this.hasCollisions = false;
         this.collisionActive = false; //used for debugging
@@ -32,7 +32,7 @@ class Tile {
                 }
             }
         }
-        
+
         this.idRow = row;
         this.idCol = col;
 
@@ -40,15 +40,15 @@ class Tile {
         this.BB;
 
         this.generateCollision();
-        
+
 
     };
 
 
     update() {
-        
+
         this.updateBB();
-        
+
     }
 
     updateBB() {
@@ -114,7 +114,7 @@ class Tile {
                 }
             }
         }
-        
+
     }
 
 };

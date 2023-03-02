@@ -74,7 +74,7 @@ ASSET_MANAGER.downloadAll(() => {
 	gameEngine.sceneManager = scene;
 	gameEngine.addEntityToFront(scene);
 
-	
+
 
 	// layer = new Layer(nightsky, 0);
 	// gameEngine.addEntity(layer)
