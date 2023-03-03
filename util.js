@@ -78,7 +78,7 @@ const collision = ({ object1, object2 }) => {
 
 
 const PARAMS = {
-    DEBUG: true,
+    DEBUG: false,
     SCALE: 3,
     BITWIDTH: 32,
     GRUNTS: true, //Toggles spawning of grunts off
@@ -104,6 +104,7 @@ const PLAYER_PHYSICS = {
 };
 
 // Enemy physics
+const GRUNT_JUMP = -220;
 const ENEMY_PHYSICS = {
     MAX_WALK: 5 * PHYSIC_SCALE,
     MAX_RUN: 10 * PHYSIC_SCALE,
