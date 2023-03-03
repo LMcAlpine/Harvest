@@ -426,7 +426,7 @@ class MasterChief {
                     this.state = 0;
                     this.velocity.x = 0;
                 } else {
-                    console.log("Adjusting");
+                    console.log("Adjusting air velocity");
                     if(this.velocity.x > 0) {
                         this.velocity.x -= PLAYER_PHYSICS.ACC_RUN / 4 * TICK;
                     } else {
@@ -454,9 +454,6 @@ class MasterChief {
 
 
         // Allow the player to fall
-        //UNCOMMENT
-        // this.velocity.y += PLAYER_PHYSICS.MAX_FALL * TICK;
-        // this.velocity.y += GRAVITY;
         this.velocity.y += PLAYER_PHYSICS.ACC_FALL * TICK;
 
         // max speed calculation for vertical
@@ -467,7 +464,7 @@ class MasterChief {
         this.position.x += this.velocity.x * TICK * PARAMS.SCALE;
         this.position.y += this.velocity.y * TICK * PARAMS.SCALE;
         
-        console.log(this.velocity.x);
+        //console.log(this.velocity.x);
 
         this.updateBB();
 
@@ -781,6 +778,7 @@ class MasterChief {
 
     die() {
         this.isAlive = false;
+        this.velocity.x = 0;
         this.game.sceneManager.scene = 3;
     }
 
