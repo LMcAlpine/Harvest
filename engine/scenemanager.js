@@ -20,10 +20,16 @@ class SceneManager {
 
         this.scene = 1;
 
-        // let position = {
-        //     x: 400 * PARAMS.SCALE,
-        //     y: 100 * PARAMS.SCALE,
-        // }
+        let position = {
+            x: 400 * PARAMS.SCALE,
+            y: 100 * PARAMS.SCALE,
+        }
+
+        console.log("Spawning grunt at: " + position.x + ", " + position.y);
+        let grunt = new Grunt(gameEngine, position);
+        this.game.addEntity(grunt);
+        this.game.addCollisionEntity(grunt);
+
         // console.log("Spawning Master Chief at: " + position.x + ", " + position.y);
         // let player = new MasterChief(gameEngine, position);
         // this.game.addEntity(player);

@@ -87,6 +87,7 @@ class Level0Generator {
                                 let enemy = new Grunt(gameEngine, position);
                                 this.game.addCollisionEntity(enemy);
                                 this.game.addEntity(enemy);
+ 
                             }
                         } else if (object["name"] === "Elite" && (getRandomInt(2) === 1)) {
                             if (PARAMS.ELITES) {

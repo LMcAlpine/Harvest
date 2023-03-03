@@ -81,7 +81,7 @@ const PARAMS = {
     DEBUG: true,
     SCALE: 3,
     BITWIDTH: 32,
-    GRUNTS: false, //Toggles spawning of grunts off
+    GRUNTS: true, //Toggles spawning of grunts off
     ELITES: true //Toggles spawning of elites off
 };
 
@@ -105,13 +105,13 @@ const PLAYER_PHYSICS = {
 
 // Enemy physics
 const ENEMY_PHYSICS = {
-    MAX_WALK: 90 * PHYSIC_SCALE,
-    MAX_RUN: 180 * PHYSIC_SCALE,
+    MAX_WALK: 5 * PHYSIC_SCALE,
+    MAX_RUN: 10 * PHYSIC_SCALE,
     ACC_WALK: 180 * PHYSIC_SCALE,
-    ACC_RUN: 400 * PHYSIC_SCALE,
+    ACC_RUN: 140 * PHYSIC_SCALE,
     CROUCH_SPEED: 50 * PHYSIC_SCALE,
     JUMP_HEIGHT: PLAYER_JUMP,
-    MAX_FALL: 150 * PHYSIC_SCALE,
+    MAX_FALL: 200 * PHYSIC_SCALE,
     ACC_FALL: PLAYER_JUMP * GRAVITY
 };
 
