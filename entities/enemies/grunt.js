@@ -33,9 +33,9 @@ class Grunt {
 
         // Load animations
         this.loadAnimations();
-        
 
-        this.states = {waiting: 0, attacking: 1};
+
+        this.states = { waiting: 0, attacking: 1 };
         this.currentState = this.states.waiting;
 
         this.patrollingLeft = false;
@@ -93,18 +93,18 @@ class Grunt {
         let distance = getDistance(this.position, this.target);
         //console.log(distance);
 
-        console.log(this.currentState);
+        //console.log(this.currentState);
 
         if (this.currentState === this.states.waiting) {
-            console.log("Waiting");
+            //  console.log("Waiting");
             if (distance < 200) {
                 this.currentState = this.states.attacking;
             }
-            
+
         }
 
         if (this.currentState === this.states.attacking) {
-            console.log("Attacking");
+            //  console.log("Attacking");
 
             //Change face
             if (this.position.x - this.target.x < 0) {
@@ -123,7 +123,7 @@ class Grunt {
             } else {
                 this.velocity.x = 0;
             }
-            
+
             // max speed cap
             if (this.velocity.x >= ENEMY_PHYSICS.MAX_RUN) this.velocity.x = ENEMY_PHYSICS.MAX_RUN;
             if (this.velocity.x <= -ENEMY_PHYSICS.MAX_RUN) this.velocity.x = -ENEMY_PHYSICS.MAX_RUN;
@@ -139,7 +139,7 @@ class Grunt {
             const targetPosStatic = this.game.player.BB.getCenter();
 
             this.currentGun.shootGun(firingPosStatic, targetPosStatic);
-            
+
         }
 
         //Basic physics
@@ -152,7 +152,7 @@ class Grunt {
         // update position
         this.position.x += this.velocity.x * TICK * PARAMS.SCALE;
         this.position.y += this.velocity.y * TICK * PARAMS.SCALE;
-       
+
 
         this.updateBB();
 
@@ -171,7 +171,7 @@ class Grunt {
                     entity.collisionActive = true; //COLLIDING WITH TILE
 
                     //FALLING
-                    if (this.velocity.y > 0) { 
+                    if (this.velocity.y > 0) {
 
                         if (this.lastBB.bottom <= entity.BB.top) {
                             this.position.y = entity.BB.top - this.BB.height - this.BBYOffset;
@@ -180,53 +180,53 @@ class Grunt {
                             this.updateBB();
                             return;
                         }
-    
+
                     }
 
                     //JUMPING
                     if (this.velocity.y < 0) { //Jumping
-                        
+
                         if (this.lastBB.top >= entity.BB.bottom) {
                             console.log("Collide top of tile");
                             this.position.y = entity.BB.bottom - this.BBYOffset;
                             this.velocity.y = 0;
                             this.updateBB();
                             return;
-    
+
                         }
                     }
 
-                    
+
                     //TOUCHING RIGHTSIDE OF TILE
                     if (this.BB.left <= entity.BB.right
                         //&& this.BB.bottom > entity.BB.top
-                        && this.velocity.x < 0) { 
+                        && this.velocity.x < 0) {
 
                         console.log("Touching right");
                         this.position.x = entity.BB.right - this.BBXOffset;
 
                         if (this.velocity.x < 0) this.velocity.x = -ENEMY_PHYSICS.MAX_RUN / 4;
-                        
+
                     }
 
 
                     //TOUCHING LEFT SIDE OF TILE
                     if (this.BB.right >= entity.BB.left
                         && this.BB.bottom > entity.BB.top
-                        && this.velocity.x > 0) { 
+                        && this.velocity.x > 0) {
 
                         console.log("Touching left");
                         this.position.x = entity.BB.left - this.BB.width - this.BBXOffset;
 
                         if (this.velocity.x > 0) this.velocity.x = ENEMY_PHYSICS.MAX_RUN / 4;
-                        
+
                     }
 
-                
-                    
+
+
                 }
 
-                
+
             }
         });
 
@@ -254,18 +254,18 @@ class Grunt {
 
         if (this.aimRight) {
             this.animations[this.state].drawFrame(
-                this.game.clockTick, 
-                ctx, 
-                this.position.x - this.game.camera.x, 
-                this.position.y - this.game.camera.y, 
+                this.game.clockTick,
+                ctx,
+                this.position.x - this.game.camera.x,
+                this.position.y - this.game.camera.y,
                 this.scale, false);
 
         } else {
             this.animations[this.state].drawFrame(
-                this.game.clockTick, 
-                ctx, 
-                this.position.x - this.game.camera.x, 
-                this.position.y - this.game.camera.y, 
+                this.game.clockTick,
+                ctx,
+                this.position.x - this.game.camera.x,
+                this.position.y - this.game.camera.y,
                 this.scale, true);
         }
 
@@ -275,6 +275,6 @@ class Grunt {
             ctx.strokeStyle = 'cyan';
             ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
         }
-        
+
     };
 }
