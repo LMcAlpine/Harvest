@@ -105,14 +105,17 @@ class SceneManager {
 
         // if (!this.title) {
         let position = {
-            x: 400 * PARAMS.SCALE,
-            y: 100 * PARAMS.SCALE,
+            x: 900 * PARAMS.SCALE,
+            y: 200 * PARAMS.SCALE,
         }
 
-        console.log("Spawning grunt at: " + position.x + ", " + position.y);
-        let grunt = new Grunt(gameEngine, position);
-        this.game.addEntity(grunt);
-        this.game.addCollisionEntity(grunt);
+        //Test entities
+
+        
+        // console.log("Spawning grunt at: " + position.x + ", " + position.y);
+        // let grunt = new Grunt(gameEngine, position);
+        // this.game.addEntity(grunt);
+        // this.game.addCollisionEntity(grunt);
 
 
 

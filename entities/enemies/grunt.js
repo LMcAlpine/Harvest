@@ -3,6 +3,7 @@ class Grunt {
         Object.assign(this, { game, position });
 
         this.hp = 150;
+        this.isAlive = true;
         this.currentGun = new Gun(this, game, "Plasma_Pistol");
         // Properties
         this.scale = 3;
@@ -10,7 +11,6 @@ class Grunt {
         //Animation states
         this.state = 0; // 0 = Idle, 1 = Moving
         this.isFiring = 0; // 0 = Not firing, 1 = Firing
-
 
         this.SpriteSheet = ASSET_MANAGER.getAsset("./sprites/GruntSprites.png");
         this.animations = [];
@@ -26,16 +26,20 @@ class Grunt {
         //Player position
         this.target = null;
 
-        // Added for Jumping
+        // Movement
         this.velocity = { x: 0, y: 0 };
-        this.onGround = true;
+        this.onGround = false;
+        this.jumping = false;
+
 
 
         // Load animations
         this.loadAnimations();
+        //dimensions of frames
+        this.width = 50;
+        this.height = 50;
 
-
-        this.states = { waiting: 0, attacking: 1 };
+        this.states = {waiting: 0, attacking: 1};
         this.currentState = this.states.waiting;
 
         this.patrollingLeft = false;
@@ -76,6 +80,14 @@ class Grunt {
             0,
             false, true);
 
+
+        this.deathAnimation = new Animator(this.SpriteSheet,
+            0, 100,
+            50, 50,
+            5, 0.1,
+            0,
+            false, false);
+
     }
 
     updateBB() {
@@ -94,52 +106,57 @@ class Grunt {
         this.target = this.game.player.position;
 
         let distance = getDistance(this.position, this.target);
-        //console.log(distance);
 
-        //console.log(this.currentState);
+        if (this.isAlive) {
+            if (this.currentState === this.states.waiting) {
 
-        if (this.currentState === this.states.waiting) {
-            //  console.log("Waiting");
-            if (distance < 200) {
-                this.currentState = this.states.attacking;
+                if (distance < PARAMS.SCALE * 240) {
+                    this.currentState = this.states.attacking;
+                }
+                
             }
 
-        }
+            if (this.currentState === this.states.attacking) {
 
-        if (this.currentState === this.states.attacking) {
-            //  console.log("Attacking");
+                //Change face
+                if (this.position.x - this.target.x < 0) {
+                    this.aimRight = true;
+                } else {
+                    this.aimRight = false;
+                }
 
-            //Change face
-            if (this.position.x - this.target.x < 0) {
-                this.aimRight = true;
-            } else {
-                this.aimRight = false;
-            }
+                this.state = 1;
 
-            this.state = 1;
+                //FOLLOW PLAYER
 
-            //FOLLOW PLAYER
-            if (this.target.x < this.position.x) { //player is to the left
-                this.velocity.x -= ENEMY_PHYSICS.ACC_RUN * TICK;
-            } else if (this.target.x > this.position.x) {
-                this.velocity.x += ENEMY_PHYSICS.ACC_RUN * TICK;
-            } else {
-                this.velocity.x = 0;
-            }
+                //Jumping
+                if (this.jumping && this.onGround) {
+                    this.velocity.y = GRUNT_JUMP;
+                    this.onGround = false;
+                    this.jumping = false;
+                }
 
-            // max speed cap
-            if (this.velocity.x >= ENEMY_PHYSICS.MAX_RUN) this.velocity.x = ENEMY_PHYSICS.MAX_RUN;
-            if (this.velocity.x <= -ENEMY_PHYSICS.MAX_RUN) this.velocity.x = -ENEMY_PHYSICS.MAX_RUN;
+                if (this.target.x < this.position.x) { //player is to the left
+                    this.velocity.x -= ENEMY_PHYSICS.ACC_RUN * TICK;
+                } else if (this.target.x > this.position.x) {
+                    this.velocity.x += ENEMY_PHYSICS.ACC_RUN * TICK;
+                } else {
+                    this.velocity.x = 0;
+                }
+                
+                // max speed cap
+                if (this.velocity.x >= ENEMY_PHYSICS.MAX_RUN) this.velocity.x = ENEMY_PHYSICS.MAX_RUN;
+                if (this.velocity.x <= -ENEMY_PHYSICS.MAX_RUN) this.velocity.x = -ENEMY_PHYSICS.MAX_RUN;
 
 
 
-            //SHOOTING AT PLAYER
-            const firingPosStatic = {
-                x: this.BB.getCenter().x,
-                y: this.BB.getCenter().y
-            }
-            //Capture the static position
-            const targetPosStatic = this.game.player.BB.getCenter();
+                //SHOOTING AT PLAYER
+                const firingPosStatic = {
+                    x: this.BB.getCenter().x,
+                    y: this.BB.getCenter().y
+                }
+                //Capture the static position
+                const targetPosStatic = this.game.player.BB.getCenter();
 
 
             if (!this.soundPlaying) {
@@ -154,8 +171,9 @@ class Grunt {
 
 
 
-            this.currentGun.shootGun(firingPosStatic, targetPosStatic);
-
+                this.currentGun.shootGun(firingPosStatic, targetPosStatic);
+                
+            }
         }
 
         //Basic physics
@@ -168,8 +186,8 @@ class Grunt {
         // update position
         this.position.x += this.velocity.x * TICK * PARAMS.SCALE;
         this.position.y += this.velocity.y * TICK * PARAMS.SCALE;
-
-
+       
+        console.log(this.velocity);
         this.updateBB();
 
         this.collisionChecker();
@@ -215,14 +233,15 @@ class Grunt {
 
                     //TOUCHING RIGHTSIDE OF TILE
                     if (this.BB.left <= entity.BB.right
-                        //&& this.BB.bottom > entity.BB.top
-                        && this.velocity.x < 0) {
+                        && this.BB.bottom > entity.BB.top
+                        && this.velocity.x < 0) { 
 
-                        console.log("Touching right");
                         this.position.x = entity.BB.right - this.BBXOffset;
 
                         if (this.velocity.x < 0) this.velocity.x = -ENEMY_PHYSICS.MAX_RUN / 4;
 
+                        this.jumping = true;
+                        
                     }
 
 
@@ -236,6 +255,8 @@ class Grunt {
 
                         if (this.velocity.x > 0) this.velocity.x = ENEMY_PHYSICS.MAX_RUN / 4;
 
+                        this.jumping = true;
+                        
                     }
 
 
@@ -262,27 +283,57 @@ class Grunt {
     }
 
     die() {
-        //Play death animation
-        this.removeFromWorld = true;
+        this.velocity.x = 0;
+        this.isAlive = false;
     }
 
     draw(ctx) {
 
-        if (this.aimRight) {
-            this.animations[this.state].drawFrame(
-                this.game.clockTick,
-                ctx,
-                this.position.x - this.game.camera.x,
-                this.position.y - this.game.camera.y,
-                this.scale, false);
+        if (this.isAlive) {
+            if (this.aimRight) {
+                this.animations[this.state].drawFrame(
+                    this.game.clockTick, 
+                    ctx, 
+                    this.position.x - this.game.camera.x, 
+                    this.position.y - this.game.camera.y, 
+                    this.scale, false);
 
-        } else {
-            this.animations[this.state].drawFrame(
-                this.game.clockTick,
-                ctx,
-                this.position.x - this.game.camera.x,
-                this.position.y - this.game.camera.y,
-                this.scale, true);
+            } else {
+                this.animations[this.state].drawFrame(
+                    this.game.clockTick, 
+                    ctx, 
+                    this.position.x - this.game.camera.x, 
+                    this.position.y - this.game.camera.y, 
+                    this.scale, true);
+            }
+        } else { // Grunt is dead
+            //play death animation
+            if (this.aimRight) {
+                this.deathAnimation.drawFrame(this.game.clockTick, ctx, 
+                    this.position.x - this.game.camera.x, 
+                    this.position.y -  this.game.camera.y, 
+                    this.scale, false);
+            } else {
+                this.deathAnimation.drawFrame(this.game.clockTick, ctx, 
+                    this.position.x - this.game.camera.x, 
+                    this.position.y - this.game.camera.y, 
+                    this.scale, true);
+            }
+
+
+            if (this.deathAnimation.isDone()) { //Draw last frame when death animation completes
+                if (this.aimRight) {
+                    this.deathAnimation.drawSpecificFrame(this.game.clockTick, ctx, 
+                        this.position.x - this.game.camera.x, 
+                        this.position.y - this.game.camera.y, 
+                        this.scale, false, 4);
+                } else {
+                    this.deathAnimation.drawSpecificFrame(this.game.clockTick, ctx, 
+                        this.position.x - this.game.camera.x, 
+                        this.position.y - this.game.camera.y, 
+                        this.scale, true, 4);
+                }
+            }
         }
 
 

@@ -104,6 +104,7 @@ const PLAYER_PHYSICS = {
 };
 
 // Enemy physics
+const GRUNT_JUMP = -220;
 const ENEMY_PHYSICS = {
     MAX_WALK: 5 * PHYSIC_SCALE,
     MAX_RUN: 10 * PHYSIC_SCALE,

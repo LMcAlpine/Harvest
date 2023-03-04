@@ -49,7 +49,7 @@ class MasterChief {
 
         // Added for Jumping
         this.velocity = { x: 0, y: 0 };
-        this.onGround = true;
+        this.onGround = false;
 
 
         this.bodyAnimations = [];
