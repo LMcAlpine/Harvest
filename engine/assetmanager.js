@@ -46,6 +46,7 @@ class AssetManager {
                 case 'wav':
 
                 case 'mp3':
+                case 'ogg':
                 case 'mp4':
                     var aud = new Audio();
                     aud.addEventListener("loadeddata", function () {

@@ -39,7 +39,7 @@ class Grunt {
         this.width = 50;
         this.height = 50;
 
-        this.states = {waiting: 0, attacking: 1};
+        this.states = { waiting: 0, attacking: 1 };
         this.currentState = this.states.waiting;
 
         this.patrollingLeft = false;
@@ -113,7 +113,7 @@ class Grunt {
                 if (distance < PARAMS.SCALE * 240) {
                     this.currentState = this.states.attacking;
                 }
-                
+
             }
 
             if (this.currentState === this.states.attacking) {
@@ -143,7 +143,7 @@ class Grunt {
                 } else {
                     this.velocity.x = 0;
                 }
-                
+
                 // max speed cap
                 if (this.velocity.x >= ENEMY_PHYSICS.MAX_RUN) this.velocity.x = ENEMY_PHYSICS.MAX_RUN;
                 if (this.velocity.x <= -ENEMY_PHYSICS.MAX_RUN) this.velocity.x = -ENEMY_PHYSICS.MAX_RUN;
@@ -159,20 +159,20 @@ class Grunt {
                 const targetPosStatic = this.game.player.BB.getCenter();
 
 
-            if (!this.soundPlaying) {
-                ASSET_MANAGER.playAsset("./sounds/plasma_rifle_fire_plasmarifle1.wav");
-                this.soundPlaying = true;
-                // dont play sound until the sound has finished playing.
-                let audio = ASSET_MANAGER.getAsset("./sounds/plasma_rifle_fire_plasmarifle1.wav");
-                audio.addEventListener('ended', () => {
-                    this.soundPlaying = false;
-                });
-            }
+                if (!this.soundPlaying) {
+                    ASSET_MANAGER.playAsset("./sounds/plasma_rifle_fire_plasmarifle1.wav");
+                    this.soundPlaying = true;
+                    // dont play sound until the sound has finished playing.
+                    let audio = ASSET_MANAGER.getAsset("./sounds/plasma_rifle_fire_plasmarifle1.wav");
+                    audio.addEventListener('ended', () => {
+                        this.soundPlaying = false;
+                    });
+                }
 
 
 
                 this.currentGun.shootGun(firingPosStatic, targetPosStatic);
-                
+
             }
         }
 
@@ -186,7 +186,7 @@ class Grunt {
         // update position
         this.position.x += this.velocity.x * TICK * PARAMS.SCALE;
         this.position.y += this.velocity.y * TICK * PARAMS.SCALE;
-       
+
         console.log(this.velocity);
         this.updateBB();
 
@@ -234,14 +234,14 @@ class Grunt {
                     //TOUCHING RIGHTSIDE OF TILE
                     if (this.BB.left <= entity.BB.right
                         && this.BB.bottom > entity.BB.top
-                        && this.velocity.x < 0) { 
+                        && this.velocity.x < 0) {
 
                         this.position.x = entity.BB.right - this.BBXOffset;
 
                         if (this.velocity.x < 0) this.velocity.x = -ENEMY_PHYSICS.MAX_RUN / 4;
 
                         this.jumping = true;
-                        
+
                     }
 
 
@@ -256,7 +256,7 @@ class Grunt {
                         if (this.velocity.x > 0) this.velocity.x = ENEMY_PHYSICS.MAX_RUN / 4;
 
                         this.jumping = true;
-                        
+
                     }
 
 
@@ -279,10 +279,27 @@ class Grunt {
         } else {
             this.hp = 0;
             this.die();
+            return;
         }
     }
 
     die() {
+
+        if (!this.soundPlaying) {
+
+            ASSET_MANAGER.playAsset("./sounds/death_violent.2.ogg")
+            //  ASSET_MANAGER.playAsset("./sounds/death_instant.5.ogg");
+            this.soundPlaying = true;
+            // dont play sound until the sound has finished playing.
+            //  let audio = ASSET_MANAGER.getAsset("./sounds/death_instant.5.ogg");
+            let audio = ASSET_MANAGER.getAsset("./sounds/death_violent.2.ogg");
+            audio.addEventListener('ended', () => {
+                this.soundPlaying = false;
+            });
+        }
+
+
+
         this.velocity.x = 0;
         this.isAlive = false;
     }
@@ -292,45 +309,45 @@ class Grunt {
         if (this.isAlive) {
             if (this.aimRight) {
                 this.animations[this.state].drawFrame(
-                    this.game.clockTick, 
-                    ctx, 
-                    this.position.x - this.game.camera.x, 
-                    this.position.y - this.game.camera.y, 
+                    this.game.clockTick,
+                    ctx,
+                    this.position.x - this.game.camera.x,
+                    this.position.y - this.game.camera.y,
                     this.scale, false);
 
             } else {
                 this.animations[this.state].drawFrame(
-                    this.game.clockTick, 
-                    ctx, 
-                    this.position.x - this.game.camera.x, 
-                    this.position.y - this.game.camera.y, 
+                    this.game.clockTick,
+                    ctx,
+                    this.position.x - this.game.camera.x,
+                    this.position.y - this.game.camera.y,
                     this.scale, true);
             }
         } else { // Grunt is dead
             //play death animation
             if (this.aimRight) {
-                this.deathAnimation.drawFrame(this.game.clockTick, ctx, 
-                    this.position.x - this.game.camera.x, 
-                    this.position.y -  this.game.camera.y, 
+                this.deathAnimation.drawFrame(this.game.clockTick, ctx,
+                    this.position.x - this.game.camera.x,
+                    this.position.y - this.game.camera.y,
                     this.scale, false);
             } else {
-                this.deathAnimation.drawFrame(this.game.clockTick, ctx, 
-                    this.position.x - this.game.camera.x, 
-                    this.position.y - this.game.camera.y, 
+                this.deathAnimation.drawFrame(this.game.clockTick, ctx,
+                    this.position.x - this.game.camera.x,
+                    this.position.y - this.game.camera.y,
                     this.scale, true);
             }
 
 
             if (this.deathAnimation.isDone()) { //Draw last frame when death animation completes
                 if (this.aimRight) {
-                    this.deathAnimation.drawSpecificFrame(this.game.clockTick, ctx, 
-                        this.position.x - this.game.camera.x, 
-                        this.position.y - this.game.camera.y, 
+                    this.deathAnimation.drawSpecificFrame(this.game.clockTick, ctx,
+                        this.position.x - this.game.camera.x,
+                        this.position.y - this.game.camera.y,
                         this.scale, false, 4);
                 } else {
-                    this.deathAnimation.drawSpecificFrame(this.game.clockTick, ctx, 
-                        this.position.x - this.game.camera.x, 
-                        this.position.y - this.game.camera.y, 
+                    this.deathAnimation.drawSpecificFrame(this.game.clockTick, ctx,
+                        this.position.x - this.game.camera.x,
+                        this.position.y - this.game.camera.y,
                         this.scale, true, 4);
                 }
             }
