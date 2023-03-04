@@ -353,10 +353,25 @@ class MasterChief {
                 }
 
                 //Shoot gun if gun is not empty and not reloading
-                if (!this.currentGun.isEmpty() && !this.currentGun.reloading){
+                let isAuto = this.currentGun.getGunInfo().param[0];
+
+                if (!this.currentGun.isEmpty() && !this.currentGun.reloading && isAuto) { //Gun is full auto
                     this.isFiring = 1;
                     this.currentGun.shootGun(firingPosStatic, targetPosStatic);
-                }
+
+                } else if (!this.currentGun.isEmpty() //Gun is semi-automatic
+                    && !this.currentGun.reloading 
+                    && !isAuto 
+                    && this.fireOnce                    //Gun should fire one time per click
+                    && this.currentGun.canFire) { 
+
+                        this.isFiring = 1;
+                        this.currentGun.shootGun(firingPosStatic, targetPosStatic);
+                        this.fireOnce = false;
+                } 
+
+            } else if (!this.game.mouseDown){
+                this.fireOnce = true;                   //Resets fire per one click
             }
 
             //Regen shield if shield is not maxed
@@ -573,7 +588,7 @@ class MasterChief {
 
             this.drawGun(ctx);
 
-            if (PARAMS.DEBUG) {
+            if (PARAMS.DEBUG && this.BB) {
                 //Draw the BB
                 ctx.strokeStyle = 'cyan';
                 ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);

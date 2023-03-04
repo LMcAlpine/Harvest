@@ -119,7 +119,7 @@ class Bullet {
         //ctx.strokeStyle = 'blue';
         //ctx.strokeRect(972, 540, 100, 100);
 
-        if (PARAMS.DEBUG) {
+        if (PARAMS.DEBUG && this.BB) {
             ctx.strokeStyle = 'red';
             ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
 

@@ -77,8 +77,10 @@ class Gun {
         }
 
         this.ammoCount = this.guns[this.gunType].param[4];
-        this.fireRateCounter = this.guns[this.gunType].param[1];
-        this.botCappedFireRate= 0;
+        this.fireRateCounterMax = this.guns[this.gunType].param[1];
+        this.fireRateCounter = 0;
+        this.canFire = true;
+        this.botCappedFireRate = 0;
         this.reloadCounter = 300; //Timer to slow reload
 
     }
@@ -97,10 +99,21 @@ class Gun {
                 }
                 
             }
+
+            if (this.shooter instanceof MasterChief)
+            console.log(this.fireRateCounter);
+
+            if (this.fireRateCounter !== 0) {
+                this.fireRateCounter++;
+                if (this.fireRateCounter >= this.fireRateCounterMax) {
+                    this.fireRateCounter = 0;
+                    this.canFire = true;
+                }
+            }
+
         } else {
             this.updateBB();
             this.physics();
-            
             this.checkCollisions();
         }
     }
@@ -141,47 +154,32 @@ class Gun {
     shootGun(firingPosStatic, targetPosStatic) {
         
         if (!this.worldEntity) { //Make sure gun isn't fire from ground
-            //console.log(this.fireRateCounter)
+
             let gunParams = this.guns[this.gunType].param;
-            let isAuto = gunParams[0];
-            let firerate = gunParams[1];
 
-            
-            if (this.ammoCount > 0) {
-                if (firerate === this.fireRateCounter) {
-                    
-                    new Bullet(
-                        this.shooter,
-                        this.game,
-                        firingPosStatic,
-                        targetPosStatic,
-                        gunParams[2],
-                        gunParams[3],
-                        gunParams[5]);
+            //Gun mechanics for chief
+            //if(this.shooter instanceof MasterChief) {
+                if (this.ammoCount > 0) {
 
-                    
-                    this.ammoCount--;
-                    this.fireRateCounter--;
-                } else {
-                    this.fireRateCounter--;
-                    if (this.fireRateCounter <= 0) {
-                        this.fireRateCounter = firerate;
-                    }
-                }
-                
+                    if (this.fireRateCounter === 0) {
+                        new Bullet(
+                            this.shooter,
+                            this.game,
+                            firingPosStatic,
+                            targetPosStatic,
+                            gunParams[2],
+                            gunParams[3],
+                            gunParams[5]
+                        );
 
-                if (!isAuto && this.shooter instanceof MasterChief) {
-                    this.fireRateCounter = firerate;
+                        this.canFire = false;
+                        this.ammoCount--;
+                        this.fireRateCounter++;
+
+                    } 
+
                 }
-                
-            } else { //Gun is empty
-                if (!isAuto && this.shooter instanceof MasterChief) {
-                    this.fireRateCounter = firerate;
-                }
-                if (!this.shooter instanceof MasterChief) { //Bots need to reload on their own
-                    this.reloadGun();
-                }
-            }
+
         }
         
     }
