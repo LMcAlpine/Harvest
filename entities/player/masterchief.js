@@ -5,19 +5,34 @@ class MasterChief {
         // Updated the constructor
         Object.assign(this, { game, position});
 
-        this.scale = 3;
-        this.endGoal = null;
+        this.SpriteSheet = ASSET_MANAGER.getAsset("./sprites/ChiefSprites.png");
+        this.GunSpriteSheet = ASSET_MANAGER.getAsset("./sprites/Guns.png");
+
+        this.scale = PARAMS.SCALE;
+
+        this.endGoal = null; //Used to identify endGoal, should be moved to scenemanager though
+
+        this.degrees = null;
+        this.aimRight = true;
+
+        this.walkingSpeed = 0.05;
+        this.width = 40; //Chief's width
+        this.height = 50; //Chief's height
+
+        // Added for Jumping
+        this.velocity = { x: 0, y: 0 };
+        this.onGround = false;
 
         /* Cache is 2d array that holds an offscreencanvas for varying gun angles, this is to avoid
         constantly creating offscreen canvases to rotate chief arm/gun and instead store previously
         created canvases into a cache.
         */
         this.cache = []; //For tracking this.angle
-        //this.cache.push([]); //For tracking this.isFiring
 
-        this.SpriteSheet = ASSET_MANAGER.getAsset("./sprites/ChiefSprites.png");
-        this.GunSpriteSheet = ASSET_MANAGER.getAsset("./sprites/Guns.png");
+        //Chief's gun
+        this.currentGun = new Gun(this, game, "Sniper");
 
+        //Bounding Boxes
         this.lastBB = null;
         this.BB = null;
         this.BBXOffset = 10 * this.scale; //Offset for adjusting BB
@@ -30,22 +45,9 @@ class MasterChief {
 
         //Animation states for chief's arms/gun firing
         this.isFiring = 0; // 0 = Not firing, 1 = Firing
-        this.gunType = 1; // 0 = Sniper Rifle, 1 = Assault Rifle
-        //this.gunTypeTranslated = ["Sniper", "Assault_Rifle"];
-        this.currentGun = new Gun(this, game, "Assault_Rifle");
-        this.game.addEntity(this.currentGun);
+        this.gunType = this.currentGun.getGunInfo().index; // 0 = Sniper Rifle, 1 = Assault Rifle
 
-        this.degrees = null;
-        this.aimRight = true;
-
-        this.walkingSpeed = 0.05;
-        this.width = 40;
-        this.height = 50;
-
-        // Added for Jumping
-        this.velocity = { x: 0, y: 0 };
-        this.onGround = false;
-
+ 
 
         this.bodyAnimations = [];
         this.helmetAnimations = [];
@@ -316,9 +318,8 @@ class MasterChief {
 
     update() {
 
-        console.log("X: " + (this.velocity.x | 0) + " Y: " + (this.velocity.y | 0));
+        //console.log("X: " + (this.velocity.x | 0) + " Y: " + (this.velocity.y | 0));
 
-        //console.log(this.hasCollisions);
         // Updater properties
         const TICK = this.game.clockTick;
 
@@ -377,14 +378,24 @@ class MasterChief {
     
 
             if(keys[' '].pressed && this.onGround) {
-                this.velocity.y = PLAYER_JUMP;
-                this.onGround = false;
-                this.state = 2;
-
-                // this.position.y += -PLAYER_JUMP;
+                if (this.fireSpace) { //Will only jump once
+                    this.velocity.y = PLAYER_JUMP;
+                    this.onGround = false;
+                    this.state = 2;
+                    this.fireSpace = false;
+                } 
+            } else if (!keys[' '].pressed){
+                this.fireSpace = true;
             }
+
             if(keys['r'].pressed) {
                 this.currentGun.reloadGun();
+            }
+            //console.log(this.game.keys);
+            //Drops gun, used for testing
+            if(this.game.keys['l']) {
+                console.log("test");
+                this.currentGun.dropGun(this.position);
             }
 
 
@@ -499,14 +510,39 @@ class MasterChief {
                             console.log("Left collision");
                             
                             this.position.x = entity.BB.left - this.BB.width - this.BBXOffset;
-                            if (this.velocity.x > 0) this.velocity.x = 5;
+                            if (this.velocity.x > 0) this.velocity.x = 0;
                         } else if (this.BB.collide(entity.rightBB)) { // Touching right side of tile
                             console.log("Right collision");
 
                             this.position.x = entity.BB.right  - this.BBXOffset;
-                            if (this.velocity.x < 0) this.velocity.x = -5;
+                            if (this.velocity.x < 0) this.velocity.x = 0;
                         }
                         //this.updateBB();
+                }
+
+                //console.log(this.currentGun)
+
+                //Gun world entity on ground
+                if (entity instanceof Gun) {
+                    //TODO: Prompt for pickup
+                    //console.log("Gun on ground"); 
+                    //Press 'E' to pickup Gun
+                    if(this.game.keys['e']) {
+
+                        if (this.fireE) { //Will only press E once
+                            
+                            this.currentGun.dropGun();
+                            entity.pickupGun(this); //this replaces shooter in gun
+                            this.currentGun = entity;
+                            
+                            this.gunType = this.currentGun.getGunInfo().index;
+                            this.cache = [];
+                            this.fireE = false;
+                        }
+                    } else if (!this.game.keys['e']) {
+                        this.fireE = true;
+                    }
+
                 }
 
             }

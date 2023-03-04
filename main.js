@@ -3,6 +3,7 @@ const ASSET_MANAGER = new AssetManager();
 
 ASSET_MANAGER.queueDownload("./sprites/ChiefSprites.png");
 ASSET_MANAGER.queueDownload("./sprites/Guns.png");
+ASSET_MANAGER.queueDownload("./sprites/GunWorldEntities.png");
 
 
 ASSET_MANAGER.queueDownload("./sprites/GruntSprites.png");

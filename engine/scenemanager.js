@@ -21,12 +21,24 @@ class SceneManager {
         this.scene = 1;
 
         let position = {
-            x: 900 * PARAMS.SCALE,
+            x: 1677,
             y: 200 * PARAMS.SCALE,
         }
 
-        //Test entities
+        let position2 = {
+            x: 1600,
+            y: 200 * PARAMS.SCALE,
+        }
 
+
+        //Test entities
+        let testGun = new Gun(null, this.game, "Assault_Rifle");
+        testGun.position = position;
+        testGun.worldEntity = true;
+
+        let testGun2 = new Gun(null, this.game, "Assault_Rifle");
+        testGun2.position = position2;
+        testGun2.worldEntity = true;
         
         // console.log("Spawning grunt at: " + position.x + ", " + position.y);
         // let grunt = new Grunt(gameEngine, position);

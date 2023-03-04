@@ -42,8 +42,6 @@ class Grunt {
         this.states = {waiting: 0, attacking: 1};
         this.currentState = this.states.waiting;
 
-        this.patrollingLeft = false;
-
         this.elapsedTime = 0;
         this.updateBB();
     }
@@ -268,6 +266,7 @@ class Grunt {
     die() {
         this.velocity.x = 0;
         this.isAlive = false;
+        this.currentGun.dropGun();
     }
 
     draw(ctx) {

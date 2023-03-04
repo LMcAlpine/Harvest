@@ -7,6 +7,10 @@ class Gun {
     constructor(shooter, game, gunType) {
         Object.assign(this, { shooter, game, gunType});
 
+        this.gunSprites = ASSET_MANAGER.getAsset("./sprites/GunWorldEntities.png");
+        this.spriteWidth = 75;
+        this.spriteHeight = 30;
+
         this.worldEntity = false; //When checked, gun will be displayed as a world entity.
         this.velocity = {
             x: 0,
@@ -18,48 +22,98 @@ class Gun {
         }
 
         this.BB = null;
+        this.BBXOffset = 1 * PARAMS.SCALE; //Offset for adjusting BB
+        this.BBYOffset = 15 * PARAMS.SCALE; //Offset for adjusting BB
+
+        this.updateBB();
+        this.game.addEntity(this);
+        this.game.addCollisionEntity(this);
 
         /* 
             Each gun has an array dictating
             [isAutomatic, Max Firerate, Bullet Velocity, Bullet Damage, Magazine Size, projectileType]
+            spriteX and spriteY are coords on the spritesheet for each gun.
+
         */
         this.guns = {
-            "Assault_Rifle": [true, 10, 30, 35, 36, "BULLET"],
-            "Sniper": [false, 100, 75, 150, 4, "BULLET"],
-            "Plasma_Pistol": [false, 40, 7, 20, 1000, "PLASMA"],
-            "SMG": [true, 15, 18, 30, 30, "BULLET"],
-            "Needler": [true, 10, 10, 30, 22, "NEEDLE"],
-            "Rocket_Launcher": [false, 40, 50, 500, 4, "ROCKET"],
+        
+            "Sniper": {
+                param: [false, 100, 75, 150, 4, "BULLET"],
+                spriteX: 0,
+                spriteY: 0,
+                index: 0
+            },
+
+            "Assault_Rifle": {
+                param: [true, 10, 30, 35, 36, "BULLET"],
+                spriteX: 0,
+                spriteY: 30,
+                index: 1
+                
+            },
+
+            "Plasma_Pistol": {
+                param: [false, 40, 7, 20, 1000, "PLASMA"],
+                spriteX: 0,
+                spriteY: 60,
+                index: 2
+            },
+
+            // "SMG": {
+            //     param: [true, 15, 18, 30, 30, "BULLET"],
+            //     spriteX: 0,
+            //     spriteY: 0
+            // },
+            // "Needler":{
+            //     param: [true, 10, 10, 30, 22, "NEEDLE"],
+            //     spriteX: 0,
+            //     spriteY: 0
+            // } ,
+            // "Rocket_Launcher": {
+            //     param: [false, 40, 50, 500, 4, "ROCKET"],
+            //     spriteX: 0,
+            //     spriteY: 0
+            // }
         }
 
-        this.ammoCount = this.guns[this.gunType][4];
-        this.fireRateCounter = this.guns[this.gunType][1];
+        this.ammoCount = this.guns[this.gunType].param[4];
+        this.fireRateCounter = this.guns[this.gunType].param[1];
         this.botCappedFireRate= 0;
         this.reloadCounter = 300; //Timer to slow reload
 
     }
 
     update() {
+        
         if (!this.worldEntity) {
+
             if (this.reloading) {
                 if (this.reloadCounter != 0) {
                     this.reloadCounter--;
                 } else {
-                    this.ammoCount = this.guns[this.gunType][4];
+                    this.ammoCount = this.guns[this.gunType].param[4];
                     this.reloading = false; //stop reloading
                     this.reloadCounter = 300; //reset reload counter
                 }
                 
             }
         } else {
-            
-            this.physics();
             this.updateBB();
+            this.physics();
+            
             this.checkCollisions();
         }
     }
 
     updateBB() {
+
+        this.lastBB = this.BB;
+
+        this.BB = new BoundingBox(
+            this.position.x + this.BBXOffset, 
+            this.position.y + this.BBYOffset, 
+            (this.spriteWidth * PARAMS.SCALE) - (45 * PARAMS.SCALE), 
+            (this.spriteHeight * PARAMS.SCALE) - (15 * PARAMS.SCALE));
 
     }
 
@@ -67,59 +121,74 @@ class Gun {
 
         if (this.worldEntity) {
 
+            if (PARAMS.DEBUG && this.BB) {
+                //Draw the BB
+                ctx.strokeStyle = 'cyan';
+                ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
+            }
+
+            ctx.drawImage(this.gunSprites,
+                0, this.guns[this.gunType].spriteY, //source from sheet
+                this.spriteWidth, this.spriteHeight,
+                this.position.x - this.game.camera.x, this.position.y - this.game.camera.y,
+                this.spriteWidth * PARAMS.SCALE,
+                this.spriteHeight * PARAMS.SCALE);
+
         }
 
     }
 
     shootGun(firingPosStatic, targetPosStatic) {
         
-        //console.log(this.fireRateCounter)
-        let isAuto = this.guns[this.gunType][0];
-        let firerate = this.guns[this.gunType][1];
+        if (!this.worldEntity) { //Make sure gun isn't fire from ground
+            //console.log(this.fireRateCounter)
+            let gunParams = this.guns[this.gunType].param;
+            let isAuto = gunParams[0];
+            let firerate = gunParams[1];
 
-        
-        if (this.ammoCount > 0) {
-            if (firerate === this.fireRateCounter) {
-                
-                new Bullet(
-                    this.shooter,
-                    this.game,
-                    firingPosStatic,
-                    targetPosStatic,
-                    this.guns[this.gunType][2],
-                    this.guns[this.gunType][3],
-                    this.guns[this.gunType][5]);
+            
+            if (this.ammoCount > 0) {
+                if (firerate === this.fireRateCounter) {
+                    
+                    new Bullet(
+                        this.shooter,
+                        this.game,
+                        firingPosStatic,
+                        targetPosStatic,
+                        gunParams[2],
+                        gunParams[3],
+                        gunParams[5]);
 
+                    
+                    this.ammoCount--;
+                    this.fireRateCounter--;
+                } else {
+                    this.fireRateCounter--;
+                    if (this.fireRateCounter <= 0) {
+                        this.fireRateCounter = firerate;
+                    }
+                }
                 
-                this.ammoCount--;
-                this.fireRateCounter--;
-            } else {
-                this.fireRateCounter--;
-                if (this.fireRateCounter <= 0) {
+
+                if (!isAuto && this.shooter instanceof MasterChief) {
                     this.fireRateCounter = firerate;
                 }
-            }
-            
-
-            if (!isAuto && this.shooter instanceof MasterChief) {
-                this.fireRateCounter = firerate;
-            }
-            
-        } else { //Gun is empty
-            if (!isAuto && this.shooter instanceof MasterChief) {
-                this.fireRateCounter = firerate;
-            }
-            if (!this.shooter instanceof MasterChief) { //Bots need to reload on their own
-                this.reloadGun();
+                
+            } else { //Gun is empty
+                if (!isAuto && this.shooter instanceof MasterChief) {
+                    this.fireRateCounter = firerate;
+                }
+                if (!this.shooter instanceof MasterChief) { //Bots need to reload on their own
+                    this.reloadGun();
+                }
             }
         }
-        
         
     }
 
     physics() {
 
-
+        const TICK = this.game.clockTick;
         // Allow the gun to fall
         this.velocity.y += PLAYER_PHYSICS.ACC_FALL * TICK;
 
@@ -181,9 +250,29 @@ class Gun {
         });
     }
 
+    /**
+     * Gun will drop from player/enemy holding it and spawn as world entity
+     * @param {position} dropPosition 
+     */
+    dropGun() {
+
+        this.position.x = this.shooter.position.x;
+        this.position.y = this.shooter.position.y;
+        this.shooter = null;
+        this.worldEntity = true;
+
+    }
+
+    //Pick gun up from the ground
+    pickupGun(shooter) {
+
+        this.shooter = shooter;
+        this.BB = null;
+        this.worldEntity = false;
+    }
+
     reloadGun() {
         this.reloading = true;
-        
     }
 
     /**
@@ -198,8 +287,12 @@ class Gun {
         return this.ammoCount;
     }
 
+    getGunInfo() {
+        return this.guns[this.gunType];
+    }
+
     getMagazineSize() {
-        return this.guns[this.gunType][4];
+        return this.guns[this.gunType].param[4];
     }
 
     isEmpty() {
