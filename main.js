@@ -35,6 +35,8 @@ ASSET_MANAGER.queueDownload("./images/covenantGlass.png");
 ASSET_MANAGER.queueDownload("./images/cityFlames.png");
 ASSET_MANAGER.queueDownload("./images/skyBurning.png");
 
+ASSET_MANAGER.queueDownload("./music/Halo.mp3");
+
 ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");
 	const ctx = canvas.getContext("2d");

@@ -13,6 +13,10 @@ class SceneManager {
 
         this.title = true;
 
+
+        this.elapsedTime = 0;
+
+
         //  this.loadLevel();
 
 
@@ -33,12 +37,28 @@ class SceneManager {
         // }
         this.loadingLevel = false;
 
+        this.click = false;
+        this.musicPlaying = false;
+
+        this.music = "./music/Halo.mp3";
+
 
         this.ship = ASSET_MANAGER.getAsset("./images/covenantGlass.png");
         this.titleShipX = -this.ship.width;
 
         if (this.title && this.scene === 0) {
             this.loadTitle();
+
+            window.addEventListener('click', (event) => {
+                if (this.music && this.title && !this.musicPlaying) {
+                    this.click = true;
+                    this.musicPlaying = true;
+                    ASSET_MANAGER.playAsset(this.music);
+                } else {
+                    //  this.click = false;
+                }
+            })
+
         }
         else {
             this.loadLevel();
@@ -71,8 +91,14 @@ class SceneManager {
 
     loadLevel() {
 
+        // if (this.music) {
+        //     ASSET_MANAGER.playAsset(this.music);
+        // }
+
         this.loadingLevel = true;
 
+        // stop the title music
+        ASSET_MANAGER.pauseBackgroundMusic();
         this.clearEntities();
         this.scene = 1;
 
@@ -150,7 +176,20 @@ class SceneManager {
 
     }
 
+    updateAudio() {
+        let mute = document.getElementById("mute").checked;
+        let volume = document.getElementById("volume").value;
+        ASSET_MANAGER.muteAudio(mute);
+        ASSET_MANAGER.adjustVolume(volume);
+    }
+
     update() {
+        if (this.click && this.title) {
+            this.elapsedTime += this.game.clockTick;
+        }
+
+
+        this.updateAudio();
 
         let midpointX = PARAMS.CANVAS_WIDTH / 2 - PARAMS.BLOCKWIDTH / 2;
         let midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.BLOCKWIDTH / 2;
@@ -192,13 +231,34 @@ class SceneManager {
     draw(ctx) {
 
         if (this.title && this.scene == 0) {
-            ctx.FONT = "50px";
-            ctx.fillText("TITLE", 100, 100);
+            ctx.fillStyle = 'black';
+            ctx.font = "50px serif";
+            //ctx.fillText("TITLE", 100, 100);
             let img = ASSET_MANAGER.getAsset("./images/skyBurning.png")
             ctx.drawImage(img, 0, 0, img.width, img.height);
             let cityflames = ASSET_MANAGER.getAsset("./images/cityFlames.png");
             ctx.drawImage(this.ship, this.titleShipX, 160, this.ship.width, this.ship.height);
             ctx.drawImage(cityflames, 0, 0, cityflames.width, cityflames.height);
+
+
+            if (this.click && this.title) {
+                // this.elapsedTime = 0;
+                if (this.elapsedTime >= 7) {
+
+
+
+                    let rgbStep = Math.floor(this.osc(80, 255, 0.5));
+                    ctx.textAlign = "center";
+                    this.drawText("Press Enter to play", 1920 / 2, 510, this.getGray(rgbStep), 50, 43, ctx);
+                }
+
+            }
+
+
+
+
+
+            //ctx.fillText("Press Enter to play", 1920 / 2, 520);
 
 
 
@@ -220,6 +280,24 @@ class SceneManager {
         // if (fps < 40)
         ctx.fillText(fps, PARAMS.CANVAS_WIDTH / 2, 0);
     }
+
+
+    drawText(txt, x, y, color, fontSize, fontStrength, ctx) {
+        fontStrength = fontStrength || '';
+        ctx.font = fontStrength + ' ' + fontSize + 'pt ' + 'serif';
+        ctx.fillStyle = color;
+        ctx.fillText(txt, x, y);
+    }
+
+    getGray(grayLevel) {
+        return "rgb(" + grayLevel + "," + grayLevel + "," + grayLevel + ")";
+    }
+
+
+    osc(min, max, freq) {
+        return min + 0.5 * (max - min) * (1 + Math.sin(2 * Math.PI * freq * Date.now() / 1000));
+    }
+
 
     winScreen(ctx) {
         ctx.drawImage(this.ship, this.titleShipX, 160, this.ship.width, this.ship.height);
