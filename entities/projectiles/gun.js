@@ -7,6 +7,18 @@ class Gun {
     constructor(shooter, game, gunType) {
         Object.assign(this, { shooter, game, gunType});
 
+        this.worldEntity = false; //When checked, gun will be displayed as a world entity.
+        this.velocity = {
+            x: 0,
+            y: 0
+        }
+        this.position = {
+            x: 0,
+            y: 0
+        }
+
+        this.BB = null;
+
         /* 
             Each gun has an array dictating
             [isAutomatic, Max Firerate, Bullet Velocity, Bullet Damage, Magazine Size, projectileType]
@@ -28,19 +40,34 @@ class Gun {
     }
 
     update() {
-        if (this.reloading) {
-            if (this.reloadCounter != 0) {
-                this.reloadCounter--;
-            } else {
-                this.ammoCount = this.guns[this.gunType][4];
-                this.reloading = false; //stop reloading
-                this.reloadCounter = 300; //reset reload counter
+        if (!this.worldEntity) {
+            if (this.reloading) {
+                if (this.reloadCounter != 0) {
+                    this.reloadCounter--;
+                } else {
+                    this.ammoCount = this.guns[this.gunType][4];
+                    this.reloading = false; //stop reloading
+                    this.reloadCounter = 300; //reset reload counter
+                }
+                
             }
+        } else {
             
+            this.physics();
+            this.updateBB();
+            this.checkCollisions();
         }
     }
 
+    updateBB() {
+
+    }
+
     draw(ctx) {
+
+        if (this.worldEntity) {
+
+        }
 
     }
 
@@ -88,6 +115,70 @@ class Gun {
         }
         
         
+    }
+
+    physics() {
+
+
+        // Allow the gun to fall
+        this.velocity.y += PLAYER_PHYSICS.ACC_FALL * TICK;
+
+        // max speed calculation for vertical
+        if (this.velocity.y >= PLAYER_PHYSICS.MAX_FALL) this.velocity.y = PLAYER_PHYSICS.MAX_FALL;
+        if (this.velocity.y <= -PLAYER_PHYSICS.MAX_FALL) this.velocity.y = -PLAYER_PHYSICS.MAX_FALL;
+
+        // update position
+        this.position.x += this.velocity.x * TICK * PARAMS.SCALE;
+        this.position.y += this.velocity.y * TICK * PARAMS.SCALE;
+    }
+
+    checkCollisions() {
+        this.game.collisionEntities.forEach(entity => {
+                    if (entity.BB && this.BB.collide(entity.BB)) { //Collision
+                        entity.collisionActive = true;
+                        //FALLING
+                        if (this.velocity.y > 0) { 
+                            if (entity instanceof Tile
+                                && this.lastBB.bottom <= entity.BB.top) {
+
+                                    this.position.y = entity.BB.top - this.BB.height - this.BBYOffset;
+                                    this.velocity.y = 0;
+                                    this.onGround = true;
+                                    this.updateBB();
+
+                                }
+                        }
+
+                        //JUMPING
+                        if (this.velocity.y < 0) {
+                            if (entity instanceof Tile
+                                && (this.lastBB.top) >= entity.BB.bottom) {
+                                    this.velocity.y = 0;
+                                    this.updateBB();
+                            }
+                        }
+
+                        //Other Tile cases (Hitting side)
+                        if (entity instanceof Tile
+                            && this.BB.collide(entity.topBB) && this.BB.collide(entity.bottomBB)) {
+                                entity.collisionActive = true;
+                                if (this.BB.collide(entity.leftBB)) { // Touching left side of tile
+                                    console.log("Left collision");
+                                    
+                                    this.position.x = entity.BB.left - this.BB.width - this.BBXOffset;
+                                    if (this.velocity.x > 0) this.velocity.x = 5;
+                                } else if (this.BB.collide(entity.rightBB)) { // Touching right side of tile
+                                    console.log("Right collision");
+
+                                    this.position.x = entity.BB.right  - this.BBXOffset;
+                                    if (this.velocity.x < 0) this.velocity.x = -5;
+                                }
+                                //this.updateBB();
+                        }
+
+                    }
+
+        });
     }
 
     reloadGun() {

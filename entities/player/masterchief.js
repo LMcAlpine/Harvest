@@ -316,6 +316,8 @@ class MasterChief {
 
     update() {
 
+        console.log("X: " + (this.velocity.x | 0) + " Y: " + (this.velocity.y | 0));
+
         //console.log(this.hasCollisions);
         // Updater properties
         const TICK = this.game.clockTick;
@@ -336,7 +338,7 @@ class MasterChief {
             }
 
             //Check if shooting
-            if (this.game.mouseDown) {
+            if (this.game.mouseDown && gameEngine.mouse !== null) {
 
                 const firingPosStatic = {
                     x: this.position.x + (20 * this.scale),
@@ -372,20 +374,6 @@ class MasterChief {
                     this.aimRight = false;
                 }
             }
-
-
-            // *** Player Movement 2 ***
-            // if (keys.a.pressed && lastKey === 'a') {
-            //     this.velocity.x = -4;
-            //     this.position.x -= PLAYER_PHYSICS.MAX_RUN;
-            //     this.state = 1;
-            // } else if (keys.d.pressed && lastKey === 'd') {
-            //     this.velocity.x = 4;
-            //     this.position.x += PLAYER_PHYSICS.MAX_RUN;
-            //     this.state = 1;
-            // } else if (this.onGround) {
-            //     this.state = 0;
-            // }
     
 
             if(keys[' '].pressed && this.onGround) {
@@ -400,10 +388,11 @@ class MasterChief {
             }
 
 
-             // *** Player Movement 3 ***
-
-            // horizontal physics
+            // *** Physics ***
             if (keys.d.pressed && !keys.a.pressed && this.onGround) { //Moving right
+
+                if(this.midAir) this.velocity.x = 0; this.midAir = false;
+
                 if (Math.abs(this.velocity.x) > PLAYER_PHYSICS.MAX_WALK) {
                     this.velocity.x += PLAYER_PHYSICS.ACC_RUN * TICK;
                 } else {
@@ -414,6 +403,9 @@ class MasterChief {
                 else this.reverseMovement(true);
                 this.state = 1;
             } else if (keys.a.pressed && !keys.d.pressed && this.onGround) { //Moving left
+
+                if(this.midAir) this.velocity.x = 0; this.midAir = false;
+
                 if (Math.abs(this.velocity.x) > PLAYER_PHYSICS.MAX_WALK) {
                     this.velocity.x -= PLAYER_PHYSICS.ACC_RUN * TICK;
                 } else this.velocity.x -= PLAYER_PHYSICS.ACC_WALK * TICK;
@@ -426,6 +418,7 @@ class MasterChief {
                     this.state = 0;
                     this.velocity.x = 0;
                 } else {
+                    this.midAir = true;
                     console.log("Adjusting air velocity");
                     if(this.velocity.x > 0) {
                         this.velocity.x -= PLAYER_PHYSICS.ACC_RUN / 4 * TICK;
@@ -448,9 +441,6 @@ class MasterChief {
                 this.game.sceneManager.loadLevel();
             }
         }
-
-
-        
 
 
         // Allow the player to fall
@@ -477,78 +467,50 @@ class MasterChief {
     collisionChecker() {
 
         this.game.collisionEntities.forEach(entity => {
-            if (this !== entity && entity.BB && this.BB.collide(entity.BB)) { //Collision
+            if (entity.BB && this.BB.collide(entity.BB)) { //Collision
+                entity.collisionActive = true;
+                //FALLING
+                if (this.velocity.y > 0) { 
+                    if (entity instanceof Tile
+                        && this.lastBB.bottom <= entity.BB.top) {
 
-                if (entity instanceof Tile) {
-                    entity.collisionActive = true; //COLLIDING WITH TILE
-
-                    //FALLING
-                    if (this.velocity.y > 0) { 
-
-                        if (this.lastBB.bottom <= entity.BB.top) {
                             this.position.y = entity.BB.top - this.BB.height - this.BBYOffset;
                             this.velocity.y = 0;
                             this.onGround = true;
                             this.updateBB();
-                            return;
+
                         }
-    
-                    }
-
-                    //JUMPING
-                    if (this.velocity.y < 0) { //Jumping
-                        
-                        if (this.lastBB.top >= entity.BB.bottom) {
-                            console.log("Collide top of tile");
-                            this.position.y = entity.BB.bottom - this.BBYOffset;
-                            this.velocity.y = 0;
-                            this.updateBB();
-                            return;
-    
-                        }
-                    }
-
-                    
-                    //TOUCHING RIGHTSIDE OF TILE
-                    if (this.BB.left <= entity.BB.right
-                        //&& this.BB.bottom > entity.BB.top
-                        && this.velocity.x < 0) { 
-
-                        console.log("Touching right");
-                        this.position.x = entity.BB.right - this.BBXOffset;
-
-                        if (this.velocity.x < 0) this.velocity.x = -PLAYER_PHYSICS.MAX_RUN / 4;
-                        
-                    }
-
-                    // if(entity.BB.left <= this.BB.left + this.width / 2 && this.BB.left + this.width / 2 <= entity.BB.right
-                    // && this.BB.bottom > entity.BB.top
-                    // && this.velocity.x < 0) {
-                        
-                    //     console.log("Touching right");
-                    //     this.position.x = entity.BB.right - this.BBXOffset;
-
-                    //     if (this.velocity.x < 0) this.velocity.x = 0;
-                    // }
-
-                    //TOUCHING LEFT SIDE OF TILE
-                    if (this.BB.right >= entity.BB.left
-                        && this.BB.bottom > entity.BB.top
-                        && this.velocity.x > 0) { 
-
-                        console.log("Touching left");
-                        this.position.x = entity.BB.left - this.BB.width - this.BBXOffset;
-
-                        if (this.velocity.x > 0) this.velocity.x = PLAYER_PHYSICS.MAX_RUN / 4;
-                        
-                    }
-
-                
-                    
                 }
 
-                
+                //JUMPING
+                if (this.velocity.y < 0) {
+                    if (entity instanceof Tile
+                        && (this.lastBB.top) >= entity.BB.bottom) {
+                            this.velocity.y = 0;
+                            this.updateBB();
+                    }
+                }
+
+                //Other Tile cases (Hitting side)
+                if (entity instanceof Tile
+                    && this.BB.collide(entity.topBB) && this.BB.collide(entity.bottomBB)) {
+                        entity.collisionActive = true;
+                        if (this.BB.collide(entity.leftBB)) { // Touching left side of tile
+                            console.log("Left collision");
+                            
+                            this.position.x = entity.BB.left - this.BB.width - this.BBXOffset;
+                            if (this.velocity.x > 0) this.velocity.x = 5;
+                        } else if (this.BB.collide(entity.rightBB)) { // Touching right side of tile
+                            console.log("Right collision");
+
+                            this.position.x = entity.BB.right  - this.BBXOffset;
+                            if (this.velocity.x < 0) this.velocity.x = -5;
+                        }
+                        //this.updateBB();
+                }
+
             }
+
         });
 
     };

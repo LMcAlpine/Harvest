@@ -171,7 +171,7 @@ class Grunt {
         this.position.x += this.velocity.x * TICK * PARAMS.SCALE;
         this.position.y += this.velocity.y * TICK * PARAMS.SCALE;
        
-        console.log(this.velocity);
+        //console.log(this.velocity);
         this.updateBB();
 
         this.collisionChecker();
@@ -205,7 +205,7 @@ class Grunt {
                     if (this.velocity.y < 0) { //Jumping
                         
                         if (this.lastBB.top >= entity.BB.bottom) {
-                            console.log("Collide top of tile");
+
                             this.position.y = entity.BB.bottom - this.BBYOffset;
                             this.velocity.y = 0;
                             this.updateBB();
@@ -234,7 +234,6 @@ class Grunt {
                         && this.BB.bottom > entity.BB.top
                         && this.velocity.x > 0) { 
 
-                        console.log("Touching left");
                         this.position.x = entity.BB.left - this.BB.width - this.BBXOffset;
 
                         if (this.velocity.x > 0) this.velocity.x = ENEMY_PHYSICS.MAX_RUN / 4;

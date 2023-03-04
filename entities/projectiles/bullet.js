@@ -84,11 +84,21 @@ class Bullet {
                 if (entity instanceof Tile) { 
                     this.removeFromWorld = true;
 
-                } else if (entity instanceof Grunt) {
+                } else if (entity instanceof Grunt //Bullet hits a grunt
+                    && entity.isAlive
+                    && !(this.shooter instanceof Grunt)
+                    && !(this.shooter instanceof Elite)) { //No friendly fire!
 
                     entity.takeDamage(this.bulletDamage);
                     this.removeFromWorld = true;
 
+                } else if (entity instanceof Elite //Bullet hits a grunt
+                    && entity.isAlive
+                    && !(this.shooter instanceof Grunt)
+                    && !(this.shooter instanceof Elite)) { //No friendly fire!
+
+                    entity.takeDamage(this.bulletDamage);
+                    this.removeFromWorld = true;
 
                 } else if (entity instanceof MasterChief) {
                     //console.log("cheese ouch");
