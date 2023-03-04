@@ -5,7 +5,7 @@
 
 class Gun {
     constructor(shooter, game, gunType) {
-        Object.assign(this, { shooter, game, gunType});
+        Object.assign(this, { shooter, game, gunType });
 
         /* 
             Each gun has an array dictating
@@ -22,8 +22,8 @@ class Gun {
 
         this.ammoCount = this.guns[this.gunType][4];
         this.fireRateCounter = this.guns[this.gunType][1];
-        this.botCappedFireRate= 0;
-        this.reloadCounter = 300; //Timer to slow reload
+        this.botCappedFireRate = 0;
+        this.reloadCounter = 125; //Timer to slow reload
 
     }
 
@@ -34,9 +34,9 @@ class Gun {
             } else {
                 this.ammoCount = this.guns[this.gunType][4];
                 this.reloading = false; //stop reloading
-                this.reloadCounter = 300; //reset reload counter
+                this.reloadCounter = 125; //reset reload counter
             }
-            
+
         }
     }
 
@@ -45,15 +45,15 @@ class Gun {
     }
 
     shootGun(firingPosStatic, targetPosStatic) {
-        
+
         //console.log(this.fireRateCounter)
         let isAuto = this.guns[this.gunType][0];
         let firerate = this.guns[this.gunType][1];
 
-        
+
         if (this.ammoCount > 0) {
             if (firerate === this.fireRateCounter) {
-                
+
                 new Bullet(
                     this.shooter,
                     this.game,
@@ -63,7 +63,7 @@ class Gun {
                     this.guns[this.gunType][3],
                     this.guns[this.gunType][5]);
 
-                
+
                 this.ammoCount--;
                 this.fireRateCounter--;
             } else {
@@ -72,12 +72,12 @@ class Gun {
                     this.fireRateCounter = firerate;
                 }
             }
-            
+
 
             if (!isAuto && this.shooter instanceof MasterChief) {
                 this.fireRateCounter = firerate;
             }
-            
+
         } else { //Gun is empty
             if (!isAuto && this.shooter instanceof MasterChief) {
                 this.fireRateCounter = firerate;
@@ -86,13 +86,13 @@ class Gun {
                 this.reloadGun();
             }
         }
-        
-        
+
+
     }
 
     reloadGun() {
         this.reloading = true;
-        
+
     }
 
     /**

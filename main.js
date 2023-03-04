@@ -36,6 +36,13 @@ ASSET_MANAGER.queueDownload("./images/cityFlames.png");
 ASSET_MANAGER.queueDownload("./images/skyBurning.png");
 
 ASSET_MANAGER.queueDownload("./music/Halo.mp3");
+ASSET_MANAGER.queueDownload("./sounds/assault_rifle_dryfire.wav");
+ASSET_MANAGER.queueDownload("./sounds/assault_rifle_fire_brown2_1.wav");
+ASSET_MANAGER.queueDownload("./sounds/assault_rifle_fire_brown2_2.wav");
+ASSET_MANAGER.queueDownload("./sounds/assault_rifle_fire_brown2_3.wav");
+ASSET_MANAGER.queueDownload("./sounds/assault_rifle_fire_brown2_4.wav");
+ASSET_MANAGER.queueDownload("./sounds/ar_ammo_ar_reload.wav");
+ASSET_MANAGER.queueDownload("./sounds/plasma_rifle_fire_plasmarifle1.wav")
 
 ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");

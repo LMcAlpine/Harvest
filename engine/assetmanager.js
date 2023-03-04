@@ -44,6 +44,7 @@ class AssetManager {
                     this.cache[path] = img;
                     break;
                 case 'wav':
+
                 case 'mp3':
                 case 'mp4':
                     var aud = new Audio();

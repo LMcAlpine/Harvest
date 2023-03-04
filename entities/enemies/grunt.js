@@ -40,6 +40,9 @@ class Grunt {
 
         this.patrollingLeft = false;
 
+
+        this.soundPlaying = false;
+
         this.elapsedTime = 0;
         this.updateBB();
     }
@@ -137,6 +140,19 @@ class Grunt {
             }
             //Capture the static position
             const targetPosStatic = this.game.player.BB.getCenter();
+
+
+            if (!this.soundPlaying) {
+                ASSET_MANAGER.playAsset("./sounds/plasma_rifle_fire_plasmarifle1.wav");
+                this.soundPlaying = true;
+                // dont play sound until the sound has finished playing.
+                let audio = ASSET_MANAGER.getAsset("./sounds/plasma_rifle_fire_plasmarifle1.wav");
+                audio.addEventListener('ended', () => {
+                    this.soundPlaying = false;
+                });
+            }
+
+
 
             this.currentGun.shootGun(firingPosStatic, targetPosStatic);
 
