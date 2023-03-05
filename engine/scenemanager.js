@@ -1,9 +1,13 @@
 class SceneManager {
     constructor(game) {
         this.game = game;
+        this.FPSCounter = 0;
+        this.FPS = 0;
 
         this.game.camera = this;
-        //RESET THIS BACK TO 0, JUST FOR TESTING
+
+        this.checkPoints = [];
+
         this.x = 0;
         this.y = 0;
 
@@ -21,7 +25,7 @@ class SceneManager {
         this.scene = 1;
 
         let position = {
-            x: 1677,
+            x: 1877,
             y: 200 * PARAMS.SCALE,
         }
 
@@ -46,6 +50,14 @@ class SceneManager {
         let testGun3 = new Gun(null, this.game, "SHOTGUN");
         testGun3.position = position3;
         testGun3.worldEntity = true;
+
+        let testGun4 = new Gun(null, this.game, "SNIPER");
+        testGun4.position = position3;
+        testGun4.worldEntity = true;
+
+        // let elite = new Elite(gameEngine, position);
+        // this.game.addEntity(elite);
+        // this.game.addCollisionEntity(elite);
         
         // console.log("Spawning grunt at: " + position.x + ", " + position.y);
         // let grunt = new Grunt(gameEngine, position);
@@ -105,19 +117,28 @@ class SceneManager {
     }
 
     draw(ctx) {
+
+        const TICK = this.game.clockTick;
+
         if (this.scene === 2) {
             this.winScreen(ctx);
         }
         else if (this.scene === 3) {
             this.gameOverScreen(ctx);
         }
-        let fps = Math.round(1 / this.game.clockTick);
         //Display bullet count
         ctx.fillStyle = "orange";
         ctx.font = "bold 25px serif";
         ctx.textBaseline = "top";
-        // if (fps < 40)
-        ctx.fillText(fps, PARAMS.CANVAS_WIDTH / 2, 0);
+
+        //Display FPS
+        if (this.FPSCounter >= 1) {
+            this.FPS = Math.round(1 / this.game.clockTick); 
+            this.FPSCounter = 0;
+        } else {
+            this.FPSCounter += TICK;
+        }
+        ctx.fillText(this.FPS, PARAMS.CANVAS_WIDTH / 2, 0);
     }
 
     winScreen(ctx) {

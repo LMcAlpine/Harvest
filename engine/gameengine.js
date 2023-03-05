@@ -22,7 +22,6 @@ class GameEngine {
         this.keys = {};
         this.playerIndex = null;
 
-        this.sceneManager = null;
 
         // Options and the Details
         this.options = options || {

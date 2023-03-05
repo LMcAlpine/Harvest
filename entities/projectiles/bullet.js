@@ -16,8 +16,8 @@ class Bullet {
     constructor(shooter, game, firingPos, targetPos, bulletVelocity, bulletDamage, bulletType, bulletDistance) {
         Object.assign(this, { shooter, game, firingPos, targetPos, bulletVelocity, bulletDamage, bulletType, bulletDistance});
         
-        let xDiff = this.targetPos.x - this.firingPos.x;
-        let yDiff = this.targetPos.y - this.firingPos.y;
+        let xDiff = (this.targetPos.x + 50)- this.firingPos.x;
+        let yDiff = (this.targetPos.y)- this.firingPos.y;
 
         //Calculating direction of bullet
         let vector = {
@@ -91,6 +91,7 @@ class Bullet {
                     && !(this.shooter instanceof Grunt)
                     && !(this.shooter instanceof Elite)) { //No friendly fire!
 
+                    entity.currentState = entity.states.attacking;
                     entity.takeDamage(this.bulletDamage);
                     this.removeFromWorld = true;
 
@@ -99,6 +100,7 @@ class Bullet {
                     && !(this.shooter instanceof Grunt)
                     && !(this.shooter instanceof Elite)) { //No friendly fire!
 
+                    entity.currentState = entity.states.attacking;
                     entity.takeDamage(this.bulletDamage);
                     this.removeFromWorld = true;
 

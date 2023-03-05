@@ -30,7 +30,7 @@ class MasterChief {
         this.cache = []; //For tracking this.angle
 
         //Chief's gun
-        this.currentGun = new Gun(this, game, "SHOTGUN");
+        this.currentGun = new Gun(this, game, "ASSAULT_RIFLE");
 
         //Bounding Boxes
         this.lastBB = null;
@@ -71,7 +71,7 @@ class MasterChief {
         // Shield Bar
         this.maxShield = 200;
         this.shield = 200;
-        this.regen = 200;
+        this.regenTimer = 0;
 
         this.HUD = new PlayerHUD(this, this.game);
         this.game.addEntity(this.HUD);
@@ -454,6 +454,8 @@ class MasterChief {
             //Regen shield if shield is not maxed
             if(this.shield < this.maxShield) {
                 this.regenShield();
+            } else {
+                this.regenTimer = 0;
             }
             
 
@@ -493,8 +495,9 @@ class MasterChief {
 
 
             // *** Physics ***
-            if (keys.d.pressed && !keys.a.pressed && this.onGround) { //Moving right
+            if (keys.d.pressed && !keys.a.pressed) { //Moving right
 
+                if(this.velocity.x < 0) this.velocity.x = 0;
                 if(this.midAir) this.velocity.x = 0; this.midAir = false;
 
                 if (Math.abs(this.velocity.x) > PLAYER_PHYSICS.MAX_WALK) {
@@ -506,8 +509,9 @@ class MasterChief {
                 if (this.aimRight) this.reverseMovement(false);
                 else this.reverseMovement(true);
                 this.state = 1;
-            } else if (keys.a.pressed && !keys.d.pressed && this.onGround) { //Moving left
+            } else if (keys.a.pressed && !keys.d.pressed) { //Moving left
 
+                if(this.velocity.x > 0) this.velocity.x = 0;
                 if(this.midAir) this.velocity.x = 0; this.midAir = false;
 
                 if (Math.abs(this.velocity.x) > PLAYER_PHYSICS.MAX_WALK) {
@@ -517,12 +521,14 @@ class MasterChief {
                 if (this.aimRight) this.reverseMovement(true);
                 else this.reverseMovement(false);
                 this.state = 1;
-            } else {
+            }
+            else {
                 if (this.onGround) {
                     this.state = 0;
                     this.velocity.x = 0;
                 } else {
                     this.midAir = true;
+
                     //console.log("Adjusting air velocity");
                     if(this.velocity.x > 0) {
                         this.velocity.x -= PLAYER_PHYSICS.ACC_RUN / 4 * TICK;
@@ -613,11 +619,11 @@ class MasterChief {
                         //this.updateBB();
                 }
 
-                //console.log(this.currentGun)
 
                 //Gun world entity on ground
                 if (entity instanceof Gun) {
                     //TODO: Prompt for pickup
+
                     //console.log("Gun on ground"); 
                     //Press 'E' to pickup Gun
                     if(this.game.keys['e']) {
@@ -830,7 +836,7 @@ class MasterChief {
 
 
     takeDamage(dmg) {
-        this.regen = 200;
+        this.regenTimer = 0;
 
         if(this.shield > 0) {
             this.shield -= dmg;
@@ -852,14 +858,14 @@ class MasterChief {
     }
 
     regenShield() {
+        const TICK = this.game.clockTick;
         if (this.shield < this.maxShield) {
-            if (this.regen > 0) {
-                this.regen--;
+            //console.log(this.regenTimer);
+            if (this.regenTimer < 4.2) {
+                this.regenTimer += TICK;
             } else {
-                this.shield += 2;
+                this.shield += 80 * TICK;
             }
-        } else {
-            this.regen = 200;
         }
     }
 
