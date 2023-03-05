@@ -71,7 +71,7 @@ class MasterChief {
         // Shield Bar
         this.maxShield = 200;
         this.shield = 200;
-        this.regen = 200;
+        this.regenTimer = 0;
 
         this.HUD = new PlayerHUD(this, this.game);
         this.game.addEntity(this.HUD);
@@ -613,11 +613,11 @@ class MasterChief {
                         //this.updateBB();
                 }
 
-                //console.log(this.currentGun)
 
                 //Gun world entity on ground
                 if (entity instanceof Gun) {
                     //TODO: Prompt for pickup
+
                     //console.log("Gun on ground"); 
                     //Press 'E' to pickup Gun
                     if(this.game.keys['e']) {
@@ -852,14 +852,16 @@ class MasterChief {
     }
 
     regenShield() {
+        const TICK = this.game.clockTick;
         if (this.shield < this.maxShield) {
-            if (this.regen > 0) {
-                this.regen--;
+            console.log(this.regenTimer);
+            if (this.regenTimer < 7) {
+                this.regenTimer += 2 * TICK;
             } else {
                 this.shield += 2;
             }
         } else {
-            this.regen = 200;
+            this.regenTimer = 0;
         }
     }
 

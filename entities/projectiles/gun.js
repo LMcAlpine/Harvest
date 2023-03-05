@@ -71,7 +71,7 @@ class Gun {
             },
 
             "SMG": {
-                param: [true, 8, 18, 15, 30, "BULLET"],
+                param: [true, 8, 18, 10, 60, "BULLET"],
                 bulletDistance: 230 * PARAMS.SCALE,
                 spriteX: 0,
                 spriteY: 120,
@@ -98,21 +98,25 @@ class Gun {
         this.fireRateCounter = 0;
         this.canFire = true;
         this.botCappedFireRate = 0;
-        this.reloadCounter = 300; //Timer to slow reload
+        this.reloadCounter = 0; //Timer to slow reload
+        this.reloadCounterMax = 1;
 
     }
 
     update() {
+
+        const TICK = this.game.clockTick;
         
         if (!this.worldEntity) {
 
             if (this.reloading) {
-                if (this.reloadCounter != 0) {
-                    this.reloadCounter--;
+                //console.log(this.reloadCounter);
+                if (this.reloadCounter < this.reloadCounterMax) {
+                    this.reloadCounter += TICK;
                 } else {
                     this.ammoCount = this.guns[this.gunType].param[4];
                     this.reloading = false; //stop reloading
-                    this.reloadCounter = 300; //reset reload counter
+                    this.reloadCounter = 0; //reset reload counter
                 }
                 
             }
@@ -171,8 +175,7 @@ class Gun {
 
             let gunParams = this.guns[this.gunType].param;
 
-            //Gun mechanics for chief
-            //if(this.shooter instanceof MasterChief) {
+            //Gun mechanics
                 if (this.ammoCount > 0) {
 
                     if (this.fireRateCounter === 0) {
