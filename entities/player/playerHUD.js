@@ -124,10 +124,8 @@ class Crosshair {
 
             //Collision
             if (entity.BB && this.BB.collide(entity.BB) ) {
-                //console.log("Crosshair Collision");
                 if (entity instanceof Grunt || entity instanceof Elite) {
-                    console.log("TARGET FOUND");
-                    this.onTarget = true;
+                    if (entity.isAlive) this.onTarget = true;
                     
                 } else {
                     this.onTarget = false;
@@ -141,8 +139,6 @@ class Crosshair {
 
         let gun = this.player.currentGun;
         let crosshairY = gun.getGunInfo().crosshairY;
-
-        console.log(crosshairY);
 
         if (this.game.mouse !== null) {
             

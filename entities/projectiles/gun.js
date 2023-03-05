@@ -39,7 +39,7 @@ class Gun {
         this.guns = {
         
             "SNIPER": {
-                param: [false, 0.1, 75, 200, 4, "BULLET"],
+                param: [false, 0.2, 75, 200, 4, "BULLET"],
                 bulletDistance: 300 * PARAMS.SCALE,
                 spriteX: 0,
                 spriteY: 0,
@@ -67,7 +67,7 @@ class Gun {
             },
 
             "PLASMA_RIFLE": {
-                param: [true, 0.08, 18, 30, 200, "PLASMA"],
+                param: [true, 0.12, 18, 30, 200, "PLASMA"],
                 bulletDistance: 290 * PARAMS.SCALE,
                 spriteX: 0,
                 spriteY: 90,
@@ -76,7 +76,7 @@ class Gun {
             },
 
             "SMG": {
-                param: [true, 0.02, 18, 10, 60, "BULLET"],
+                param: [true, 0.02, 22, 10, 60, "BULLET"],
                 bulletDistance: 260 * PARAMS.SCALE,
                 spriteX: 0,
                 spriteY: 120,
@@ -107,7 +107,7 @@ class Gun {
         this.botCappedFireRate = 0;
         this.reloadCounter = 0; //Timer to slow reload
         this.reloadCounterMax = 1;
-
+        this.updateBB();
     }
 
     update() {
@@ -144,6 +144,7 @@ class Gun {
             this.physics();
             this.checkCollisions();
         }
+        
     }
 
     updateBB() {
@@ -235,7 +236,7 @@ class Gun {
                         //FALLING
                         if (this.velocity.y > 0) { 
                             if (entity instanceof Tile
-                                && this.lastBB.bottom <= entity.BB.top) {
+                                && this.lastBB.bottom <= entity.BB.top) { //Possible bug where lastBB is not defined
 
                                     this.position.y = entity.BB.top - this.BB.height - this.BBYOffset;
                                     this.velocity.y = 0;
