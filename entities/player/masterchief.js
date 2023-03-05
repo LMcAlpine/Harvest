@@ -495,6 +495,7 @@ class MasterChief {
             // *** Physics ***
             if (keys.d.pressed && !keys.a.pressed) { //Moving right
 
+                if(this.velocity.x < 0) this.velocity.x = 0;
                 if(this.midAir) this.velocity.x = 0; this.midAir = false;
 
                 if (Math.abs(this.velocity.x) > PLAYER_PHYSICS.MAX_WALK) {
@@ -508,6 +509,7 @@ class MasterChief {
                 this.state = 1;
             } else if (keys.a.pressed && !keys.d.pressed) { //Moving left
 
+                if(this.velocity.x > 0) this.velocity.x = 0;
                 if(this.midAir) this.velocity.x = 0; this.midAir = false;
 
                 if (Math.abs(this.velocity.x) > PLAYER_PHYSICS.MAX_WALK) {
