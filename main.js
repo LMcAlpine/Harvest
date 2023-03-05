@@ -3,12 +3,12 @@ const ASSET_MANAGER = new AssetManager();
 
 ASSET_MANAGER.queueDownload("./sprites/ChiefSprites.png");
 ASSET_MANAGER.queueDownload("./sprites/Guns.png");
+ASSET_MANAGER.queueDownload("./sprites/GunWorldEntities.png");
+ASSET_MANAGER.queueDownload("./sprites/crosshairs.png");
 
 
 ASSET_MANAGER.queueDownload("./sprites/GruntSprites.png");
-ASSET_MANAGER.queueDownload("./sprites/grunt.png");
-ASSET_MANAGER.queueDownload("./sprites/elite.png");
-ASSET_MANAGER.queueDownload("./sprites/brute.png");
+ASSET_MANAGER.queueDownload("./sprites/EliteSprites.png");
 
 ASSET_MANAGER.queueDownload("./sprites/Grass Blocks.png");
 ASSET_MANAGER.queueDownload("./sprites/EarthBlocks.png");
@@ -16,11 +16,11 @@ ASSET_MANAGER.queueDownload("./sprites/EarthBlocks2.png");
 ASSET_MANAGER.queueDownload("./sprites/EarthBlocks3.png");
 ASSET_MANAGER.queueDownload("./sprites/BuildingBlocks.png");
 ASSET_MANAGER.queueDownload("./sprites/BuildingDoor.png");
-ASSET_MANAGER.queueDownload("./sprites/Healthpack.png");
+ASSET_MANAGER.queueDownload("./sprites/BasicTrees.png");
+ASSET_MANAGER.queueDownload("./sprites/BlueBase.png");
+ASSET_MANAGER.queueDownload("./sprites/RedBase.png");
 ASSET_MANAGER.queueDownload("./sprites/HaloPod1.png");
 ASSET_MANAGER.queueDownload("./sprites/HaloPod2.png");
-ASSET_MANAGER.queueDownload("./sprites/tree1.png");
-ASSET_MANAGER.queueDownload("./sprites/tree2.png");
 ASSET_MANAGER.queueDownload("./sprites/BasicTrees.png");
 
 ASSET_MANAGER.queueDownload("./images/FOREST.png")
@@ -51,9 +51,6 @@ ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");
 	const ctx = canvas.getContext("2d");
 
-	//console.log("Hello world");
-
-
 
 	PARAMS.BLOCKWIDTH = PARAMS.BITWIDTH * PARAMS.SCALE;
 	PARAMS.CANVAS_WIDTH = canvas.width;
@@ -72,6 +69,8 @@ ASSET_MANAGER.downloadAll(() => {
 		document.mozExitPointerLock;
 
 
+	//Diables default cursor
+	canvas.style.cursor = "none";
 
 	//console.log(floorCollisions);
 
@@ -85,9 +84,7 @@ ASSET_MANAGER.downloadAll(() => {
 
 
 
-	let scene = new SceneManager(gameEngine);
-	gameEngine.sceneManager = scene;
-	gameEngine.addEntityToFront(scene);
+	gameEngine.addEntity(new SceneManager(gameEngine));
 
 
 

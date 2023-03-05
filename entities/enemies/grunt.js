@@ -4,7 +4,7 @@ class Grunt {
 
         this.hp = 150;
         this.isAlive = true;
-        this.currentGun = new Gun(this, game, "Plasma_Pistol");
+        this.currentGun = new Gun(this, game, "PLASMA_PISTOL");
         // Properties
         this.scale = 3;
 
@@ -39,13 +39,8 @@ class Grunt {
         this.width = 50;
         this.height = 50;
 
-        this.states = { waiting: 0, attacking: 1 };
+        this.states = {waiting: 0, attacking: 1};
         this.currentState = this.states.waiting;
-
-        this.patrollingLeft = false;
-
-
-        this.soundPlaying = false;
 
         this.elapsedTime = 0;
         this.updateBB();
@@ -113,7 +108,7 @@ class Grunt {
                 if (distance < PARAMS.SCALE * 240) {
                     this.currentState = this.states.attacking;
                 }
-
+                
             }
 
             if (this.currentState === this.states.attacking) {
@@ -143,7 +138,7 @@ class Grunt {
                 } else {
                     this.velocity.x = 0;
                 }
-
+                
                 // max speed cap
                 if (this.velocity.x >= ENEMY_PHYSICS.MAX_RUN) this.velocity.x = ENEMY_PHYSICS.MAX_RUN;
                 if (this.velocity.x <= -ENEMY_PHYSICS.MAX_RUN) this.velocity.x = -ENEMY_PHYSICS.MAX_RUN;
@@ -158,21 +153,8 @@ class Grunt {
                 //Capture the static position
                 const targetPosStatic = this.game.player.BB.getCenter();
 
-
-                if (!this.soundPlaying) {
-                    ASSET_MANAGER.playAsset("./sounds/plasma_rifle_fire_plasmarifle1.wav");
-                    this.soundPlaying = true;
-                    // dont play sound until the sound has finished playing.
-                    let audio = ASSET_MANAGER.getAsset("./sounds/plasma_rifle_fire_plasmarifle1.wav");
-                    audio.addEventListener('ended', () => {
-                        this.soundPlaying = false;
-                    });
-                }
-
-
-
                 this.currentGun.shootGun(firingPosStatic, targetPosStatic);
-
+                
             }
         }
 
@@ -186,8 +168,8 @@ class Grunt {
         // update position
         this.position.x += this.velocity.x * TICK * PARAMS.SCALE;
         this.position.y += this.velocity.y * TICK * PARAMS.SCALE;
-
-        console.log(this.velocity);
+       
+        //console.log(this.velocity);
         this.updateBB();
 
         this.collisionChecker();
@@ -205,7 +187,7 @@ class Grunt {
                     entity.collisionActive = true; //COLLIDING WITH TILE
 
                     //FALLING
-                    if (this.velocity.y > 0) {
+                    if (this.velocity.y > 0) { 
 
                         if (this.lastBB.bottom <= entity.BB.top) {
                             this.position.y = entity.BB.top - this.BB.height - this.BBYOffset;
@@ -214,56 +196,55 @@ class Grunt {
                             this.updateBB();
                             return;
                         }
-
+    
                     }
 
                     //JUMPING
                     if (this.velocity.y < 0) { //Jumping
-
+                        
                         if (this.lastBB.top >= entity.BB.bottom) {
-                            console.log("Collide top of tile");
+
                             this.position.y = entity.BB.bottom - this.BBYOffset;
                             this.velocity.y = 0;
                             this.updateBB();
                             return;
-
+    
                         }
                     }
 
-
+                    
                     //TOUCHING RIGHTSIDE OF TILE
                     if (this.BB.left <= entity.BB.right
                         && this.BB.bottom > entity.BB.top
-                        && this.velocity.x < 0) {
+                        && this.velocity.x < 0) { 
 
                         this.position.x = entity.BB.right - this.BBXOffset;
 
                         if (this.velocity.x < 0) this.velocity.x = -ENEMY_PHYSICS.MAX_RUN / 4;
 
                         this.jumping = true;
-
+                        
                     }
 
 
                     //TOUCHING LEFT SIDE OF TILE
                     if (this.BB.right >= entity.BB.left
                         && this.BB.bottom > entity.BB.top
-                        && this.velocity.x > 0) {
+                        && this.velocity.x > 0) { 
 
-                        console.log("Touching left");
                         this.position.x = entity.BB.left - this.BB.width - this.BBXOffset;
 
                         if (this.velocity.x > 0) this.velocity.x = ENEMY_PHYSICS.MAX_RUN / 4;
 
                         this.jumping = true;
-
+                        
                     }
 
-
-
+                
+                    
                 }
 
-
+                
             }
         });
 
@@ -279,29 +260,17 @@ class Grunt {
         } else {
             this.hp = 0;
             this.die();
-            return;
+        }
+
+        if (this.hp <= 0) {
+            this.die();
         }
     }
 
     die() {
-
-        if (!this.soundPlaying) {
-
-            ASSET_MANAGER.playAsset("./sounds/death_violent.2.ogg")
-            //  ASSET_MANAGER.playAsset("./sounds/death_instant.5.ogg");
-            this.soundPlaying = true;
-            // dont play sound until the sound has finished playing.
-            //  let audio = ASSET_MANAGER.getAsset("./sounds/death_instant.5.ogg");
-            let audio = ASSET_MANAGER.getAsset("./sounds/death_violent.2.ogg");
-            audio.addEventListener('ended', () => {
-                this.soundPlaying = false;
-            });
-        }
-
-
-
         this.velocity.x = 0;
         this.isAlive = false;
+        this.currentGun.dropGun();
     }
 
     draw(ctx) {
@@ -309,56 +278,56 @@ class Grunt {
         if (this.isAlive) {
             if (this.aimRight) {
                 this.animations[this.state].drawFrame(
-                    this.game.clockTick,
-                    ctx,
-                    this.position.x - this.game.camera.x,
-                    this.position.y - this.game.camera.y,
+                    this.game.clockTick, 
+                    ctx, 
+                    this.position.x - this.game.camera.x, 
+                    this.position.y - this.game.camera.y, 
                     this.scale, false);
 
             } else {
                 this.animations[this.state].drawFrame(
-                    this.game.clockTick,
-                    ctx,
-                    this.position.x - this.game.camera.x,
-                    this.position.y - this.game.camera.y,
+                    this.game.clockTick, 
+                    ctx, 
+                    this.position.x - this.game.camera.x, 
+                    this.position.y - this.game.camera.y, 
                     this.scale, true);
             }
         } else { // Grunt is dead
             //play death animation
             if (this.aimRight) {
-                this.deathAnimation.drawFrame(this.game.clockTick, ctx,
-                    this.position.x - this.game.camera.x,
-                    this.position.y - this.game.camera.y,
+                this.deathAnimation.drawFrame(this.game.clockTick, ctx, 
+                    this.position.x - this.game.camera.x, 
+                    this.position.y -  this.game.camera.y, 
                     this.scale, false);
             } else {
-                this.deathAnimation.drawFrame(this.game.clockTick, ctx,
-                    this.position.x - this.game.camera.x,
-                    this.position.y - this.game.camera.y,
+                this.deathAnimation.drawFrame(this.game.clockTick, ctx, 
+                    this.position.x - this.game.camera.x, 
+                    this.position.y - this.game.camera.y, 
                     this.scale, true);
             }
 
 
             if (this.deathAnimation.isDone()) { //Draw last frame when death animation completes
                 if (this.aimRight) {
-                    this.deathAnimation.drawSpecificFrame(this.game.clockTick, ctx,
-                        this.position.x - this.game.camera.x,
-                        this.position.y - this.game.camera.y,
+                    this.deathAnimation.drawSpecificFrame(this.game.clockTick, ctx, 
+                        this.position.x - this.game.camera.x, 
+                        this.position.y - this.game.camera.y, 
                         this.scale, false, 4);
                 } else {
-                    this.deathAnimation.drawSpecificFrame(this.game.clockTick, ctx,
-                        this.position.x - this.game.camera.x,
-                        this.position.y - this.game.camera.y,
+                    this.deathAnimation.drawSpecificFrame(this.game.clockTick, ctx, 
+                        this.position.x - this.game.camera.x, 
+                        this.position.y - this.game.camera.y, 
                         this.scale, true, 4);
                 }
             }
         }
 
 
-        if (PARAMS.DEBUG) {
+        if (PARAMS.DEBUG && this.BB) {
             //draw the BB
             ctx.strokeStyle = 'cyan';
             ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
         }
-
+        
     };
 }

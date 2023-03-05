@@ -22,7 +22,6 @@ class GameEngine {
         this.keys = {};
         this.playerIndex = null;
 
-        this.sceneManager = null;
 
         // Options and the Details
         this.options = options || {
@@ -79,10 +78,6 @@ class GameEngine {
             this.wheel = e;
         });
 
-        this.ctx.canvas.addEventListener("keydown", function (e) {
-            e.preventDefault();
-            this.space = e; // Prevent space bar scrolling
-        })
 
         this.ctx.canvas.addEventListener("contextmenu", e => {
             if (this.options.debugging) {
@@ -93,7 +88,12 @@ class GameEngine {
         });
 
 
-        this.ctx.canvas.addEventListener("keydown", event => this.keys[event.key] = true);
+        this.ctx.canvas.addEventListener("keydown", event => {
+            this.keys[event.key] = true
+            event.preventDefault();
+            this.space = event; // Prevent space bar scrolling
+        });
+
         this.ctx.canvas.addEventListener("keyup", event => this.keys[event.key] = false);
 
 

@@ -7,9 +7,6 @@ class Level0Generator {
         this.level0Map = HaloMap;
         
         this.tileSets = {
-            "GrassBlocks" : GrassBlocks,
-            "tree1" : tree1,
-            "tree2" : tree2,
             "BasicTrees" : BasicTrees,
             "Healthpack" : Healthpack,
             "EarthBlocks" : EarthBlocks,
@@ -17,6 +14,8 @@ class Level0Generator {
             "EarthBlocks3" : EarthBlocks3,
             "BuildingBlocks" : BuildingBlocks,
             "BuildingDoor" : BuildingDoor,
+            "BlueBase" : BlueBase,
+            "RedBase" : RedBase,
             "HaloPod1" : HaloPod1,
             "HaloPod2" : HaloPod2
         }
@@ -75,7 +74,7 @@ class Level0Generator {
                         }
 
                         if (object["name"] === "MasterChief") {
-                            console.log("Spawning Master Chief at: " + position.x + ", " + position.y);
+                            console.log("Spawning Master Chief at: " + (position.x | 0) + ", " + (position.y| 0));
                             let player = new MasterChief(gameEngine, position);
                             this.game.addEntity(player);
                             this.game.addCollisionEntity(player);
@@ -83,20 +82,21 @@ class Level0Generator {
                             
                         } else if (object["name"] === "Grunt" && (getRandomInt(2) === 1) ) { //Checks if spawn point is grunt and flips coin to spawn enemy there or not
                             if (PARAMS.GRUNTS) {
-                                console.log("Spawning Grunt at: " + position.x + ", " + position.y);
+                                console.log("Spawning Grunt at: " + (position.x | 0) + ", " + (position.y | 0));
                                 let enemy = new Grunt(gameEngine, position);
                                 this.game.addCollisionEntity(enemy);
                                 this.game.addEntity(enemy);
  
                             }
-                        } else if (object["name"] === "Elite" && (getRandomInt(2) === 1)) {
+                        } else if (object["name"] === "Elite" && (getRandomInt(1) === 0)) {
                             if (PARAMS.ELITES) {
-                                console.log("Spawning Elite at: " + position.x + ", " + position.y);
+                                console.log("Spawning Elite at: " + (position.x | 0) + ", " + (position.y | 0));
                                 let enemy = new Elite(gameEngine, position);
                                 this.game.addEntity(enemy);
                                 this.game.addCollisionEntity(enemy);
                             }
                         }
+
                         
                     } else if (object["class"] === "CheckPoint") {
 
@@ -107,7 +107,52 @@ class Level0Generator {
 
                         if (object["name"] === "End") {
                             this.game.player.endGoal = position;
+
+                        } else if (object["name"] === "CheckPoint") {
+                            this.game.camera.checkPoints.push(position);
+                            console.log("Pushing checkpoint to array");
+                            console.log(this.game.camera.checkPoints);
                         }
+
+
+
+                    } else if (object["class"] === "GUN") {
+                        let position = {
+                            x: object["x"] * PARAMS.SCALE,
+                            y: object["y"] * PARAMS.SCALE,
+                        }
+
+                        if (object["name"] === "ASSAULT_RIFLE") {
+                            let gunSpawn = new Gun(null, this.game, "ASSAULT_RIFLE");
+                            gunSpawn.position = position;
+                            gunSpawn.worldEntity = true;
+
+                        } else if (object["name"] === "SNIPER") {
+                            let gunSpawn = new Gun(null, this.game, "SNIPER");
+                            gunSpawn.position = position;
+                            gunSpawn.worldEntity = true;
+
+                        } else if (object["name"] === "PLASMA_PISTOL") {
+                            let gunSpawn = new Gun(null, this.game, "PLASMA_PISTOL");
+                            gunSpawn.position = position;
+                            gunSpawn.worldEntity = true;
+
+                        } else if (object["name"] === "PLASMA_RIFLE") {
+                            let gunSpawn = new Gun(null, this.game, "PLASMA_RIFLE");
+                            gunSpawn.position = position;
+                            gunSpawn.worldEntity = true;
+
+                        } else if (object["name"] === "SMG") {
+                            let gunSpawn = new Gun(null, this.game, "SMG");
+                            gunSpawn.position = position;
+                            gunSpawn.worldEntity = true;
+
+                        } else if (object["name"] === "SHOTGUN") {
+                            let gunSpawn = new Gun(null, this.game, "SHOTGUN");
+                            gunSpawn.position = position;
+                            gunSpawn.worldEntity = true;
+                        }
+
                     }
                 });
             }

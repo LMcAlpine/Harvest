@@ -1,60 +1,50 @@
-//
 class Elite {
     constructor(game, position) {
         Object.assign(this, { game, position });
 
-        this.hp = 150;
-        this.currentGun = new Gun(this, game, "Plasma_Pistol");
+        this.hp = 300;
+        this.isAlive = true;
+        this.currentGun = new Gun(this, game, "PLASMA_RIFLE");
         // Properties
         this.scale = 3;
-        this.state = 1; //0 = Idle, 1 = Moving
+
+        //Animation states
+        this.state = 0; // 0 = Idle, 1 = Moving
         this.isFiring = 0; // 0 = Not firing, 1 = Firing
-        this.SpriteSheet = ASSET_MANAGER.getAsset("./sprites/elite.png");
-        //this.SpriteSheet = ASSET_MANAGER.getAsset("./sprites/GruntSprites.png");
+
+        this.SpriteSheet = ASSET_MANAGER.getAsset("./sprites/EliteSprites.png");
         this.animations = [];
 
         this.walkingSpeed = 0.07;
         this.aimRight = true;
 
-        //this.BBXOffset = 10 * this.scale; //Offset for adjusting BB
-        //this.BBYOffset = 12 * this.scale; //Offset for adjusting BB
+        this.lastBB = null;
+        this.BB = null;
+        this.BBXOffset = 10 * this.scale; //Offset for adjusting BB
+        this.BBYOffset = 1 * this.scale; //Offset for adjusting BB
 
-        this.width = 64;
-        this.height = 64;
+        //Player position
+        this.target = null;
 
-        // keeping track of which path to move towards
-        this.targetID = 0;
-        this.target = { x: game.player.position.x, y: game.player.position.y };
+        // Movement
+        this.velocity = { x: 0, y: 0 };
+        this.onGround = false;
+        this.jumping = false;
 
-
-        let distance = getDistance(this.position, this.target);
-        // direction from enemy to target
-        let unitVector = { x: (this.target.x - this.position.x) / distance * 100, y: (this.target.y - this.position.y) / distance * 100 };
-
-
-        // Added for Jumping
-        // this.velocity = { x: 0, y: 0 };
-
-
-
-
-        this.fallingVelocity = { x: 0, y: 0 };
-        this.velocity = unitVector;
-        this.onGround = true;
 
 
         // Load animations
         this.loadAnimations();
-        this.updateBB();
+        //dimensions of frames
+        this.width = 60;
+        this.height = 60;
 
-        //   this.states = { patrolling: new PatrollingState(this), waiting: new WaitingState(this), chasing: new ChasingState(this) };
-        this.states = { patrolling: "patrolling", waiting: "waiting", chasing: "chasing" };
-        this.currentState = this.states.patrolling;
-
-        this.patrollingLeft = false;
-        //  game.addEntity(this.currentState);
+        this.states = {waiting: 0, attacking: 1};
+        this.currentState = this.states.waiting;
+        this.gunType = this.currentGun.getGunInfo().index; // 3 = Plasma Rifle, 6 = Carbine 
 
         this.elapsedTime = 0;
+        this.updateBB();
     }
 
     setState(state) {
@@ -66,61 +56,63 @@ class Elite {
         //Build array
         for (let i = 0; i <= 1; i++) { // this.state
             this.animations.push([]);
+            for (let j = 0; j <= 6; j++) { //this.gunType
+                this.animations[i].push([]);
+            }
         }
 
 
-
-        // Luke's test sheet
-        // this.animations[1] = new Animator(this.SpriteSheet,
-        //     0, 0,
-        //     50, 50,
-        //     6, 0.095,
-        //     0,
-        //     false, true);
-
-        // idle
-        this.animations[0] = new Animator(this.SpriteSheet,
-            0, 0,
-            64, 64,
+        // waiting plasma rifle
+        this.animations[0][3] = new Animator(this.SpriteSheet,
+            0, 180,
+            60, 60,
             1, 1,
             0,
             false, true);
 
 
-        // idle right
-        this.animations[3] = new Animator(this.SpriteSheet,
-            0, 0,
-            64, 64,
+        // walking plasma rifle
+        this.animations[1][3] = new Animator(this.SpriteSheet,
+            0, 120,
+            60, 60,
+            8, 0.095,
+            0,
+            false, true);
+
+        // waiting carbine
+        this.animations[0][6] = new Animator(this.SpriteSheet,
+            0, 60,
+            60, 60,
             1, 1,
             0,
             false, true);
 
-        //   Walk right
-        this.animations[1] = new Animator(this.SpriteSheet,
+
+        // walking carbine
+        this.animations[1][6] = new Animator(this.SpriteSheet,
             0, 0,
-            64, 64,
+            60, 60,
             8, 0.095,
             0,
             false, true);
 
 
-        // spritesheet, xStart, yStart, width, height, frameCount, frameDuration, framePadding, reverse, loop) {
-        // Walk left
-        this.animations[2] = new Animator(this.SpriteSheet,
-            0, 0,
-            64, 64,
-            8, 0.095,
+        this.deathAnimation = new Animator(this.SpriteSheet,
+            0, 240,
+            60, 60,
+            3, 0.2,
             0,
-            true, true);
+            false, false);
 
     }
 
     updateBB() {
         this.lastBB = this.BB;
-        this.BB = new BoundingBox(this.position.x,
-            this.position.y,
-            (this.width * this.scale),
-            (this.height * this.scale));
+        this.BB = new BoundingBox(
+            this.position.x + this.BBXOffset,
+            this.position.y + this.BBYOffset,
+            (60 * this.scale) - (35 * this.scale),
+            (60 * this.scale) - (6 * this.scale));
     }
 
     update() {
@@ -129,108 +121,76 @@ class Elite {
 
         this.target = this.game.player.position;
 
-
         let distance = getDistance(this.position, this.target);
-        //console.log(distance);
-        this.velocity = { x: (this.target.x - this.position.x) / distance * 100, y: (this.target.y - this.position.y) / distance * 100 };
 
-        if (this.velocity.x > 0) {
-            this.state = 1;
-        }
-        else if (this.velocity.x < 0) {
-            this.state = 2;
-        }
+        if (this.isAlive) {
+            if (this.currentState === this.states.waiting) {
 
-
-        // if (distance < 300) {
-        //     this.setState(this.states.chasing);
-        // }
-
-        if (this.currentState == 'patrolling') {
-            if (distance < 100) {
-                this.setState(this.states.chasing);
+                if (distance < PARAMS.SCALE * 240) {
+                    this.currentState = this.states.attacking;
+                }
+                
             }
-            if (this.patrollingLeft) {
-                this.position.x -= 1;
-                if (this.position.x === 400) {
-                    this.patrollingLeft = false;
-                    this.flip = false;
-                    //   this.setState(this.states.waiting);
 
-                    this.state = 0;
-                    return;
+            if (this.currentState === this.states.attacking) {
 
+                //Change face
+                if (this.position.x - this.target.x < 0) {
+                    this.aimRight = true;
+                } else {
+                    this.aimRight = false;
                 }
 
-
-            }
-
-            else {
-                this.position.x += 1;
-                if (this.position.x === 700) {
-                    this.patrollingLeft = true;
-
-                    this.flip = true;
-
-                    //  this.setState(this.states.waiting);
-                    this.state = 3;
-
-                    return;
-
-                }
-            }
-            if (this.flip) {
-                this.state = 2;
-            }
-            else {
                 this.state = 1;
+
+                //FOLLOW PLAYER
+
+                //Jumping
+                if (this.jumping && this.onGround) {
+                    this.velocity.y = GRUNT_JUMP;
+                    this.onGround = false;
+                    this.jumping = false;
+                }
+
+                if (this.target.x < this.position.x) { //player is to the left
+                    this.velocity.x -= ELITE_PHYSICS.ACC_RUN * TICK;
+                } else if (this.target.x > this.position.x) {
+                    this.velocity.x += ELITE_PHYSICS.ACC_RUN * TICK;
+                } else {
+                    this.velocity.x = 0;
+                }
+                
+                // max speed cap
+                if (this.velocity.x >= ELITE_PHYSICS.MAX_RUN) this.velocity.x = ELITE_PHYSICS.MAX_RUN;
+                if (this.velocity.x <= -ELITE_PHYSICS.MAX_RUN) this.velocity.x = -ELITE_PHYSICS.MAX_RUN;
+
+
+
+                //SHOOTING AT PLAYER
+                const firingPosStatic = {
+                    x: this.BB.getCenter().x,
+                    y: this.BB.getCenter().y
+                }
+                //Capture the static position
+                const targetPosStatic = this.game.player.BB.getCenter();
+
+                this.currentGun.shootGun(firingPosStatic, targetPosStatic);
+                
             }
         }
-        // if (this.currentState == 'chasing') {
-        //     this.position.x += this.velocity.x * TICK;
-        //     if (distance < 1000) {
-        //         // const firingPosStatic = this.BB.getCenter();
-        //         const firingPosStatic = {
-        //             x: this.BB.getCenter().x ,
-        //             y: this.BB.getCenter().y
-        //         }
-        //         //Capture the static position
-        //         const targetPosStatic =  this.game.player.BB.getCenter();
 
-        //        this.currentGun.shootGun(firingPosStatic, targetPosStatic);
-        //     }
+        //Basic physics
+        this.velocity.y += ELITE_PHYSICS.ACC_FALL * TICK;
 
-        // }
-        // if (this.currentState == 'waiting') {
-        //     if (this.elapsedTime < 3) {
-        //         this.elapsedTime += this.game.clockTick;
-        //         //  this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y - this.game.camera.y, this.scale, false);
+        // max speed calculation for vertical
+        if (this.velocity.y >= ELITE_PHYSICS.MAX_FALL) this.velocity.y = ELITE_PHYSICS.MAX_FALL;
+        if (this.velocity.y <= -ELITE_PHYSICS.MAX_FALL) this.velocity.y = -ELITE_PHYSICS.MAX_FALL;
 
-        //     }
-        //     else {
-        //         this.elapsedTime = 0;
-        //         this.setState(this.states.patrolling)
-        //     }
-
-
-        // }
-
-
-
-
-
-        //    console.log(this.velocity.x);
-        //   this.position.x += this.velocity.x * this.game.clockTick;
-        // this.position.y += this.velocity.y * this.game.clockTick;
-
-        this.position.y += this.fallingVelocity.y * TICK;
-        this.fallingVelocity.y += ENEMY_PHYSICS.MAX_FALL * TICK;
-        this.fallingVelocity.y += GRAVITY;
-
-
-        //  this.position.x += this.velocity.x * TICK;
-
-
+        // update position
+        this.position.x += this.velocity.x * TICK * PARAMS.SCALE;
+        this.position.y += this.velocity.y * TICK * PARAMS.SCALE;
+       
+        //console.log(this.velocity);
         this.updateBB();
 
         this.collisionChecker();
@@ -239,99 +199,75 @@ class Elite {
     }
 
 
-    // shootGun() {
-
-    //     this.isFiring = 1;
-
-    //     //Capture 
-    //     const firingPosStatic = {
-    //         x: this.position.x + (20 * this.scale),
-    //         y: this.position.y + (15 * this.scale)
-    //     }
-
-    //     //Capture the static position
-    //     const targetPosStatic = {
-    //         x: (20 * this.scale) + this.game.camera.x,
-    //         y: this.game.camera.y
-    //     }
-
-    //     let bullet = new Bullet(
-    //         this,
-    //         this.game,
-    //         2,
-    //         firingPosStatic,
-    //         targetPosStatic,
-    //         1);
-
-    //     this.game.addCollisionEntity(bullet);
-    //     this.game.addEntityToFront(bullet);
-
-    // };
-
-    stopShooting() {
-        this.isFiring = 0;
-    };
-
     collisionChecker() {
 
-        this.game.entities.forEach(entity => {
-            if (entity.BB && this !== entity && entity.BB && this.BB.collide(entity.BB)) { //falling
+        this.game.collisionEntities.forEach(entity => {
+            if (this !== entity && entity.BB && this.BB.collide(entity.BB)) { //Collision
 
-                if (this.fallingVelocity.y > 0) { //falling
-                    //console.log("Touching ground");
-                    if ((entity instanceof Tile) && this.lastBB.bottom <= entity.BB.top) {
-                        this.position.y = entity.BB.top - this.BB.height;
-                        this.fallingVelocity.y = 0;
-                        this.onGround = true;
-                        this.updateBB();
-                        return;
+                if (entity instanceof Tile) {
+                    entity.collisionActive = true; //COLLIDING WITH TILE
+
+                    //FALLING
+                    if (this.velocity.y > 0) { 
+
+                        if (this.lastBB.bottom <= entity.BB.top) {
+                            this.position.y = entity.BB.top - this.BB.height - this.BBYOffset;
+                            this.velocity.y = 0;
+                            this.onGround = true;
+                            this.updateBB();
+                            return;
+                        }
+    
                     }
 
-                }
-                if (this.fallingVelocity.y < 0) { //Jumping
+                    //JUMPING
+                    if (this.velocity.y < 0) { //Jumping
+                        
+                        if (this.lastBB.top >= entity.BB.bottom) {
 
-                    if ((entity instanceof Tile) && this.lastBB.top >= entity.BB.bottom) {
-                        console.log("Collide top of tile");
-                        this.position.y = entity.BB.bottom;
-                        this.fallingVelocity.y = 0;
-                        this.updateBB();
-                        return;
-
+                            this.position.y = entity.BB.bottom - this.BBYOffset;
+                            this.velocity.y = 0;
+                            this.updateBB();
+                            return;
+    
+                        }
                     }
-                }
 
-                //Other cases for hitting tile
-                if ((entity instanceof Tile)) {
-                    //console.log("Check");
-
+                    
+                    //TOUCHING RIGHTSIDE OF TILE
                     if (this.BB.left <= entity.BB.right
                         && this.BB.bottom > entity.BB.top
-                        && this.velocity.x < 0) { //Touching right side
+                        && this.velocity.x < 0) { 
 
-                        console.log("Touching right");
-                        this.position.x = entity.BB.right;
+                        this.position.x = entity.BB.right - this.BBXOffset;
 
-                        if (this.velocity.x < 0) this.velocity.x = 0;
+                        if (this.velocity.x < 0) this.velocity.x = -ELITE_PHYSICS.MAX_RUN / 4;
+
+                        this.jumping = true;
+                        
                     }
 
+
+                    //TOUCHING LEFT SIDE OF TILE
                     if (this.BB.right >= entity.BB.left
                         && this.BB.bottom > entity.BB.top
-                        && this.velocity.x > 0) {  //Touching left side
+                        && this.velocity.x > 0) { 
 
-                        console.log("Touching left");
-                        this.position.x = entity.BB.left - this.BB.width;
+                        this.position.x = entity.BB.left - this.BB.width - this.BBXOffset;
 
-                        if (this.velocity.x > 0) this.velocity.x = 0;
+                        if (this.velocity.x > 0) this.velocity.x = ELITE_PHYSICS.MAX_RUN / 4;
+
+                        this.jumping = true;
+                        
                     }
 
+                
+                    
                 }
 
-
-                //this.BB.top < entity.BB.bottom)
-
+                
             }
         });
-
 
 
 
@@ -340,35 +276,79 @@ class Elite {
     takeDamage(damage) {
 
         if (this.hp > 0) {
+            console.log();
             this.hp -= damage;
-        }
-        if (this.hp <= 0) {
+        } else {
             this.hp = 0;
+            this.die();
+        }
+
+        if (this.hp <= 0) {
             this.die();
         }
     }
 
     die() {
-        //Todo: Play death animation
-        this.removeFromWorld = true;
+        this.velocity.x = 0;
+        this.isAlive = false;
+        this.currentGun.dropGun();
     }
 
     draw(ctx) {
-        //   this.currentState.update();
-        //   this.currentState.draw(ctx);
+
+        if (this.isAlive) {
+            if (this.aimRight) {
+                this.animations[this.state][this.gunType].drawFrame(
+                    this.game.clockTick, 
+                    ctx, 
+                    this.position.x - this.game.camera.x, 
+                    this.position.y - this.game.camera.y, 
+                    this.scale, false);
+
+            } else {
+                this.animations[this.state][this.gunType].drawFrame(
+                    this.game.clockTick, 
+                    ctx, 
+                    this.position.x - this.game.camera.x, 
+                    this.position.y - this.game.camera.y, 
+                    this.scale, true);
+            }
+        } else { // Elite is dead
+            //play death animation
+            if (this.aimRight) {
+                this.deathAnimation.drawFrame(this.game.clockTick, ctx, 
+                    this.position.x - this.game.camera.x, 
+                    this.position.y -  this.game.camera.y, 
+                    this.scale, false);
+            } else {
+                this.deathAnimation.drawFrame(this.game.clockTick, ctx, 
+                    this.position.x - this.game.camera.x, 
+                    this.position.y - this.game.camera.y, 
+                    this.scale, true);
+            }
 
 
+            if (this.deathAnimation.isDone()) { //Draw last frame when death animation completes
+                if (this.aimRight) {
+                    this.deathAnimation.drawSpecificFrame(this.game.clockTick, ctx, 
+                        this.position.x - this.game.camera.x, 
+                        this.position.y - this.game.camera.y, 
+                        this.scale, false, 2);
+                } else {
+                    this.deathAnimation.drawSpecificFrame(this.game.clockTick, ctx, 
+                        this.position.x - this.game.camera.x, 
+                        this.position.y - this.game.camera.y, 
+                        this.scale, true, 2);
+                }
+            }
+        }
 
 
-
-        this.animations[this.state].drawFrame(this.game.clockTick, ctx, this.position.x - this.game.camera.x, this.position.y - this.game.camera.y, this.scale, false);
-
-        //draw ths BB
-        ctx.strokeStyle = 'cyan';
-        ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
-
-        //Draw the lastBB
-        //  ctx.strokeStyle = 'red';
-        //  ctx.strokeRect(this.lastBB.x - this.game.camera.x, this.lastBB.y - this.game.camera.y, this.BB.width, this.BB.height);
-    }
+        if (PARAMS.DEBUG && this.BB) {
+            //draw the BB
+            ctx.strokeStyle = 'cyan';
+            ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
+        }
+        
+    };
 }

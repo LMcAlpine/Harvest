@@ -1,4 +1,4 @@
-var HaloPod2 = 
+var HaloPod2 =
 { "columns":2,
  "image":"HaloPod2.png",
  "imageheight":64,
