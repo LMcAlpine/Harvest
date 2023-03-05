@@ -7,9 +7,7 @@ ASSET_MANAGER.queueDownload("./sprites/GunWorldEntities.png");
 
 
 ASSET_MANAGER.queueDownload("./sprites/GruntSprites.png");
-ASSET_MANAGER.queueDownload("./sprites/grunt.png");
-ASSET_MANAGER.queueDownload("./sprites/elite.png");
-ASSET_MANAGER.queueDownload("./sprites/brute.png");
+ASSET_MANAGER.queueDownload("./sprites/EliteSprites.png");
 
 ASSET_MANAGER.queueDownload("./sprites/Grass Blocks.png");
 ASSET_MANAGER.queueDownload("./sprites/EarthBlocks.png");
@@ -23,6 +21,7 @@ ASSET_MANAGER.queueDownload("./sprites/BlueBase.png");
 ASSET_MANAGER.queueDownload("./sprites/RedBase.png");
 ASSET_MANAGER.queueDownload("./sprites/HaloPod1.png");
 ASSET_MANAGER.queueDownload("./sprites/HaloPod2.png");
+ASSET_MANAGER.queueDownload("./sprites/BasicTrees.png");
 
 ASSET_MANAGER.queueDownload("./images/FOREST.png")
 ASSET_MANAGER.queueDownload("./images/cityfar.png")
@@ -33,9 +32,6 @@ ASSET_MANAGER.queueDownload("./images/nightBG.png")
 ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");
 	const ctx = canvas.getContext("2d");
-
-	//console.log("Hello world");
-
 
 
 	PARAMS.BLOCKWIDTH = PARAMS.BITWIDTH * PARAMS.SCALE;
