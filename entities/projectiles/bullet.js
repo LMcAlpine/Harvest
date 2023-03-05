@@ -37,21 +37,10 @@ class Bullet {
             y: this.firingPos.y
         }
 
-        //Get angle of bullet direction
-        let theta = Math.tan(yDiff / xDiff);
-        // this.bulletEndX = this.position.x + (this.bulletDistance * Math.cos(theta));
-        // this.bulletEndY = this.position.y + (this.bulletDistance * Math.sin(theta));
         this.bulletEndX = this.position.x + this.vectorNormalized.x * this.bulletDistance;
         this.bulletEndY = this.position.y + this.vectorNormalized.y * this.bulletDistance;
 
-        console.log("bullet start x: " + (this.position.x | 0) + " bullet start y: " + (this.position.y | 0));
-        console.log("bullet end x: " + (this.bulletEndX | 0) + " bullet end y: " + (this.bulletEndY | 0));
-        console.log("\n");
-        
-
-        //this.aimRight = shooter.aimRight;
         this.removeFromWorld = false;
-        //this.aliveCounter = 4000;
 
         this.updateBB();
 
@@ -67,13 +56,11 @@ class Bullet {
             y: (this.position.y + (this.vectorNormalized.y * this.bulletVelocity))
         }
 
-        // console.log("bullet start x: " + Math.abs((this.position.x | 0)) + " bullet start y: " + Math.abs((this.position.y | 0)));
-        // console.log("bullet end x: " + Math.abs((this.bulletEndX | 0)) + " bullet end y: " + Math.abs((this.bulletEndY | 0)));
-        // console.log("\n");
         //Loop to kill bullet entity
-        if (Math.abs(this.position.x - this.firingPos.x) >= Math.abs(this.bulletEndX - this.firingPos.x) && Math.abs(this.position.y - this.firingPos.y) >= Math.abs(this.bulletEndY - this.firingPos.y)) {
-            console.log("LIMIT");
-            this.removeFromWorld = true;
+        if (Math.abs(this.position.x - this.firingPos.x) >= Math.abs(this.bulletEndX - this.firingPos.x) 
+            && Math.abs(this.position.y - this.firingPos.y) >= Math.abs(this.bulletEndY - this.firingPos.y)) {
+
+                this.removeFromWorld = true;
         }
 
         this.collisionChecker();

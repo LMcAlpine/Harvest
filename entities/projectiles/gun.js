@@ -63,7 +63,7 @@ class Gun {
             },
 
             "PLASMA_RIFLE": {
-                param: [true, 30, 18, 30, 200, "BULLET"],
+                param: [true, 30, 18, 30, 200, "PLASMA"],
                 bulletDistance: 230 * PARAMS.SCALE,
                 spriteX: 0,
                 spriteY: 90,
@@ -85,7 +85,6 @@ class Gun {
                 spriteY: 150,
                 index: 5
             }
-
             
             // "Rocket_Launcher": {
             //     param: [false, 40, 50, 500, 4, "ROCKET"],
