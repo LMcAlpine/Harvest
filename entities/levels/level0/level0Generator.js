@@ -88,7 +88,7 @@ class Level0Generator {
                                 this.game.addEntity(enemy);
  
                             }
-                        } else if (object["name"] === "Elite" && (getRandomInt(2) === 1)) {
+                        } else if (object["name"] === "Elite" && (getRandomInt(1) === 0)) {
                             if (PARAMS.ELITES) {
                                 console.log("Spawning Elite at: " + (position.x | 0) + ", " + (position.y | 0));
                                 let enemy = new Elite(gameEngine, position);
@@ -107,6 +107,43 @@ class Level0Generator {
                         if (object["name"] === "End") {
                             this.game.player.endGoal = position;
                         }
+                    } else if (object["class"] === "GUN") {
+                        let position = {
+                            x: object["x"] * PARAMS.SCALE,
+                            y: object["y"] * PARAMS.SCALE,
+                        }
+
+                        if (object["name"] === "ASSAULT_RIFLE") {
+                            let gunSpawn = new Gun(null, this.game, "ASSAULT_RIFLE");
+                            gunSpawn.position = position;
+                            gunSpawn.worldEntity = true;
+
+                        } else if (object["name"] === "SNIPER") {
+                            let gunSpawn = new Gun(null, this.game, "SNIPER");
+                            gunSpawn.position = position;
+                            gunSpawn.worldEntity = true;
+
+                        } else if (object["name"] === "PLASMA_PISTOL") {
+                            let gunSpawn = new Gun(null, this.game, "PLASMA_PISTOL");
+                            gunSpawn.position = position;
+                            gunSpawn.worldEntity = true;
+
+                        } else if (object["name"] === "PLASMA_RIFLE") {
+                            let gunSpawn = new Gun(null, this.game, "PLASMA_RIFLE");
+                            gunSpawn.position = position;
+                            gunSpawn.worldEntity = true;
+
+                        } else if (object["name"] === "SMG") {
+                            let gunSpawn = new Gun(null, this.game, "SMG");
+                            gunSpawn.position = position;
+                            gunSpawn.worldEntity = true;
+
+                        } else if (object["name"] === "SHOTGUN") {
+                            let gunSpawn = new Gun(null, this.game, "SHOTGUN");
+                            gunSpawn.position = position;
+                            gunSpawn.worldEntity = true;
+                        }
+
                     }
                 });
             }

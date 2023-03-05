@@ -30,7 +30,7 @@ class MasterChief {
         this.cache = []; //For tracking this.angle
 
         //Chief's gun
-        this.currentGun = new Gun(this, game, "SHOTGUN");
+        this.currentGun = new Gun(this, game, "ASSAULT_RIFLE");
 
         //Bounding Boxes
         this.lastBB = null;
@@ -392,7 +392,7 @@ class MasterChief {
 
     update() {
 
-        //console.log("X: " + (this.velocity.x | 0) + " Y: " + (this.velocity.y | 0));
+        console.log("X: " + (this.velocity.x | 0) + " Y: " + (this.velocity.y | 0));
 
         // Updater properties
         const TICK = this.game.clockTick;
@@ -493,7 +493,7 @@ class MasterChief {
 
 
             // *** Physics ***
-            if (keys.d.pressed && !keys.a.pressed && this.onGround) { //Moving right
+            if (keys.d.pressed && !keys.a.pressed) { //Moving right
 
                 if(this.midAir) this.velocity.x = 0; this.midAir = false;
 
@@ -506,7 +506,7 @@ class MasterChief {
                 if (this.aimRight) this.reverseMovement(false);
                 else this.reverseMovement(true);
                 this.state = 1;
-            } else if (keys.a.pressed && !keys.d.pressed && this.onGround) { //Moving left
+            } else if (keys.a.pressed && !keys.d.pressed) { //Moving left
 
                 if(this.midAir) this.velocity.x = 0; this.midAir = false;
 
@@ -517,12 +517,14 @@ class MasterChief {
                 if (this.aimRight) this.reverseMovement(true);
                 else this.reverseMovement(false);
                 this.state = 1;
-            } else {
+            }
+            else {
                 if (this.onGround) {
                     this.state = 0;
                     this.velocity.x = 0;
                 } else {
                     this.midAir = true;
+
                     //console.log("Adjusting air velocity");
                     if(this.velocity.x > 0) {
                         this.velocity.x -= PLAYER_PHYSICS.ACC_RUN / 4 * TICK;
