@@ -403,7 +403,7 @@ class MasterChief {
             if (this.endGoal !== null) {
                 if (this.position.x > this.endGoal.x) {
                     console.log("GAME WON");
-                    this.game.sceneManager.scene = 2;
+                    this.game.camera.scene = 2;
                 }
             }
 
