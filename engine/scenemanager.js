@@ -20,10 +20,19 @@ class SceneManager {
 
         this.scene = 1;
 
-        // let position = {
-        //     x: 7000 * PARAMS.SCALE,
-        //     y: 100 * PARAMS.SCALE,
-        // }
+        let position = {
+            x: 900 * PARAMS.SCALE,
+            y: 200 * PARAMS.SCALE,
+        }
+
+        //Test entities
+
+        
+        // console.log("Spawning grunt at: " + position.x + ", " + position.y);
+        // let grunt = new Grunt(gameEngine, position);
+        // this.game.addEntity(grunt);
+        // this.game.addCollisionEntity(grunt);
+
         // console.log("Spawning Master Chief at: " + position.x + ", " + position.y);
         // let player = new MasterChief(gameEngine, position);
         // this.game.addEntity(player);
@@ -34,7 +43,7 @@ class SceneManager {
         let nightForest = ASSET_MANAGER.getAsset("./images/nightBG.png");
 
         // for the parallax 
-        let layer = new Layer(nightForest, 0.1);
+        let layer = new Layer(nightForest, this.game);
         gameEngine.addEntity(layer);
 
             
@@ -66,7 +75,6 @@ class SceneManager {
 
     update() {
 
-
         let midpointX = PARAMS.CANVAS_WIDTH / 2 - PARAMS.BLOCKWIDTH / 2;
         let midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.BLOCKWIDTH / 2;
 
@@ -84,6 +92,13 @@ class SceneManager {
         else if (this.scene === 3) {
             this.gameOverScreen(ctx);
         }
+        let fps = Math.round(1 / this.game.clockTick);
+        //Display bullet count
+        ctx.fillStyle = "orange";
+        ctx.font = "bold 25px serif";
+        ctx.textBaseline = "top";
+        // if (fps < 40)
+        ctx.fillText(fps, PARAMS.CANVAS_WIDTH / 2, 0);
     }
 
     winScreen(ctx) {
@@ -106,8 +121,8 @@ class SceneManager {
         offscreenCtx.textBaseline = "top";
         //offscreenCtx.textAlign = "Center";
         offscreenCtx.fillText("YOU WON", (width / 2) - (width / 16), height / 4);
-        
-        
+
+
         ctx.drawImage(offscreenCanvas,
             0, 0,
             width, height);

@@ -73,8 +73,6 @@ class Level0Generator {
                             y: object["y"] * PARAMS.SCALE,
                         }
 
-                        console.log(position);
-
                         if (object["name"] === "MasterChief") {
                             console.log("Spawning Master Chief at: " + position.x + ", " + position.y);
                             let player = new MasterChief(gameEngine, position);
@@ -82,18 +80,21 @@ class Level0Generator {
                             this.game.addCollisionEntity(player);
                             this.game.player = player;
                             
-                        } else if (object["name"] === "Grunt") {
-                            console.log("Spawning Grunt at: " + position.x + ", " + position.y);
-                            let enemy = new Grunt(gameEngine, position);
-                            this.game.addCollisionEntity(enemy);
-                            this.game.addEntity(enemy);
-
-                        } else if (object["name"] === "Elite") {
-                            console.log("Spawning Elite at: " + position.x + ", " + position.y);
-                            let enemy = new Elite(gameEngine, position);
-                            this.game.addEntity(enemy);
-                            this.game.addCollisionEntity(enemy);
-
+                        } else if (object["name"] === "Grunt" && (getRandomInt(2) === 1) ) { //Checks if spawn point is grunt and flips coin to spawn enemy there or not
+                            if (PARAMS.GRUNTS) {
+                                console.log("Spawning Grunt at: " + position.x + ", " + position.y);
+                                let enemy = new Grunt(gameEngine, position);
+                                this.game.addCollisionEntity(enemy);
+                                this.game.addEntity(enemy);
+ 
+                            }
+                        } else if (object["name"] === "Elite" && (getRandomInt(2) === 1)) {
+                            if (PARAMS.ELITES) {
+                                console.log("Spawning Elite at: " + position.x + ", " + position.y);
+                                let enemy = new Elite(gameEngine, position);
+                                this.game.addEntity(enemy);
+                                this.game.addCollisionEntity(enemy);
+                            }
                         }
                         
                     } else if (object["class"] === "CheckPoint") {

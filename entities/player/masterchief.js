@@ -6,7 +6,14 @@ class MasterChief {
         Object.assign(this, { game, position});
 
         this.scale = 3;
-        this.cache = [];
+        this.endGoal = null;
+
+        /* Cache is 2d array that holds an offscreencanvas for varying gun angles, this is to avoid
+        constantly creating offscreen canvases to rotate chief arm/gun and instead store previously
+        created canvases into a cache.
+        */
+        this.cache = []; //For tracking this.angle
+        //this.cache.push([]); //For tracking this.isFiring
 
         this.SpriteSheet = ASSET_MANAGER.getAsset("./sprites/ChiefSprites.png");
         this.GunSpriteSheet = ASSET_MANAGER.getAsset("./sprites/Guns.png");
@@ -31,13 +38,13 @@ class MasterChief {
         this.degrees = null;
         this.aimRight = true;
 
-        this.walkingSpeed = 0.07;
+        this.walkingSpeed = 0.05;
         this.width = 40;
         this.height = 50;
 
         // Added for Jumping
         this.velocity = { x: 0, y: 0 };
-        this.onGround = true;
+        this.onGround = false;
 
 
         this.bodyAnimations = [];
@@ -47,9 +54,6 @@ class MasterChief {
 
         //Loads animations into array
         this.loadAnimations();
-
-        //anytime we move we should call updateBB
-        this.updateBB();
 
         // Keeps track of last key pressed
         this.lastKey;
@@ -66,6 +70,9 @@ class MasterChief {
 
         this.HUD = new PlayerHUD(this, this.game);
         this.game.addEntity(this.HUD);
+
+        //anytime we move we should call updateBB
+        this.updateBB();
 
     };
 
@@ -308,16 +315,27 @@ class MasterChief {
     }
 
     update() {
+
+        //console.log(this.hasCollisions);
         // Updater properties
         const TICK = this.game.clockTick;
 
         if (this.isAlive) {
 
-            if (this.position.x > this.endGoal.x) {
-                console.log("GAME WON");
-                this.game.sceneManager.scene = 2;
+            //Check if endGoal is reached
+            if (this.endGoal !== null) {
+                if (this.position.x > this.endGoal.x) {
+                    console.log("GAME WON");
+                    this.game.sceneManager.scene = 2;
+                }
             }
 
+            //Check if chief falls out of bounds
+            if (this.position.y > PARAMS.BITWIDTH * 50) {
+                this.die();
+            }
+
+            //Check if shooting
             if (this.game.mouseDown) {
 
                 const firingPosStatic = {
@@ -331,17 +349,17 @@ class MasterChief {
                     y: gameEngine.mouse.y + this.game.camera.y
                 }
 
+                //Shoot gun if gun is not empty and not reloading
                 if (!this.currentGun.isEmpty() && !this.currentGun.reloading){
-
                     this.isFiring = 1;
                     this.currentGun.shootGun(firingPosStatic, targetPosStatic);
                 }
             }
 
+            //Regen shield if shield is not maxed
             if(this.shield < this.maxShield) {
                 this.regenShield();
             }
-            
             
 
             //Calculate if player is aiming to right or left of player model
@@ -357,30 +375,73 @@ class MasterChief {
 
 
             // *** Player Movement 2 ***
-            if (keys.a.pressed && lastKey === 'a') {
-                this.velocity.x = -4;
-                this.position.x -= PLAYER_PHYSICS.MAX_RUN;
-                this.state = 1;
-            } else if (keys.d.pressed && lastKey === 'd') {
-                this.velocity.x = 4;
-                this.position.x += PLAYER_PHYSICS.MAX_RUN;
-                this.state = 1;
-            } else if (this.onGround) {
-                this.state = 0;
-            }
+            // if (keys.a.pressed && lastKey === 'a') {
+            //     this.velocity.x = -4;
+            //     this.position.x -= PLAYER_PHYSICS.MAX_RUN;
+            //     this.state = 1;
+            // } else if (keys.d.pressed && lastKey === 'd') {
+            //     this.velocity.x = 4;
+            //     this.position.x += PLAYER_PHYSICS.MAX_RUN;
+            //     this.state = 1;
+            // } else if (this.onGround) {
+            //     this.state = 0;
+            // }
     
 
             if(keys[' '].pressed && this.onGround) {
                 this.velocity.y = PLAYER_JUMP;
                 this.onGround = false;
                 this.state = 2;
+
                 // this.position.y += -PLAYER_JUMP;
             }
             if(keys['r'].pressed) {
                 this.currentGun.reloadGun();
             }
 
+
+             // *** Player Movement 3 ***
+
+            // horizontal physics
+            if (keys.d.pressed && !keys.a.pressed && this.onGround) { //Moving right
+                if (Math.abs(this.velocity.x) > PLAYER_PHYSICS.MAX_WALK) {
+                    this.velocity.x += PLAYER_PHYSICS.ACC_RUN * TICK;
+                } else {
+                    this.velocity.x += PLAYER_PHYSICS.ACC_WALK * TICK;
+                }
+
+                if (this.aimRight) this.reverseMovement(false);
+                else this.reverseMovement(true);
+                this.state = 1;
+            } else if (keys.a.pressed && !keys.d.pressed && this.onGround) { //Moving left
+                if (Math.abs(this.velocity.x) > PLAYER_PHYSICS.MAX_WALK) {
+                    this.velocity.x -= PLAYER_PHYSICS.ACC_RUN * TICK;
+                } else this.velocity.x -= PLAYER_PHYSICS.ACC_WALK * TICK;
+                
+                if (this.aimRight) this.reverseMovement(true);
+                else this.reverseMovement(false);
+                this.state = 1;
+            } else {
+                if (this.onGround) {
+                    this.state = 0;
+                    this.velocity.x = 0;
+                } else {
+                    console.log("Adjusting air velocity");
+                    if(this.velocity.x > 0) {
+                        this.velocity.x -= PLAYER_PHYSICS.ACC_RUN / 4 * TICK;
+                    } else {
+                        this.velocity.x += PLAYER_PHYSICS.ACC_RUN / 4 * TICK;
+                    }
+                }
+            }
             
+            // max speed calculation
+            if (this.velocity.x >= PLAYER_PHYSICS.MAX_RUN) this.velocity.x = PLAYER_PHYSICS.MAX_RUN;
+            if (this.velocity.x <= -PLAYER_PHYSICS.MAX_RUN) this.velocity.x = -PLAYER_PHYSICS.MAX_RUN;
+            // if (this.velocity.x >= PLAYER_PHYSICS.MAX_WALK) this.velocity.x = PLAYER_PHYSICS.MAX_WALK;
+            // if (this.velocity.x <= -PLAYER_PHYSICS.MAX_WALK) this.velocity.x = -PLAYER_PHYSICS.MAX_WALK;
+
+
         } else { //Chief is dead
             if(keys[' '].pressed) {
                 this.game.clearEntities();
@@ -389,16 +450,22 @@ class MasterChief {
         }
 
 
-            // Allow the player to fall
-            //UNCOMMENT
-            this.velocity.y += PLAYER_PHYSICS.MAX_FALL * TICK;
-            this.velocity.y += GRAVITY;
-
-            // Update the player x and y
-            // this.position.x += this.velocity.x * TICK;
-            //UNCOMMENT
-            this.position.y += this.velocity.y * TICK;
         
+
+
+        // Allow the player to fall
+        this.velocity.y += PLAYER_PHYSICS.ACC_FALL * TICK;
+
+        // max speed calculation for vertical
+        if (this.velocity.y >= PLAYER_PHYSICS.MAX_FALL) this.velocity.y = PLAYER_PHYSICS.MAX_FALL;
+        if (this.velocity.y <= -PLAYER_PHYSICS.MAX_FALL) this.velocity.y = -PLAYER_PHYSICS.MAX_FALL;
+
+        // update position
+        this.position.x += this.velocity.x * TICK * PARAMS.SCALE;
+        this.position.y += this.velocity.y * TICK * PARAMS.SCALE;
+        
+        //console.log(this.velocity.x);
+
         this.updateBB();
 
         this.collisionChecker();
@@ -412,56 +479,75 @@ class MasterChief {
         this.game.collisionEntities.forEach(entity => {
             if (this !== entity && entity.BB && this.BB.collide(entity.BB)) { //Collision
 
-                if (this.velocity.y > 0) { //falling
+                if (entity instanceof Tile) {
+                    entity.collisionActive = true; //COLLIDING WITH TILE
 
-                    if ((entity instanceof Tile) && this.lastBB.bottom <= entity.BB.top) {
-                        this.position.y = entity.BB.top - this.BB.height - this.BBYOffset;
-                        this.velocity.y = 0;
-                        this.onGround = true;
-                        this.updateBB();
-                        return;
+                    //FALLING
+                    if (this.velocity.y > 0) { 
+
+                        if (this.lastBB.bottom <= entity.BB.top) {
+                            this.position.y = entity.BB.top - this.BB.height - this.BBYOffset;
+                            this.velocity.y = 0;
+                            this.onGround = true;
+                            this.updateBB();
+                            return;
+                        }
+    
                     }
 
-                }
-                if (this.velocity.y < 0) { //Jumping
-
-                    if ((entity instanceof Tile) && this.lastBB.top >= entity.BB.bottom) {
-                        console.log("Collide top of tile");
-                        this.position.y = entity.BB.bottom - this.BBYOffset;
-                        this.velocity.y = 0;
-                        this.updateBB();
-                        return;
-
+                    //JUMPING
+                    if (this.velocity.y < 0) { //Jumping
+                        
+                        if (this.lastBB.top >= entity.BB.bottom) {
+                            console.log("Collide top of tile");
+                            this.position.y = entity.BB.bottom - this.BBYOffset;
+                            this.velocity.y = 0;
+                            this.updateBB();
+                            return;
+    
+                        }
                     }
-                }
 
-                //Other cases for hitting tile
-                if ((entity instanceof Tile)) {
-                    //console.log("Check");
-
+                    
+                    //TOUCHING RIGHTSIDE OF TILE
                     if (this.BB.left <= entity.BB.right
-                        && this.BB.bottom > entity.BB.top
-                        && this.velocity.x < 0) { //Touching right side
+                        //&& this.BB.bottom > entity.BB.top
+                        && this.velocity.x < 0) { 
 
-                        //console.log("Touching right");
+                        console.log("Touching right");
                         this.position.x = entity.BB.right - this.BBXOffset;
 
-                        if (this.velocity.x < 0) this.velocity.x = 0;
+                        if (this.velocity.x < 0) this.velocity.x = -PLAYER_PHYSICS.MAX_RUN / 4;
+                        
                     }
 
+                    // if(entity.BB.left <= this.BB.left + this.width / 2 && this.BB.left + this.width / 2 <= entity.BB.right
+                    // && this.BB.bottom > entity.BB.top
+                    // && this.velocity.x < 0) {
+                        
+                    //     console.log("Touching right");
+                    //     this.position.x = entity.BB.right - this.BBXOffset;
+
+                    //     if (this.velocity.x < 0) this.velocity.x = 0;
+                    // }
+
+                    //TOUCHING LEFT SIDE OF TILE
                     if (this.BB.right >= entity.BB.left
                         && this.BB.bottom > entity.BB.top
-                        && this.velocity.x > 0) {  //Touching left side
+                        && this.velocity.x > 0) { 
 
-                        //console.log("Touching left");
+                        console.log("Touching left");
                         this.position.x = entity.BB.left - this.BB.width - this.BBXOffset;
 
-                        if (this.velocity.x > 0) this.velocity.x = 0;
+                        if (this.velocity.x > 0) this.velocity.x = PLAYER_PHYSICS.MAX_RUN / 4;
+                        
                     }
 
+                
+                    
                 }
 
-
+                
             }
         });
 
@@ -470,7 +556,6 @@ class MasterChief {
     draw(ctx) {
 
         if (this.isAlive) { //CHIEF IS ALIVE
-            this.findMouseAngle();
 
             if (this.aimRight) {
                 this.bodyAnimations[this.state][this.helmet][this.shieldDamage].drawFrame(
@@ -531,44 +616,52 @@ class MasterChief {
 
     };
 
+    /**
+     * Method will rotate chief's arm/gun and draw it depending on the direction
+     * the player is aiming.
+     * @param {*} ctx 
+     */
     drawGun(ctx) {
 
+        this.findMouseAngle(); //Get angle in degrees player is aiming, sets to global this.degrees
+
+        //Grabs animator object for gun, manually resets to first frame (idle, not shooting) once animation completes.
         let a = this.gunAnimations[this.gunType][this.isFiring];
-
         a.elapsedTime += this.game.clockTick;
-
-        if (a.isDone()) {
-            if (a.loop) {
-                a.elapsedTime -= a.totalTime;
+            if (a.isDone()) {
+                if (a.loop) {
+                    a.elapsedTime -= a.totalTime;
+                }
+                else {
+                    //Reset animation once complete
+                    a.reset();
+                    this.isFiring = 0; //After firing one bullet, firing animation returns to idle
+                }
             }
-            else {
-                //Reset animation once complete
-                a.reset();
-                this.isFiring = 0;
-            }
-        }
-
         let frame = a.currentFrame();
         if (a.reverse) frame = a.frameCount - frame - 1;
 
-        let radians = -this.degrees / 360 * 2 * Math.PI;
+        // Will only draw a new offscreencanvas if the gun was never drawn at this.degrees and the animator frame prior
+        if (!this.cache[ [this.degrees, frame] ]) { 
 
-        if (this.aimRight) {
+            let radians = -this.degrees / 360 * 2 * Math.PI; //Convert degrees to radians
 
-            var offscreenCanvas = rotateImage(a.spritesheet,
-                a.xStart + frame * (a.width + a.framePadding), a.yStart,
-                a.width, a.height,
-                radians, 5,
-                false);
-
-        } else {
-
-            var offscreenCanvas = rotateImage(a.spritesheet,
-                a.xStart + frame * (a.width + a.framePadding), a.yStart,
-                a.width, a.height,
-                -radians - Math.PI, 5,
-                true);
-
+            //Offscreen canvas conversions depend on direction player is aiming
+            if (this.aimRight) {
+                var offscreenCanvas = rotateImage(a.spritesheet,
+                    a.xStart + frame * (a.width + a.framePadding), a.yStart,
+                    a.width, a.height,
+                    radians, 5,
+                    false);
+            } else {
+                var offscreenCanvas = rotateImage(a.spritesheet,
+                    a.xStart + frame * (a.width + a.framePadding), a.yStart,
+                    a.width, a.height,
+                    -radians - Math.PI, 5,
+                    true);
+            }
+            this.cache[[this.degrees, frame]] = offscreenCanvas; //Cache the offscreen canvas to avoid redrawing in the future
+            
         }
 
 
@@ -580,7 +673,9 @@ class MasterChief {
         }
         var armYOffset = (72 * this.scale);
 
-        ctx.drawImage(offscreenCanvas,
+        
+        //Draw the gun/arm
+        ctx.drawImage(this.cache[[this.degrees, frame]],
             (this.position.x - this.game.camera.x) - armXOffset, (this.position.y - this.game.camera.y) - armYOffset,
             this.scale * a.width, this.scale * a.width);
 
@@ -614,13 +709,15 @@ class MasterChief {
                 this.degrees += 360;
             }
 
+            /* This code will change the angle of chief's helmet depending on where he is aiming (low, normal, high).
+            *  The animation time is captured as changing states rapidly like this leads to animations between the body
+            *  parts to desync.  timeSync is used to sychronize body/head animations.
+            */
             //Record the current elapsed time of animation state
             let timeSync = this.bodyAnimations[this.state][this.helmet][this.shieldDamage].elapsedTime;
             //Set helmet animation
             if ((this.degrees <= 90 && this.degrees > 30) || (this.degrees > 90 && this.degrees <= 150)) {
-
                 this.helmet = 2;
-
             } else if ((this.degrees >= 270 && this.degrees < 330) || (this.degrees < 270 && this.degrees > 210)) {
                 this.helmet = 1;
             } else {
@@ -633,9 +730,17 @@ class MasterChief {
 
     };
 
+    /**
+     * Sets animation reverse flag to cond. Mainly used to reverse walking animation when walking
+     * backwards.
+     * @param {boolean} cond 
+     */
+
     reverseMovement(cond) {
         this.bodyAnimations[this.state][this.helmet][this.shieldDamage].reverse = cond;
     };
+
+
 
     takeDamage(dmg) {
         this.regen = 200;
@@ -673,6 +778,7 @@ class MasterChief {
 
     die() {
         this.isAlive = false;
+        this.velocity.x = 0;
         this.game.sceneManager.scene = 3;
     }
 

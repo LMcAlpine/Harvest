@@ -11,7 +11,7 @@ class GameEngine {
         this.collisionEntities = [];
 
         //this.collisionEntities = [];
-        
+
 
         // Information on the input
         this.click = null;
@@ -56,14 +56,14 @@ class GameEngine {
         this.ctx.canvas.addEventListener("mousemove", e => {
             if (this.options.debugging) {
                 console.log("MOUSE_MOVE: X: ", (getXandY(e).x | 0) +
-                " Y: ", (getXandY(e).y | 0));
+                    " Y: ", (getXandY(e).y | 0));
             }
             this.mouse = getXandY(e);
 
         });
 
 
-        this.ctx.canvas.addEventListener("mousedown", e => {         
+        this.ctx.canvas.addEventListener("mousedown", e => {
             this.mouseDown = true;
         });
 
@@ -79,10 +79,10 @@ class GameEngine {
             this.wheel = e;
         });
 
-        this.ctx.canvas.addEventListener("keydown", function(e) {
+        this.ctx.canvas.addEventListener("keydown", function (e) {
             e.preventDefault();
             this.space = e; // Prevent space bar scrolling
-          })
+        })
 
         this.ctx.canvas.addEventListener("contextmenu", e => {
             if (this.options.debugging) {
@@ -110,7 +110,7 @@ class GameEngine {
     //Adds entity after index 2
     addEntityToFront(entity) {
         this.entities.splice(2, 0, entity);
- 
+
     };
 
     clearEntities() {
@@ -146,10 +146,11 @@ class GameEngine {
         for (let i = this.entities.length - 1; i >= 0; i--) {
             this.entities[i].draw(this.ctx, this);
         }
+        this.camera.draw(this.ctx);
     };
 
     update() {
-        
+        //Why should we update the BB of entities without collisions?
         let entitiesCount = this.entities.length;
 
         for (let i = 0; i < entitiesCount; i++) {
@@ -164,24 +165,7 @@ class GameEngine {
                 this.entities.splice(i, 1);
             }
         }
-
-        //console.log(this.entities);
-
-        // let collisionEntitiesCount = this.collisionEntities.length;
-        // for (let i = 0; i < collisionEntitiesCount; i++) {
-        //     let entity = this.collisionEntities[i];
-
-        //     if (!entity.removeFromWorld) {
-        //         entity.update();
-        //     }
-        // }
-
-        // for (let i = this.collisionEntities.length - 1; i >= 0; --i) {  
-        //     if (this.collisionEntitiess[i].removeFromWorld) {
-        //         this.collisionEntities.splice(i, 1);
-        //     }
-        // }
-        
+    
 
     };
 
