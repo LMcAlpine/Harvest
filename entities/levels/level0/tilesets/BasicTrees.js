@@ -1,12 +1,12 @@
-var BasicTrees = 
-{ "columns":7,
+var BasicTrees =
+{ "columns":9,
  "image":"BasicTrees.png",
- "imageheight":121,
- "imagewidth":250,
+ "imageheight":288,
+ "imagewidth":288,
  "margin":0,
  "name":"BasicTrees",
  "spacing":0,
- "tilecount":21,
+ "tilecount":81,
  "tiledversion":"1.9.2",
  "tileheight":32,
  "tilewidth":32,
