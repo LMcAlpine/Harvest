@@ -153,16 +153,16 @@ class Elite {
                 }
 
                 if (this.target.x < this.position.x) { //player is to the left
-                    this.velocity.x -= ENEMY_PHYSICS.ACC_RUN * TICK;
+                    this.velocity.x -= ELITE_PHYSICS.ACC_RUN * TICK;
                 } else if (this.target.x > this.position.x) {
-                    this.velocity.x += ENEMY_PHYSICS.ACC_RUN * TICK;
+                    this.velocity.x += ELITE_PHYSICS.ACC_RUN * TICK;
                 } else {
                     this.velocity.x = 0;
                 }
                 
                 // max speed cap
-                if (this.velocity.x >= ENEMY_PHYSICS.MAX_RUN) this.velocity.x = ENEMY_PHYSICS.MAX_RUN;
-                if (this.velocity.x <= -ENEMY_PHYSICS.MAX_RUN) this.velocity.x = -ENEMY_PHYSICS.MAX_RUN;
+                if (this.velocity.x >= ELITE_PHYSICS.MAX_RUN) this.velocity.x = ELITE_PHYSICS.MAX_RUN;
+                if (this.velocity.x <= -ELITE_PHYSICS.MAX_RUN) this.velocity.x = -ELITE_PHYSICS.MAX_RUN;
 
 
 
@@ -180,11 +180,11 @@ class Elite {
         }
 
         //Basic physics
-        this.velocity.y += ENEMY_PHYSICS.ACC_FALL * TICK;
+        this.velocity.y += ELITE_PHYSICS.ACC_FALL * TICK;
 
         // max speed calculation for vertical
-        if (this.velocity.y >= ENEMY_PHYSICS.MAX_FALL) this.velocity.y = ENEMY_PHYSICS.MAX_FALL;
-        if (this.velocity.y <= -ENEMY_PHYSICS.MAX_FALL) this.velocity.y = -ENEMY_PHYSICS.MAX_FALL;
+        if (this.velocity.y >= ELITE_PHYSICS.MAX_FALL) this.velocity.y = ELITE_PHYSICS.MAX_FALL;
+        if (this.velocity.y <= -ELITE_PHYSICS.MAX_FALL) this.velocity.y = -ELITE_PHYSICS.MAX_FALL;
 
         // update position
         this.position.x += this.velocity.x * TICK * PARAMS.SCALE;
@@ -241,7 +241,7 @@ class Elite {
 
                         this.position.x = entity.BB.right - this.BBXOffset;
 
-                        if (this.velocity.x < 0) this.velocity.x = -ENEMY_PHYSICS.MAX_RUN / 4;
+                        if (this.velocity.x < 0) this.velocity.x = -ELITE_PHYSICS.MAX_RUN / 4;
 
                         this.jumping = true;
                         
@@ -255,7 +255,7 @@ class Elite {
 
                         this.position.x = entity.BB.left - this.BB.width - this.BBXOffset;
 
-                        if (this.velocity.x > 0) this.velocity.x = ENEMY_PHYSICS.MAX_RUN / 4;
+                        if (this.velocity.x > 0) this.velocity.x = ELITE_PHYSICS.MAX_RUN / 4;
 
                         this.jumping = true;
                         

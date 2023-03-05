@@ -8,6 +8,7 @@ class Gun {
         Object.assign(this, { shooter, game, gunType});
 
         this.gunSprites = ASSET_MANAGER.getAsset("./sprites/GunWorldEntities.png");
+        
         this.spriteWidth = 75;
         this.spriteHeight = 30;
 
@@ -38,51 +39,57 @@ class Gun {
         this.guns = {
         
             "SNIPER": {
-                param: [false, 100, 75, 200, 4, "BULLET"],
+                param: [false, 0.1, 75, 200, 4, "BULLET"],
                 bulletDistance: 300 * PARAMS.SCALE,
                 spriteX: 0,
                 spriteY: 0,
+                crosshairY: 250,
                 index: 0
             },
 
             "ASSAULT_RIFLE": {
-                param: [true, 10, 30, 35, 36, "BULLET"],
-                bulletDistance: 260 * PARAMS.SCALE,
+                param: [true, 0.05, 30, 35, 36, "BULLET"],
+                bulletDistance: 300 * PARAMS.SCALE,
                 spriteX: 0,
                 spriteY: 30,
+                crosshairY: 0,
                 index: 1
                 
             },
 
             "PLASMA_PISTOL": {
-                param: [false, 40, 7, 20, 1000, "PLASMA"],
+                param: [false, 0.2, 7, 20, 1000, "PLASMA"],
                 bulletDistance: 350 * PARAMS.SCALE,
                 spriteX: 0,
                 spriteY: 60,
+                crosshairY: 50,
                 index: 2
             },
 
             "PLASMA_RIFLE": {
-                param: [true, 30, 18, 30, 200, "PLASMA"],
-                bulletDistance: 230 * PARAMS.SCALE,
+                param: [true, 0.08, 18, 30, 200, "PLASMA"],
+                bulletDistance: 290 * PARAMS.SCALE,
                 spriteX: 0,
                 spriteY: 90,
+                crosshairY: 200,
                 index: 3
             },
 
             "SMG": {
-                param: [true, 8, 18, 10, 60, "BULLET"],
-                bulletDistance: 230 * PARAMS.SCALE,
+                param: [true, 0.02, 18, 10, 60, "BULLET"],
+                bulletDistance: 260 * PARAMS.SCALE,
                 spriteX: 0,
                 spriteY: 120,
+                crosshairY: 300,
                 index: 4
             },
 
             "SHOTGUN": {
-                param: [false, 70, 18, 150, 6, "BULLET"], 
+                param: [false, 0.2, 18, 150, 6, "BULLET"], 
                 bulletDistance: 100 * PARAMS.SCALE,
                 spriteX: 0,
                 spriteY: 150,
+                crosshairY: 100,
                 index: 5
             }
             
@@ -122,7 +129,10 @@ class Gun {
             }
 
             if (this.fireRateCounter !== 0) {
-                this.fireRateCounter++;
+
+                //console.log(this.fireRateCounter);
+                this.fireRateCounter += 0.5 * TICK;
+                //console.log(this.fireRateCounter);
                 if (this.fireRateCounter >= this.fireRateCounterMax) {
                     this.fireRateCounter = 0;
                     this.canFire = true;
@@ -166,10 +176,11 @@ class Gun {
                 this.spriteHeight * PARAMS.SCALE);
 
         }
-
     }
 
     shootGun(firingPosStatic, targetPosStatic) {
+
+        const TICK = this.game.clockTick;
         
         if (!this.worldEntity) { //Make sure gun isn't fire from ground
 
@@ -192,7 +203,7 @@ class Gun {
 
                         this.canFire = false;
                         this.ammoCount--;
-                        this.fireRateCounter++;
+                        this.fireRateCounter += 0.1 * TICK;
 
                     } 
 
