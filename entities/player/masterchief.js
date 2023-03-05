@@ -70,7 +70,7 @@ class MasterChief {
 
         // Shield Bar
         this.maxShield = 200;
-        this.shield = 0;
+        this.shield = 200;
         this.regenTimer = 0;
 
         this.HUD = new PlayerHUD(this, this.game);
@@ -860,7 +860,7 @@ class MasterChief {
     regenShield() {
         const TICK = this.game.clockTick;
         if (this.shield < this.maxShield) {
-            console.log(this.regenTimer);
+            //console.log(this.regenTimer);
             if (this.regenTimer < 4.2) {
                 this.regenTimer += TICK;
             } else {

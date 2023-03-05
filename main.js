@@ -4,6 +4,7 @@ const ASSET_MANAGER = new AssetManager();
 ASSET_MANAGER.queueDownload("./sprites/ChiefSprites.png");
 ASSET_MANAGER.queueDownload("./sprites/Guns.png");
 ASSET_MANAGER.queueDownload("./sprites/GunWorldEntities.png");
+ASSET_MANAGER.queueDownload("./sprites/crosshairs.png");
 
 
 ASSET_MANAGER.queueDownload("./sprites/GruntSprites.png");
@@ -15,7 +16,6 @@ ASSET_MANAGER.queueDownload("./sprites/EarthBlocks2.png");
 ASSET_MANAGER.queueDownload("./sprites/EarthBlocks3.png");
 ASSET_MANAGER.queueDownload("./sprites/BuildingBlocks.png");
 ASSET_MANAGER.queueDownload("./sprites/BuildingDoor.png");
-ASSET_MANAGER.queueDownload("./sprites/Healthpack.png");
 ASSET_MANAGER.queueDownload("./sprites/BasicTrees.png");
 ASSET_MANAGER.queueDownload("./sprites/BlueBase.png");
 ASSET_MANAGER.queueDownload("./sprites/RedBase.png");
@@ -51,6 +51,8 @@ ASSET_MANAGER.downloadAll(() => {
 		document.mozExitPointerLock;
 
 
+	//Diables default cursor
+	canvas.style.cursor = "none";
 
 	//console.log(floorCollisions);
 

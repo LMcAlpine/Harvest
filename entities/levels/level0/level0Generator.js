@@ -96,6 +96,7 @@ class Level0Generator {
                                 this.game.addCollisionEntity(enemy);
                             }
                         }
+
                         
                     } else if (object["class"] === "CheckPoint") {
 
@@ -106,7 +107,15 @@ class Level0Generator {
 
                         if (object["name"] === "End") {
                             this.game.player.endGoal = position;
+
+                        } else if (object["name"] === "CheckPoint") {
+                            this.game.camera.checkPoints.push(position);
+                            console.log("Pushing checkpoint to array");
+                            console.log(this.game.camera.checkPoints);
                         }
+
+
+
                     } else if (object["class"] === "GUN") {
                         let position = {
                             x: object["x"] * PARAMS.SCALE,

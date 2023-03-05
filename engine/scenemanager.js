@@ -3,7 +3,9 @@ class SceneManager {
         this.game = game;
 
         this.game.camera = this;
-        //RESET THIS BACK TO 0, JUST FOR TESTING
+
+        this.checkPoints = [];
+
         this.x = 0;
         this.y = 0;
 
