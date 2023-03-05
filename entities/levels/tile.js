@@ -36,8 +36,11 @@ class Tile {
         this.idRow = row;
         this.idCol = col;
 
-        this.lastBB;
         this.BB;
+        this.leftBB;
+        this.rightBB;
+        this.bottomBB;
+        this.topBB;
 
         this.generateCollision();
 
@@ -47,7 +50,8 @@ class Tile {
 
     update() {
 
-        this.updateBB();
+        //Commenting this out, BB should not be updating, position will always be static
+        //this.updateBB();
 
     }
 
@@ -71,14 +75,19 @@ class Tile {
             ctx.drawImage(this.spritesheet, spriteX, spriteY, this.tileWidth, this.tileHeight, this.x - this.game.camera.x, this.y - this.game.camera.y, PARAMS.BLOCKWIDTH, PARAMS.BLOCKWIDTH);
 
             //Draw Bounding box
-            if (PARAMS.DEBUG && this.hasCollisions) {
+            if (PARAMS.DEBUG && this.hasCollisions && this.BB) {
                 if (this.collisionActive) { //Used for debugging, makes color of BB red for identifying collisions
                     ctx.strokeStyle = 'red';
                 } else {
                     ctx.strokeStyle = 'blue';
                 }
                 ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
+                ctx.strokeRect(this.leftBB.x - this.game.camera.x, this.leftBB.y - this.game.camera.y, this.leftBB.width, this.leftBB.height);
+                ctx.strokeRect(this.rightBB.x - this.game.camera.x, this.rightBB.y - this.game.camera.y, this.rightBB.width, this.rightBB.height);
+                ctx.strokeRect(this.topBB.x - this.game.camera.x, this.topBB.y - this.game.camera.y, this.topBB.width, this.topBB.height);
+                ctx.strokeRect(this.bottomBB.x - this.game.camera.x, this.bottomBB.y - this.game.camera.y, this.bottomBB.width, this.bottomBB.height);
                 this.collisionActive = false;
+
             }
         }
 
@@ -105,6 +114,18 @@ class Tile {
                             this.bbHeight = object["height"];
                             this.bbX = object["x"];
                             this.bbY = object["y"];
+
+                            let posX = this.x + this.bbX;
+                            let posY = this.y + this.bbY;
+                            let width = this.tileWidth * PARAMS.SCALE;
+                            let height = this.tileHeight * PARAMS.SCALE
+
+                            this.BB = new BoundingBox(posX + width / 8, posY, width * 3 / 4, height);
+                            this.leftBB = new BoundingBox(posX, posY, width / 2 , height);
+                            this.rightBB = new BoundingBox(posX + (width / 2), posY, width / 2 , height);
+
+                            this.topBB =  new BoundingBox(posX, posY, width, height / 2);
+                            this.bottomBB =  new BoundingBox(posX, posY + height / 2, width, height / 2);
                         }
                     }
                     //});

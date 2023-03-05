@@ -74,7 +74,7 @@ class Level0Generator {
                         }
 
                         if (object["name"] === "MasterChief") {
-                            console.log("Spawning Master Chief at: " + position.x + ", " + position.y);
+                            console.log("Spawning Master Chief at: " + (position.x | 0) + ", " + (position.y| 0));
                             let player = new MasterChief(gameEngine, position);
                             this.game.addEntity(player);
                             this.game.addCollisionEntity(player);
@@ -82,7 +82,7 @@ class Level0Generator {
                             
                         } else if (object["name"] === "Grunt" && (getRandomInt(2) === 1) ) { //Checks if spawn point is grunt and flips coin to spawn enemy there or not
                             if (PARAMS.GRUNTS) {
-                                console.log("Spawning Grunt at: " + position.x + ", " + position.y);
+                                console.log("Spawning Grunt at: " + (position.x | 0) + ", " + (position.y | 0));
                                 let enemy = new Grunt(gameEngine, position);
                                 this.game.addCollisionEntity(enemy);
                                 this.game.addEntity(enemy);
@@ -90,7 +90,7 @@ class Level0Generator {
                             }
                         } else if (object["name"] === "Elite" && (getRandomInt(2) === 1)) {
                             if (PARAMS.ELITES) {
-                                console.log("Spawning Elite at: " + position.x + ", " + position.y);
+                                console.log("Spawning Elite at: " + (position.x | 0) + ", " + (position.y | 0));
                                 let enemy = new Elite(gameEngine, position);
                                 this.game.addEntity(enemy);
                                 this.game.addCollisionEntity(enemy);
