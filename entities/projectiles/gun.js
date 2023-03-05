@@ -38,7 +38,7 @@ class Gun {
         this.guns = {
         
             "SNIPER": {
-                param: [false, 100, 75, 200, 4, "BULLET"],
+                param: [false, 0.1, 75, 200, 4, "BULLET"],
                 bulletDistance: 300 * PARAMS.SCALE,
                 spriteX: 0,
                 spriteY: 0,
@@ -46,7 +46,7 @@ class Gun {
             },
 
             "ASSAULT_RIFLE": {
-                param: [true, 10, 30, 35, 36, "BULLET"],
+                param: [true, 0.05, 30, 35, 36, "BULLET"],
                 bulletDistance: 260 * PARAMS.SCALE,
                 spriteX: 0,
                 spriteY: 30,
@@ -55,7 +55,7 @@ class Gun {
             },
 
             "PLASMA_PISTOL": {
-                param: [false, 40, 7, 20, 1000, "PLASMA"],
+                param: [false, 0.2, 7, 20, 1000, "PLASMA"],
                 bulletDistance: 350 * PARAMS.SCALE,
                 spriteX: 0,
                 spriteY: 60,
@@ -63,23 +63,23 @@ class Gun {
             },
 
             "PLASMA_RIFLE": {
-                param: [true, 30, 18, 30, 200, "PLASMA"],
-                bulletDistance: 230 * PARAMS.SCALE,
+                param: [true, 0.1, 18, 30, 200, "PLASMA"],
+                bulletDistance: 270 * PARAMS.SCALE,
                 spriteX: 0,
                 spriteY: 90,
                 index: 3
             },
 
             "SMG": {
-                param: [true, 8, 18, 10, 60, "BULLET"],
-                bulletDistance: 230 * PARAMS.SCALE,
+                param: [true, 0.02, 18, 10, 60, "BULLET"],
+                bulletDistance: 260 * PARAMS.SCALE,
                 spriteX: 0,
                 spriteY: 120,
                 index: 4
             },
 
             "SHOTGUN": {
-                param: [false, 70, 18, 150, 6, "BULLET"], 
+                param: [false, 0.2, 18, 150, 6, "BULLET"], 
                 bulletDistance: 100 * PARAMS.SCALE,
                 spriteX: 0,
                 spriteY: 150,
@@ -122,7 +122,10 @@ class Gun {
             }
 
             if (this.fireRateCounter !== 0) {
-                this.fireRateCounter++;
+
+                //console.log(this.fireRateCounter);
+                this.fireRateCounter += 0.5 * TICK;
+                //console.log(this.fireRateCounter);
                 if (this.fireRateCounter >= this.fireRateCounterMax) {
                     this.fireRateCounter = 0;
                     this.canFire = true;
@@ -170,6 +173,8 @@ class Gun {
     }
 
     shootGun(firingPosStatic, targetPosStatic) {
+
+        const TICK = this.game.clockTick;
         
         if (!this.worldEntity) { //Make sure gun isn't fire from ground
 
@@ -192,7 +197,7 @@ class Gun {
 
                         this.canFire = false;
                         this.ammoCount--;
-                        this.fireRateCounter++;
+                        this.fireRateCounter += 0.1 * TICK;
 
                     } 
 

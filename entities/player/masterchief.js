@@ -70,7 +70,7 @@ class MasterChief {
 
         // Shield Bar
         this.maxShield = 200;
-        this.shield = 200;
+        this.shield = 0;
         this.regenTimer = 0;
 
         this.HUD = new PlayerHUD(this, this.game);
@@ -392,7 +392,7 @@ class MasterChief {
 
     update() {
 
-        console.log("X: " + (this.velocity.x | 0) + " Y: " + (this.velocity.y | 0));
+        //console.log("X: " + (this.velocity.x | 0) + " Y: " + (this.velocity.y | 0));
 
         // Updater properties
         const TICK = this.game.clockTick;
@@ -454,6 +454,8 @@ class MasterChief {
             //Regen shield if shield is not maxed
             if(this.shield < this.maxShield) {
                 this.regenShield();
+            } else {
+                this.regenTimer = 0;
             }
             
 
@@ -859,13 +861,11 @@ class MasterChief {
         const TICK = this.game.clockTick;
         if (this.shield < this.maxShield) {
             console.log(this.regenTimer);
-            if (this.regenTimer < 7) {
-                this.regenTimer += 2 * TICK;
+            if (this.regenTimer < 4.2) {
+                this.regenTimer += TICK;
             } else {
-                this.shield += 2;
+                this.shield += 80 * TICK;
             }
-        } else {
-            this.regenTimer = 0;
         }
     }
 
