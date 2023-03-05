@@ -91,6 +91,7 @@ class Bullet {
                     && !(this.shooter instanceof Grunt)
                     && !(this.shooter instanceof Elite)) { //No friendly fire!
 
+                    entity.currentState = entity.states.attacking;
                     entity.takeDamage(this.bulletDamage);
                     this.removeFromWorld = true;
 

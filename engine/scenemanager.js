@@ -1,6 +1,8 @@
 class SceneManager {
     constructor(game) {
         this.game = game;
+        this.FPSCounter = 0;
+        this.FPS = 0;
 
         this.game.camera = this;
 
@@ -115,19 +117,28 @@ class SceneManager {
     }
 
     draw(ctx) {
+
+        const TICK = this.game.clockTick;
+
         if (this.scene === 2) {
             this.winScreen(ctx);
         }
         else if (this.scene === 3) {
             this.gameOverScreen(ctx);
         }
-        let fps = Math.round(1 / this.game.clockTick);
         //Display bullet count
         ctx.fillStyle = "orange";
         ctx.font = "bold 25px serif";
         ctx.textBaseline = "top";
-        // if (fps < 40)
-        ctx.fillText(fps, PARAMS.CANVAS_WIDTH / 2, 0);
+
+        //Display FPS
+        if (this.FPSCounter >= 1) {
+            this.FPS = Math.round(1 / this.game.clockTick); 
+            this.FPSCounter = 0;
+        } else {
+            this.FPSCounter += TICK;
+        }
+        ctx.fillText(this.FPS, PARAMS.CANVAS_WIDTH / 2, 0);
     }
 
     winScreen(ctx) {

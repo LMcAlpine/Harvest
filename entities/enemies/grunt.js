@@ -6,7 +6,7 @@ class Grunt {
         this.isAlive = true;
         this.currentGun = new Gun(this, game, "PLASMA_PISTOL");
         // Properties
-        this.scale = 3;
+        this.scale = PARAMS.SCALE;
 
         //Animation states
         this.state = 0; // 0 = Idle, 1 = Moving
