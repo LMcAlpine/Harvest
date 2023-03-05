@@ -5,19 +5,34 @@ class MasterChief {
         // Updated the constructor
         Object.assign(this, { game, position});
 
-        this.scale = 3;
-        this.endGoal = null;
+        this.SpriteSheet = ASSET_MANAGER.getAsset("./sprites/ChiefSprites.png");
+        this.GunSpriteSheet = ASSET_MANAGER.getAsset("./sprites/Guns.png");
+
+        this.scale = PARAMS.SCALE;
+
+        this.endGoal = null; //Used to identify endGoal, should be moved to scenemanager though
+
+        this.degrees = null;
+        this.aimRight = true;
+
+        this.walkingSpeed = 0.05;
+        this.width = 40; //Chief's width
+        this.height = 50; //Chief's height
+
+        // Added for Jumping
+        this.velocity = { x: 0, y: 0 };
+        this.onGround = false;
 
         /* Cache is 2d array that holds an offscreencanvas for varying gun angles, this is to avoid
         constantly creating offscreen canvases to rotate chief arm/gun and instead store previously
         created canvases into a cache.
         */
         this.cache = []; //For tracking this.angle
-        //this.cache.push([]); //For tracking this.isFiring
 
-        this.SpriteSheet = ASSET_MANAGER.getAsset("./sprites/ChiefSprites.png");
-        this.GunSpriteSheet = ASSET_MANAGER.getAsset("./sprites/Guns.png");
+        //Chief's gun
+        this.currentGun = new Gun(this, game, "SHOTGUN");
 
+        //Bounding Boxes
         this.lastBB = null;
         this.BB = null;
         this.BBXOffset = 10 * this.scale; //Offset for adjusting BB
@@ -30,22 +45,12 @@ class MasterChief {
 
         //Animation states for chief's arms/gun firing
         this.isFiring = 0; // 0 = Not firing, 1 = Firing
-        this.gunType = 1; // 0 = Sniper Rifle, 1 = Assault Rifle
-        //this.gunTypeTranslated = ["Sniper", "Assault_Rifle"];
-        this.currentGun = new Gun(this, game, "Assault_Rifle");
-        this.game.addEntity(this.currentGun);
 
-        this.degrees = null;
-        this.aimRight = true;
+        // 0 = Sniper, 1 = Assault_Rifle, 2 = Plasma_Pistol, 3 = Plasma_Rifle,
+        // 4 = SMG, 5 = SHOTGUN
+        this.gunType = this.currentGun.getGunInfo().index; 
 
-        this.walkingSpeed = 0.05;
-        this.width = 40;
-        this.height = 50;
-
-        // Added for Jumping
-        this.velocity = { x: 0, y: 0 };
-        this.onGround = false;
-
+ 
 
         this.bodyAnimations = [];
         this.helmetAnimations = [];
@@ -96,7 +101,7 @@ class MasterChief {
             }
         }
 
-        for (let i = 0; i <= 1; i++) { // this.gunType
+        for (let i = 0; i <= 5; i++) { // this.gunType
             this.gunAnimations.push([]);
             for (let j = 0; j <= 1; j++) { // this.isFiring
                 this.gunAnimations[i].push([]);
@@ -104,8 +109,11 @@ class MasterChief {
         }
 
 
+        // 0 = Sniper, 1 = Assault_Rifle, 2 = Plasma_Pistol, 3 = Plasma_Rifle,
+        // 4 = SMG, 5 = SHOTGUN
+
         // ---- GUN ANIMATIONS ----
-        // gunType: Sniper Rifle
+        // gunType: SNIPER
         // isFiring: False
         this.gunAnimations[0][0] = new Animator(this.GunSpriteSheet,
             0, 0,
@@ -122,7 +130,7 @@ class MasterChief {
             0,
             false, false);
 
-        // gunType: Assault Rifle
+        // gunType: ASSAULT_RFILE
         // isFiring: False
         this.gunAnimations[1][0] = new Animator(this.GunSpriteSheet,
             0, 180,
@@ -134,6 +142,74 @@ class MasterChief {
         // isFiring: True
         this.gunAnimations[1][1] = new Animator(this.GunSpriteSheet,
             0, 180,
+            180, 180,
+            3, 0.05,
+            0,
+            false, false);
+
+        // gunType: PLASMA_PISTOL
+        // isFiring: False
+        this.gunAnimations[2][0] = new Animator(this.GunSpriteSheet,
+            0, 2 * 180,
+            180, 180,
+            1, 1,
+            0,
+            false, true);
+
+        // isFiring: True
+        this.gunAnimations[2][1] = new Animator(this.GunSpriteSheet,
+            0, 2 * 180,
+            180, 180,
+            2, 0.05,
+            0,
+            false, false);
+
+        // gunType: PLASMA_RIFLE
+        // isFiring: False
+        this.gunAnimations[3][0] = new Animator(this.GunSpriteSheet,
+            0, 3 * 180,
+            180, 180,
+            1, 1,
+            0,
+            false, true);
+
+        // isFiring: True
+        this.gunAnimations[3][1] = new Animator(this.GunSpriteSheet,
+            0, 3 * 180,
+            180, 180,
+            3, 0.05,
+            0,
+            false, false);
+
+        // gunType: SMG
+        // isFiring: False
+        this.gunAnimations[4][0] = new Animator(this.GunSpriteSheet,
+            0, 4 * 180,
+            180, 180,
+            1, 1,
+            0,
+            false, true);
+
+        // isFiring: True
+        this.gunAnimations[4][1] = new Animator(this.GunSpriteSheet,
+            0, 4 * 180,
+            180, 180,
+            3, 0.05,
+            0,
+            false, false);
+
+        // gunType: SHOTGUN
+        // isFiring: False
+        this.gunAnimations[5][0] = new Animator(this.GunSpriteSheet,
+            0, 5 * 180,
+            180, 180,
+            1, 1,
+            0,
+            false, true);
+
+        // isFiring: True
+        this.gunAnimations[5][1] = new Animator(this.GunSpriteSheet,
+            0, 5 * 180,
             180, 180,
             3, 0.05,
             0,
@@ -316,7 +392,8 @@ class MasterChief {
 
     update() {
 
-        //console.log(this.hasCollisions);
+        //console.log("X: " + (this.velocity.x | 0) + " Y: " + (this.velocity.y | 0));
+
         // Updater properties
         const TICK = this.game.clockTick;
 
@@ -336,7 +413,7 @@ class MasterChief {
             }
 
             //Check if shooting
-            if (this.game.mouseDown) {
+            if (this.game.mouseDown && gameEngine.mouse !== null) {
 
                 const firingPosStatic = {
                     x: this.position.x + (20 * this.scale),
@@ -350,10 +427,28 @@ class MasterChief {
                 }
 
                 //Shoot gun if gun is not empty and not reloading
-                if (!this.currentGun.isEmpty() && !this.currentGun.reloading){
+                let isAuto = this.currentGun.getGunInfo().param[0];
+
+                if (!this.currentGun.isEmpty() 
+                    && !this.currentGun.reloading 
+                    && isAuto
+                    && this.currentGun.canFire) { //Gun is full auto
                     this.isFiring = 1;
                     this.currentGun.shootGun(firingPosStatic, targetPosStatic);
-                }
+
+                } else if (!this.currentGun.isEmpty() //Gun is semi-automatic
+                    && !this.currentGun.reloading 
+                    && !isAuto 
+                    && this.fireOnce                    //Gun should fire one time per click
+                    && this.currentGun.canFire) { 
+
+                        this.isFiring = 1;
+                        this.currentGun.shootGun(firingPosStatic, targetPosStatic);
+                        this.fireOnce = false;
+                } 
+
+            } else if (!this.game.mouseDown){
+                this.fireOnce = true;                   //Resets fire per one click
             }
 
             //Regen shield if shield is not maxed
@@ -372,38 +467,35 @@ class MasterChief {
                     this.aimRight = false;
                 }
             }
-
-
-            // *** Player Movement 2 ***
-            // if (keys.a.pressed && lastKey === 'a') {
-            //     this.velocity.x = -4;
-            //     this.position.x -= PLAYER_PHYSICS.MAX_RUN;
-            //     this.state = 1;
-            // } else if (keys.d.pressed && lastKey === 'd') {
-            //     this.velocity.x = 4;
-            //     this.position.x += PLAYER_PHYSICS.MAX_RUN;
-            //     this.state = 1;
-            // } else if (this.onGround) {
-            //     this.state = 0;
-            // }
     
 
             if(keys[' '].pressed && this.onGround) {
-                this.velocity.y = PLAYER_JUMP;
-                this.onGround = false;
-                this.state = 2;
-
-                // this.position.y += -PLAYER_JUMP;
+                if (this.fireSpace) { //Will only jump once
+                    this.velocity.y = PLAYER_JUMP;
+                    this.onGround = false;
+                    this.state = 2;
+                    this.fireSpace = false;
+                } 
+            } else if (!keys[' '].pressed){
+                this.fireSpace = true;
             }
+
             if(keys['r'].pressed) {
                 this.currentGun.reloadGun();
             }
+            //console.log(this.game.keys);
+            //Drops gun, used for testing
+            if(this.game.keys['l']) {
+                console.log("test");
+                this.currentGun.dropGun(this.position);
+            }
 
 
-             // *** Player Movement 3 ***
-
-            // horizontal physics
+            // *** Physics ***
             if (keys.d.pressed && !keys.a.pressed && this.onGround) { //Moving right
+
+                if(this.midAir) this.velocity.x = 0; this.midAir = false;
+
                 if (Math.abs(this.velocity.x) > PLAYER_PHYSICS.MAX_WALK) {
                     this.velocity.x += PLAYER_PHYSICS.ACC_RUN * TICK;
                 } else {
@@ -414,6 +506,9 @@ class MasterChief {
                 else this.reverseMovement(true);
                 this.state = 1;
             } else if (keys.a.pressed && !keys.d.pressed && this.onGround) { //Moving left
+
+                if(this.midAir) this.velocity.x = 0; this.midAir = false;
+
                 if (Math.abs(this.velocity.x) > PLAYER_PHYSICS.MAX_WALK) {
                     this.velocity.x -= PLAYER_PHYSICS.ACC_RUN * TICK;
                 } else this.velocity.x -= PLAYER_PHYSICS.ACC_WALK * TICK;
@@ -426,7 +521,8 @@ class MasterChief {
                     this.state = 0;
                     this.velocity.x = 0;
                 } else {
-                    console.log("Adjusting air velocity");
+                    this.midAir = true;
+                    //console.log("Adjusting air velocity");
                     if(this.velocity.x > 0) {
                         this.velocity.x -= PLAYER_PHYSICS.ACC_RUN / 4 * TICK;
                     } else {
@@ -448,9 +544,6 @@ class MasterChief {
                 this.game.sceneManager.loadLevel();
             }
         }
-
-
-        
 
 
         // Allow the player to fall
@@ -477,78 +570,75 @@ class MasterChief {
     collisionChecker() {
 
         this.game.collisionEntities.forEach(entity => {
-            if (this !== entity && entity.BB && this.BB.collide(entity.BB)) { //Collision
+            if (entity.BB && this.BB.collide(entity.BB)) { //Collision
+                entity.collisionActive = true;
+                //FALLING
+                if (this.velocity.y > 0) { 
+                    if (entity instanceof Tile
+                        && this.lastBB.bottom <= entity.BB.top) {
 
-                if (entity instanceof Tile) {
-                    entity.collisionActive = true; //COLLIDING WITH TILE
-
-                    //FALLING
-                    if (this.velocity.y > 0) { 
-
-                        if (this.lastBB.bottom <= entity.BB.top) {
                             this.position.y = entity.BB.top - this.BB.height - this.BBYOffset;
                             this.velocity.y = 0;
                             this.onGround = true;
                             this.updateBB();
-                            return;
+
                         }
-    
-                    }
-
-                    //JUMPING
-                    if (this.velocity.y < 0) { //Jumping
-                        
-                        if (this.lastBB.top >= entity.BB.bottom) {
-                            console.log("Collide top of tile");
-                            this.position.y = entity.BB.bottom - this.BBYOffset;
-                            this.velocity.y = 0;
-                            this.updateBB();
-                            return;
-    
-                        }
-                    }
-
-                    
-                    //TOUCHING RIGHTSIDE OF TILE
-                    if (this.BB.left <= entity.BB.right
-                        //&& this.BB.bottom > entity.BB.top
-                        && this.velocity.x < 0) { 
-
-                        console.log("Touching right");
-                        this.position.x = entity.BB.right - this.BBXOffset;
-
-                        if (this.velocity.x < 0) this.velocity.x = -PLAYER_PHYSICS.MAX_RUN / 4;
-                        
-                    }
-
-                    // if(entity.BB.left <= this.BB.left + this.width / 2 && this.BB.left + this.width / 2 <= entity.BB.right
-                    // && this.BB.bottom > entity.BB.top
-                    // && this.velocity.x < 0) {
-                        
-                    //     console.log("Touching right");
-                    //     this.position.x = entity.BB.right - this.BBXOffset;
-
-                    //     if (this.velocity.x < 0) this.velocity.x = 0;
-                    // }
-
-                    //TOUCHING LEFT SIDE OF TILE
-                    if (this.BB.right >= entity.BB.left
-                        && this.BB.bottom > entity.BB.top
-                        && this.velocity.x > 0) { 
-
-                        console.log("Touching left");
-                        this.position.x = entity.BB.left - this.BB.width - this.BBXOffset;
-
-                        if (this.velocity.x > 0) this.velocity.x = PLAYER_PHYSICS.MAX_RUN / 4;
-                        
-                    }
-
-                
-                    
                 }
 
-                
+                //JUMPING
+                if (this.velocity.y < 0) {
+                    if (entity instanceof Tile
+                        && (this.lastBB.top) >= entity.BB.bottom) {
+                            this.velocity.y = 0;
+                            this.updateBB();
+                    }
+                }
+
+                //Other Tile cases (Hitting side)
+                if (entity instanceof Tile
+                    && this.BB.collide(entity.topBB) && this.BB.collide(entity.bottomBB)) {
+                        entity.collisionActive = true;
+                        if (this.BB.collide(entity.leftBB)) { // Touching left side of tile
+                            console.log("Left collision");
+                            
+                            this.position.x = entity.BB.left - this.BB.width - this.BBXOffset;
+                            if (this.velocity.x > 0) this.velocity.x = 0;
+                        } else if (this.BB.collide(entity.rightBB)) { // Touching right side of tile
+                            console.log("Right collision");
+
+                            this.position.x = entity.BB.right  - this.BBXOffset;
+                            if (this.velocity.x < 0) this.velocity.x = 0;
+                        }
+                        //this.updateBB();
+                }
+
+                //console.log(this.currentGun)
+
+                //Gun world entity on ground
+                if (entity instanceof Gun) {
+                    //TODO: Prompt for pickup
+                    //console.log("Gun on ground"); 
+                    //Press 'E' to pickup Gun
+                    if(this.game.keys['e']) {
+
+                        if (this.fireE) { //Will only press E once
+                            
+                            this.currentGun.dropGun();
+                            entity.pickupGun(this); //this replaces shooter in gun
+                            this.currentGun = entity;
+                            
+                            this.gunType = this.currentGun.getGunInfo().index;
+                            this.cache = [];
+                            this.fireE = false;
+                        }
+                    } else if (!this.game.keys['e']) {
+                        this.fireE = true;
+                    }
+
+                }
+
             }
+
         });
 
     };
@@ -575,7 +665,7 @@ class MasterChief {
 
             this.drawGun(ctx);
 
-            if (PARAMS.DEBUG) {
+            if (PARAMS.DEBUG && this.BB) {
                 //Draw the BB
                 ctx.strokeStyle = 'cyan';
                 ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);

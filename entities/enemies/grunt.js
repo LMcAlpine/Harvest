@@ -4,7 +4,7 @@ class Grunt {
 
         this.hp = 150;
         this.isAlive = true;
-        this.currentGun = new Gun(this, game, "Plasma_Pistol");
+        this.currentGun = new Gun(this, game, "PLASMA_PISTOL");
         // Properties
         this.scale = 3;
 
@@ -41,8 +41,6 @@ class Grunt {
 
         this.states = {waiting: 0, attacking: 1};
         this.currentState = this.states.waiting;
-
-        this.patrollingLeft = false;
 
         this.elapsedTime = 0;
         this.updateBB();
@@ -171,7 +169,7 @@ class Grunt {
         this.position.x += this.velocity.x * TICK * PARAMS.SCALE;
         this.position.y += this.velocity.y * TICK * PARAMS.SCALE;
        
-        console.log(this.velocity);
+        //console.log(this.velocity);
         this.updateBB();
 
         this.collisionChecker();
@@ -205,7 +203,7 @@ class Grunt {
                     if (this.velocity.y < 0) { //Jumping
                         
                         if (this.lastBB.top >= entity.BB.bottom) {
-                            console.log("Collide top of tile");
+
                             this.position.y = entity.BB.bottom - this.BBYOffset;
                             this.velocity.y = 0;
                             this.updateBB();
@@ -234,7 +232,6 @@ class Grunt {
                         && this.BB.bottom > entity.BB.top
                         && this.velocity.x > 0) { 
 
-                        console.log("Touching left");
                         this.position.x = entity.BB.left - this.BB.width - this.BBXOffset;
 
                         if (this.velocity.x > 0) this.velocity.x = ENEMY_PHYSICS.MAX_RUN / 4;
@@ -264,11 +261,16 @@ class Grunt {
             this.hp = 0;
             this.die();
         }
+
+        if (this.hp <= 0) {
+            this.die();
+        }
     }
 
     die() {
         this.velocity.x = 0;
         this.isAlive = false;
+        this.currentGun.dropGun();
     }
 
     draw(ctx) {
@@ -321,7 +323,7 @@ class Grunt {
         }
 
 
-        if (PARAMS.DEBUG) {
+        if (PARAMS.DEBUG && this.BB) {
             //draw the BB
             ctx.strokeStyle = 'cyan';
             ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
