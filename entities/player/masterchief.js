@@ -480,10 +480,11 @@ class MasterChief {
                 this.fireSpace = true;
             }
 
-            if(keys['r'].pressed) {
+            if(keys['r'].pressed && !this.currentGun.reloading) {
+                console.log("reloading");
                 this.currentGun.reloadGun();
             }
-            //console.log(this.game.keys);
+
             //Drops gun, used for testing
             if(this.game.keys['l']) {
                 console.log("test");
@@ -780,13 +781,9 @@ class MasterChief {
             let yOffset = 24 * this.scale;
             let xOffset = 25 * this.scale;
 
-            // console.log('this.position.x: ' + (this.position.x | 0) + ' game.camera.x: ' + (this.game.camera.x | 0) +
-            // ' math: ' + ((this.position.x - this.game.camera.x) | 0) );
-
             let opp = -(gameEngine.mouse.y - (this.position.y - this.game.camera.y) - yOffset);
             let adj = gameEngine.mouse.x - (this.position.x - this.game.camera.x) - xOffset;
 
-            //console.log('Opp: ' + -opp + ' Adj: ' + adj);
             let angle = Math.atan(opp / adj);
             this.degrees = Math.floor(angle * (180 / Math.PI));
 
