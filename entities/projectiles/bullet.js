@@ -13,12 +13,13 @@ class Bullet {
      * @param {Object} targetPos - Position bullet should travel to
      * @param {Integer} bulletDamage - Damage of bullet if hits target it can damage
      */
-    constructor(shooter, game, firingPos, targetPos, bulletVelocity, bulletDamage, bulletType) {
-        Object.assign(this, { shooter, game, firingPos, targetPos, bulletVelocity, bulletDamage, bulletType});
+    constructor(shooter, game, firingPos, targetPos, bulletVelocity, bulletDamage, bulletType, bulletDistance) {
+        Object.assign(this, { shooter, game, firingPos, targetPos, bulletVelocity, bulletDamage, bulletType, bulletDistance});
         
         let xDiff = this.targetPos.x - this.firingPos.x;
         let yDiff = this.targetPos.y - this.firingPos.y;
 
+        //Calculating direction of bullet
         let vector = {
             x: xDiff,
             y: yDiff
@@ -36,9 +37,21 @@ class Bullet {
             y: this.firingPos.y
         }
 
+        //Get angle of bullet direction
+        let theta = Math.tan(yDiff / xDiff);
+        // this.bulletEndX = this.position.x + (this.bulletDistance * Math.cos(theta));
+        // this.bulletEndY = this.position.y + (this.bulletDistance * Math.sin(theta));
+        this.bulletEndX = this.position.x + this.vectorNormalized.x * this.bulletDistance;
+        this.bulletEndY = this.position.y + this.vectorNormalized.y * this.bulletDistance;
+
+        console.log("bullet start x: " + (this.position.x | 0) + " bullet start y: " + (this.position.y | 0));
+        console.log("bullet end x: " + (this.bulletEndX | 0) + " bullet end y: " + (this.bulletEndY | 0));
+        console.log("\n");
+        
+
         //this.aimRight = shooter.aimRight;
         this.removeFromWorld = false;
-        this.aliveCounter = 4000;
+        //this.aliveCounter = 4000;
 
         this.updateBB();
 
@@ -54,6 +67,15 @@ class Bullet {
             y: (this.position.y + (this.vectorNormalized.y * this.bulletVelocity))
         }
 
+        // console.log("bullet start x: " + Math.abs((this.position.x | 0)) + " bullet start y: " + Math.abs((this.position.y | 0)));
+        // console.log("bullet end x: " + Math.abs((this.bulletEndX | 0)) + " bullet end y: " + Math.abs((this.bulletEndY | 0)));
+        // console.log("\n");
+        //Loop to kill bullet entity
+        if (Math.abs(this.position.x - this.firingPos.x) >= Math.abs(this.bulletEndX - this.firingPos.x) && Math.abs(this.position.y - this.firingPos.y) >= Math.abs(this.bulletEndY - this.firingPos.y)) {
+            console.log("LIMIT");
+            this.removeFromWorld = true;
+        }
+
         this.collisionChecker();
 
         this.updateBB();
@@ -65,13 +87,6 @@ class Bullet {
         let width = 20;
         let height = 20;
         this.BB = new BoundingBox(this.position.x - (width / 2), this.position.y - (height / 2), width, height);
-        // this.BB = new BoundingBox(this.position.x - this.game.camera.x,  this.position.y - this.game.camera.y, width, height);
-
-        // this.BB = new BoundingBox(
-        //     this.position.x, 
-        //     this.position.y, 
-        //     width, 
-        //     height);
 
     }
 
@@ -149,11 +164,7 @@ class Bullet {
         }
         
 
-        //Loop to kill bullet entity
-        if (this.aliveCounter == 0) {
-            this.removeFromWorld = true;
-        }
-        this.aliveCounter--;
+        
 
 
 

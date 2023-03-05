@@ -37,38 +37,56 @@ class Gun {
         */
         this.guns = {
         
-            "Sniper": {
-                param: [false, 100, 75, 150, 4, "BULLET"],
+            "SNIPER": {
+                param: [false, 100, 75, 200, 4, "BULLET"],
+                bulletDistance: 300 * PARAMS.SCALE,
                 spriteX: 0,
                 spriteY: 0,
                 index: 0
             },
 
-            "Assault_Rifle": {
+            "ASSAULT_RIFLE": {
                 param: [true, 10, 30, 35, 36, "BULLET"],
+                bulletDistance: 260 * PARAMS.SCALE,
                 spriteX: 0,
                 spriteY: 30,
                 index: 1
                 
             },
 
-            "Plasma_Pistol": {
+            "PLASMA_PISTOL": {
                 param: [false, 40, 7, 20, 1000, "PLASMA"],
+                bulletDistance: 350 * PARAMS.SCALE,
                 spriteX: 0,
                 spriteY: 60,
                 index: 2
             },
 
-            // "SMG": {
-            //     param: [true, 15, 18, 30, 30, "BULLET"],
-            //     spriteX: 0,
-            //     spriteY: 0
-            // },
-            // "Needler":{
-            //     param: [true, 10, 10, 30, 22, "NEEDLE"],
-            //     spriteX: 0,
-            //     spriteY: 0
-            // } ,
+            "PLASMA_RIFLE": {
+                param: [true, 30, 18, 30, 200, "BULLET"],
+                bulletDistance: 230 * PARAMS.SCALE,
+                spriteX: 0,
+                spriteY: 90,
+                index: 3
+            },
+
+            "SMG": {
+                param: [true, 8, 18, 15, 30, "BULLET"],
+                bulletDistance: 230 * PARAMS.SCALE,
+                spriteX: 0,
+                spriteY: 120,
+                index: 4
+            },
+
+            "SHOTGUN": {
+                param: [false, 70, 18, 150, 6, "BULLET"], 
+                bulletDistance: 100 * PARAMS.SCALE,
+                spriteX: 0,
+                spriteY: 150,
+                index: 5
+            }
+
+            
             // "Rocket_Launcher": {
             //     param: [false, 40, 50, 500, 4, "ROCKET"],
             //     spriteX: 0,
@@ -99,9 +117,6 @@ class Gun {
                 }
                 
             }
-
-            if (this.shooter instanceof MasterChief)
-            console.log(this.fireRateCounter);
 
             if (this.fireRateCounter !== 0) {
                 this.fireRateCounter++;
@@ -169,7 +184,8 @@ class Gun {
                             targetPosStatic,
                             gunParams[2],
                             gunParams[3],
-                            gunParams[5]
+                            gunParams[5],
+                            this.guns[this.gunType].bulletDistance
                         );
 
                         this.canFire = false;

@@ -4,7 +4,7 @@ class Grunt {
 
         this.hp = 150;
         this.isAlive = true;
-        this.currentGun = new Gun(this, game, "Plasma_Pistol");
+        this.currentGun = new Gun(this, game, "PLASMA_PISTOL");
         // Properties
         this.scale = 3;
 
@@ -259,6 +259,10 @@ class Grunt {
             this.hp -= damage;
         } else {
             this.hp = 0;
+            this.die();
+        }
+
+        if (this.hp <= 0) {
             this.die();
         }
     }

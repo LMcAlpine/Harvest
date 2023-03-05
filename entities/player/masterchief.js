@@ -30,7 +30,7 @@ class MasterChief {
         this.cache = []; //For tracking this.angle
 
         //Chief's gun
-        this.currentGun = new Gun(this, game, "Sniper");
+        this.currentGun = new Gun(this, game, "SHOTGUN");
 
         //Bounding Boxes
         this.lastBB = null;
@@ -45,7 +45,10 @@ class MasterChief {
 
         //Animation states for chief's arms/gun firing
         this.isFiring = 0; // 0 = Not firing, 1 = Firing
-        this.gunType = this.currentGun.getGunInfo().index; // 0 = Sniper Rifle, 1 = Assault Rifle
+
+        // 0 = Sniper, 1 = Assault_Rifle, 2 = Plasma_Pistol, 3 = Plasma_Rifle,
+        // 4 = SMG, 5 = SHOTGUN
+        this.gunType = this.currentGun.getGunInfo().index; 
 
  
 
@@ -98,7 +101,7 @@ class MasterChief {
             }
         }
 
-        for (let i = 0; i <= 1; i++) { // this.gunType
+        for (let i = 0; i <= 5; i++) { // this.gunType
             this.gunAnimations.push([]);
             for (let j = 0; j <= 1; j++) { // this.isFiring
                 this.gunAnimations[i].push([]);
@@ -106,8 +109,11 @@ class MasterChief {
         }
 
 
+        // 0 = Sniper, 1 = Assault_Rifle, 2 = Plasma_Pistol, 3 = Plasma_Rifle,
+        // 4 = SMG, 5 = SHOTGUN
+
         // ---- GUN ANIMATIONS ----
-        // gunType: Sniper Rifle
+        // gunType: SNIPER
         // isFiring: False
         this.gunAnimations[0][0] = new Animator(this.GunSpriteSheet,
             0, 0,
@@ -124,7 +130,7 @@ class MasterChief {
             0,
             false, false);
 
-        // gunType: Assault Rifle
+        // gunType: ASSAULT_RFILE
         // isFiring: False
         this.gunAnimations[1][0] = new Animator(this.GunSpriteSheet,
             0, 180,
@@ -136,6 +142,74 @@ class MasterChief {
         // isFiring: True
         this.gunAnimations[1][1] = new Animator(this.GunSpriteSheet,
             0, 180,
+            180, 180,
+            3, 0.05,
+            0,
+            false, false);
+
+        // gunType: PLASMA_PISTOL
+        // isFiring: False
+        this.gunAnimations[2][0] = new Animator(this.GunSpriteSheet,
+            0, 2 * 180,
+            180, 180,
+            1, 1,
+            0,
+            false, true);
+
+        // isFiring: True
+        this.gunAnimations[2][1] = new Animator(this.GunSpriteSheet,
+            0, 2 * 180,
+            180, 180,
+            2, 0.05,
+            0,
+            false, false);
+
+        // gunType: PLASMA_RIFLE
+        // isFiring: False
+        this.gunAnimations[3][0] = new Animator(this.GunSpriteSheet,
+            0, 3 * 180,
+            180, 180,
+            1, 1,
+            0,
+            false, true);
+
+        // isFiring: True
+        this.gunAnimations[3][1] = new Animator(this.GunSpriteSheet,
+            0, 3 * 180,
+            180, 180,
+            3, 0.05,
+            0,
+            false, false);
+
+        // gunType: SMG
+        // isFiring: False
+        this.gunAnimations[4][0] = new Animator(this.GunSpriteSheet,
+            0, 4 * 180,
+            180, 180,
+            1, 1,
+            0,
+            false, true);
+
+        // isFiring: True
+        this.gunAnimations[4][1] = new Animator(this.GunSpriteSheet,
+            0, 4 * 180,
+            180, 180,
+            3, 0.05,
+            0,
+            false, false);
+
+        // gunType: SHOTGUN
+        // isFiring: False
+        this.gunAnimations[5][0] = new Animator(this.GunSpriteSheet,
+            0, 5 * 180,
+            180, 180,
+            1, 1,
+            0,
+            false, true);
+
+        // isFiring: True
+        this.gunAnimations[5][1] = new Animator(this.GunSpriteSheet,
+            0, 5 * 180,
             180, 180,
             3, 0.05,
             0,
@@ -355,7 +429,10 @@ class MasterChief {
                 //Shoot gun if gun is not empty and not reloading
                 let isAuto = this.currentGun.getGunInfo().param[0];
 
-                if (!this.currentGun.isEmpty() && !this.currentGun.reloading && isAuto) { //Gun is full auto
+                if (!this.currentGun.isEmpty() 
+                    && !this.currentGun.reloading 
+                    && isAuto
+                    && this.currentGun.canFire) { //Gun is full auto
                     this.isFiring = 1;
                     this.currentGun.shootGun(firingPosStatic, targetPosStatic);
 
@@ -445,7 +522,7 @@ class MasterChief {
                     this.velocity.x = 0;
                 } else {
                     this.midAir = true;
-                    console.log("Adjusting air velocity");
+                    //console.log("Adjusting air velocity");
                     if(this.velocity.x > 0) {
                         this.velocity.x -= PLAYER_PHYSICS.ACC_RUN / 4 * TICK;
                     } else {
