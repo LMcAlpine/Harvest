@@ -866,7 +866,7 @@ class MasterChief {
     die() {
         this.isAlive = false;
         this.velocity.x = 0;
-        this.game.sceneManager.scene = 3;
+        this.game.camera.scene = 3;
     }
 
 };

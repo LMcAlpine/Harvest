@@ -7,9 +7,6 @@ class Level0Generator {
         this.level0Map = HaloMap;
         
         this.tileSets = {
-            "GrassBlocks" : GrassBlocks,
-            "tree1" : tree1,
-            "tree2" : tree2,
             "BasicTrees" : BasicTrees,
             "Healthpack" : Healthpack,
             "EarthBlocks" : EarthBlocks,
@@ -17,6 +14,8 @@ class Level0Generator {
             "EarthBlocks3" : EarthBlocks3,
             "BuildingBlocks" : BuildingBlocks,
             "BuildingDoor" : BuildingDoor,
+            "BlueBase" : BlueBase,
+            "RedBase" : RedBase,
             "HaloPod1" : HaloPod1,
             "HaloPod2" : HaloPod2
         }
