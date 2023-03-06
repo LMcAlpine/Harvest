@@ -772,8 +772,12 @@ class MasterChief {
                 }
 
                 if (entity instanceof Healthpack) {
+
+                    ASSET_MANAGER.playAsset("./sounds/pickup_health.pickup.wav");
+
+
                     this.addHealth();
-                    entity.removeFromWorld = true;   
+                    entity.removeFromWorld = true;
                 }
 
             }
