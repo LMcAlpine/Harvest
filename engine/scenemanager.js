@@ -7,6 +7,7 @@ class SceneManager {
         this.game.camera = this;
 
         this.checkPoints = [];
+        this.saves = [];
 
         this.x = 0;
         this.y = 0;
@@ -17,7 +18,28 @@ class SceneManager {
 
         this.loadLevel();
 
+        this.saveGame();
+
     }
+
+    saveGame() {
+        let ents = {
+            entities : this.game.entities.slice(),
+            collisionEntities: this.game.collisionEntities.slice()
+        }
+
+        this.saves.push(ents);
+
+    };
+
+    loadGame() {
+
+        let ents = this.saves[this.saves.length - 1];
+
+        this.game.entities = ents["entities"].slice();
+        this.game.collisionEntities = ents["collisionEntities"].slice();
+
+    };
 
 
     loadLevel() {

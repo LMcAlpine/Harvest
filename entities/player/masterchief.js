@@ -508,7 +508,7 @@ class MasterChief {
 
                 if (this.aimRight) this.reverseMovement(false);
                 else this.reverseMovement(true);
-                this.state = 1;
+                if (this.onGround) this.state = 1;
             } else if (keys.a.pressed && !keys.d.pressed) { //Moving left
 
                 if(this.velocity.x > 0) this.velocity.x = 0;
@@ -520,7 +520,7 @@ class MasterChief {
                 
                 if (this.aimRight) this.reverseMovement(true);
                 else this.reverseMovement(false);
-                this.state = 1;
+                if (this.onGround) this.state = 1;
             }
             else {
                 if (this.onGround) {
@@ -547,8 +547,7 @@ class MasterChief {
 
         } else { //Chief is dead
             if(keys[' '].pressed) {
-                this.game.clearEntities();
-                this.game.sceneManager.loadLevel();
+                this.game.camera.loadGame();
             }
         }
 

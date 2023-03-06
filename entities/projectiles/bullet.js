@@ -16,6 +16,8 @@ class Bullet {
     constructor(shooter, game, firingPos, targetPos, bulletVelocity, bulletDamage, bulletType, bulletDistance) {
         Object.assign(this, { shooter, game, firingPos, targetPos, bulletVelocity, bulletDamage, bulletType, bulletDistance});
         
+        this.bloodSprites = ASSET_MANAGER.getAsset("./sprites/Blood Impacts.png");
+
         let xDiff = (this.targetPos.x + 50)- this.firingPos.x;
         let yDiff = (this.targetPos.y)- this.firingPos.y;
 
