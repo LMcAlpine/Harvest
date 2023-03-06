@@ -22,6 +22,8 @@ ASSET_MANAGER.queueDownload("./sprites/RedBase.png");
 ASSET_MANAGER.queueDownload("./sprites/HaloPod1.png");
 ASSET_MANAGER.queueDownload("./sprites/HaloPod2.png");
 ASSET_MANAGER.queueDownload("./sprites/BasicTrees.png");
+ASSET_MANAGER.queueDownload("./sprites/Ballistics.png");
+
 
 ASSET_MANAGER.queueDownload("./images/FOREST.png")
 ASSET_MANAGER.queueDownload("./images/cityfar.png")
