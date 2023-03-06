@@ -141,7 +141,7 @@ class SceneManager {
 
         //Test entities
 
-        new Healthpack(this.game, position2);
+        //new Healthpack(this.game, position2);
 
         // let testGun = new Gun(null, this.game, "PLASMA_RIFLE");
         // testGun.position = position;
