@@ -74,10 +74,22 @@ class SceneManager {
 
     clearEntities() {
         this.game.entities.forEach(function (entity) {
-            entity.removeFromWorld = true;
+            if(!(entity instanceof SceneManager)) {
+                entity.removeFromWorld = true;
+                entity = null;
+            }
+            
+        });
+        this.game.collisionEntities.forEach(function (entity) {
+            if(!(entity instanceof SceneManager)) {
+                entity.removeFromWorld = true;
+                entity = null;
+            }
+            
         });
 
-        
+        this.game.collisionEntities = [];
+
     };
 
 

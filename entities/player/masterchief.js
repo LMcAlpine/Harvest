@@ -672,7 +672,7 @@ class MasterChief {
         } else { //Chief is dead
             if (keys[' '].pressed) {
                 console.log("Died");
-                this.game.clearEntities();
+                this.game.camera.clearEntities();
                 this.game.camera.loadLevel();
             }
         }
@@ -818,7 +818,7 @@ class MasterChief {
 
 
             if (this.deathAnimation.isDone()) { //Draw last frame when death animation completes
-                console.log("DEATH DONE");
+
                 this.game.camera.scene = 3;
                 if (this.aimRight) {
                     this.deathAnimation.drawSpecificFrame(this.game.clockTick, ctx,
