@@ -769,6 +769,11 @@ class MasterChief {
 
                 }
 
+                if (entity instanceof Healthpack) {
+                    this.addHealth();
+                    entity.removeFromWorld = true;   
+                }
+
             }
 
         });
@@ -980,7 +985,10 @@ class MasterChief {
 
 
     addHealth() {
-        // Add to HP
+        this.hp = this.maxHP;
+        this.regenTimer = 5;
+        this.regenShield();
+        console.log(this.hp);
     }
 
     regenShield() {

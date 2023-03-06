@@ -16,8 +16,9 @@ class Layer {
     }
 
     update() {
+        const TICK = this.game.clockTick;
 
-        this.speed = this.speedModifier * this.game.player.velocity.x / 12;
+        this.speed = TICK * this.speedModifier * this.game.player.velocity.x * 3;
         if (this.x <= -this.width) {
             this.x = 0;
         }
@@ -29,6 +30,7 @@ class Layer {
 
     draw(ctx) {
         // let x = this.x;
+        ctx.drawImage(this.image, this.x - this.width, this.y, this.width, this.height);
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
         ctx.drawImage(this.image, this.x + this.width, this.y, this.width, this.height);
         //  ctx.drawImage(this.image, x + 2 * this.width, this.y, this.width, this.height);
