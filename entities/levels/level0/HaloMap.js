@@ -1590,8 +1590,8 @@ var HaloMap =
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":12384,
-                 "y":233
+                 "x":12799,
+                 "y":226
                 }, 
                 {
                  "class":"ITEM",
@@ -1652,6 +1652,18 @@ var HaloMap =
                  "width":0,
                  "x":13852,
                  "y":304
+                }, 
+                {
+                 "class":"ITEM",
+                 "height":0,
+                 "id":148,
+                 "name":"Healthpack",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":13759,
+                 "y":353
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1660,7 +1672,7 @@ var HaloMap =
          "y":0
         }],
  "nextlayerid":16,
- "nextobjectid":148,
+ "nextobjectid":149,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
