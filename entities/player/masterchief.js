@@ -68,7 +68,7 @@ class MasterChief {
 
         this.isAlive = true;
         // Health Bar
-        this.maxHP = 1000000;
+        this.maxHP = 100;
         this.hp = 100;
 
         // Shield Bar
