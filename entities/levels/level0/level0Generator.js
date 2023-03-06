@@ -63,7 +63,7 @@ class Level0Generator {
                 levelData.push(FormattedData);
             } else if (layer["type"] === "objectgroup"){ //Used for spawn points / world events
                 let objects = layer["objects"];
-                console.log(objects);
+                //console.log(objects);
                 objects.forEach(object => {
                     if (object["class"] === "SpawnPoint") {
                         
@@ -110,8 +110,8 @@ class Level0Generator {
 
                         } else if (object["name"] === "CheckPoint") {
                             this.game.camera.checkPoints.push(position);
-                            console.log("Pushing checkpoint to array");
-                            console.log(this.game.camera.checkPoints);
+                            //console.log("Pushing checkpoint to array");
+                            //console.log(this.game.camera.checkPoints);
                         }
 
 
@@ -153,6 +153,21 @@ class Level0Generator {
                             gunSpawn.worldEntity = true;
                         }
 
+                    } else if (object["class"] === "ITEM") {
+
+                        // let position = {
+                        //     x: object["x"] * PARAMS.SCALE,
+                        //     y: object["y"] * PARAMS.SCALE,
+                        // }
+                        let position = {
+                            x: object["x"] * PARAMS.SCALE,
+                            y: object["y"] * PARAMS.SCALE,
+                        }
+                        if (object["name"] === "Healthpack") {
+                            console.log("HP");
+                            new Healthpack(this.game, position);
+
+                        }
                     }
                 });
             }

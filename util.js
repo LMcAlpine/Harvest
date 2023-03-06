@@ -81,8 +81,8 @@ const PARAMS = {
     DEBUG: false,
     SCALE: 3,
     BITWIDTH: 32,
-    GRUNTS: false, //Toggles spawning of grunts off
-    ELITES: false //Toggles spawning of elites off
+    GRUNTS: true, //Toggles spawning of grunts off
+    ELITES: true //Toggles spawning of elites off
 };
 
 // for the parallax 
