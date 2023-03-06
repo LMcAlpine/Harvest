@@ -18,6 +18,16 @@ class SceneManager {
         this.title = true;
 
 
+
+
+        this.flames = ASSET_MANAGER.getAsset("./images/flames/test.png");
+
+        this.flames2 = ASSET_MANAGER.getAsset("./images/flames/test3.png");
+        //   this.fireAnim = new Animator(this.flames, 0, 0, 90, 100, 10, 0.3, 9, false, true);
+
+        this.fireAnim = new Animator(this.flames, 0, 100, 100, 100, 10, 0.25, 0, false, true);
+        this.fireAnim2 = new Animator(this.flames2, 0, 200, 100, 100, 10, 0.35, 0, false, true);
+
         this.elapsedTime = 0;
 
 
@@ -157,10 +167,12 @@ class SceneManager {
         let frontTrees = ASSET_MANAGER.getAsset("./images/fronttrees.png");
         let layer = new Layer(frontTrees, 0.09);
         gameEngine.addEntity(layer);
+        this.game.layer = layer;
 
         let backtrees = ASSET_MANAGER.getAsset("./images/backtrees.png");
         layer = new Layer(backtrees, 0.06);
         gameEngine.addEntity(layer);
+        this.game.layer2 = layer;
 
 
 
@@ -271,10 +283,26 @@ class SceneManager {
             ctx.font = "50px serif";
             //ctx.fillText("TITLE", 100, 100);
             let img = ASSET_MANAGER.getAsset("./images/skyBurning.png")
+
+
+
+
+
             ctx.drawImage(img, 0, 0, img.width, img.height);
             let cityflames = ASSET_MANAGER.getAsset("./images/cityFlames.png");
-            ctx.drawImage(this.ship, this.titleShipX, 160, this.ship.width, this.ship.height);
+
+            let shipY = this.osc(158, 162, 0.85);
+            ctx.drawImage(this.ship, this.titleShipX, shipY, this.ship.width, this.ship.height);
+            this.fireAnim.drawFrame(this.game.clockTick, ctx, this.titleShipX + 30, shipY + 120, 2, false);
+
+
             ctx.drawImage(cityflames, 0, 0, cityflames.width, cityflames.height);
+            this.fireAnim2.drawFrame(this.game.clockTick, ctx, 1100, 200, 3, false);
+
+
+
+
+
 
 
             if (this.click && this.title) {
@@ -342,7 +370,7 @@ class SceneManager {
 
 
     winScreen(ctx) {
-        ctx.drawImage(this.ship, this.titleShipX, 160, this.ship.width, this.ship.height);
+
 
         let width = PARAMS.CANVAS_WIDTH;
         let height = PARAMS.CANVAS_HEIGHT;

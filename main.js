@@ -35,6 +35,10 @@ ASSET_MANAGER.queueDownload("./images/covenantGlass.png");
 ASSET_MANAGER.queueDownload("./images/cityFlames.png");
 ASSET_MANAGER.queueDownload("./images/skyBurning.png");
 
+
+ASSET_MANAGER.queueDownload("./images/flames/test.png");
+ASSET_MANAGER.queueDownload("./images/flames/test3.png");
+
 ASSET_MANAGER.queueDownload("./music/Halo.mp3");
 ASSET_MANAGER.queueDownload("./sounds/assault_rifle_dryfire.wav");
 ASSET_MANAGER.queueDownload("./sounds/assault_rifle_fire_brown2_1.wav");
@@ -81,6 +85,9 @@ ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");
 	const ctx = canvas.getContext("2d");
 
+
+
+	ASSET_MANAGER.autoRepeat("./music/Halo.mp3");
 
 	PARAMS.BLOCKWIDTH = PARAMS.BITWIDTH * PARAMS.SCALE;
 	PARAMS.CANVAS_WIDTH = canvas.width;

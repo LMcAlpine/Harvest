@@ -68,7 +68,7 @@ class MasterChief {
 
         this.isAlive = true;
         // Health Bar
-        this.maxHP = 100;
+        this.maxHP = 1000000;
         this.hp = 100;
 
         // Shield Bar
@@ -460,12 +460,13 @@ class MasterChief {
                     if (!this.soundPlaying && this.currentGun.gunType === "PLASMA_RIFLE") {
                         let i = 1;
                         this.soundPlaying = true;
+                        // ASSET_MANAGER.playAsset("./sounds/plasma_rifle_fire_plasmarifle1.wav");
                         let playNextSound = () => {
 
                             ASSET_MANAGER.playAsset("./sounds/plasma_rifle_fire_plasmarifle" + i + ".wav");
                             i++;
                             if (i < 5) {
-                                setTimeout(playNextSound, 75);
+                                setTimeout(playNextSound, 1);
                             }
                             else {
                                 this.soundPlaying = false;
@@ -626,6 +627,7 @@ class MasterChief {
             // *** Physics ***
             if (keys.d.pressed && !keys.a.pressed) { //Moving right
 
+
                 if (this.velocity.x < 0) this.velocity.x = 0;
                 if (this.midAir) this.velocity.x = 0; this.midAir = false;
 
@@ -780,6 +782,8 @@ class MasterChief {
     };
 
     draw(ctx) {
+
+
 
         if (this.isAlive) { //CHIEF IS ALIVE
 
