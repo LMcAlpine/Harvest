@@ -973,6 +973,9 @@ class MasterChief {
             if (this.shield <= 0) dmg = Math.abs(this.shield);
         }
         if (this.shield <= 0 && this.hp > 0) {
+
+            ASSET_MANAGER.playAsset("./sounds/shield/shield_depleted.wav");
+
             this.shield = 0;
             this.hp -= dmg;
         }
@@ -988,12 +991,25 @@ class MasterChief {
     }
 
     regenShield() {
+
         const TICK = this.game.clockTick;
         if (this.shield < this.maxShield) {
             //console.log(this.regenTimer);
             if (this.regenTimer < 4.2) {
                 this.regenTimer += TICK;
             } else {
+
+                // if (!this.soundPlaying) {
+                //     ASSET_MANAGER.playAsset("./sounds/shield/shield_charge.wav");
+                //     this.soundPlaying = true;
+                //     // dont play sound until the sound has finished playing.
+                //     let audio = ASSET_MANAGER.getAsset("./sounds/shield/shield_charge.wav");
+                //     audio.addEventListener('ended', () => {
+                //         this.soundPlaying = false;
+                //     });
+                // }
+
+                // ASSET_MANAGER.playAsset("./sounds/shotgun_fire_shotgun6050.wav");
                 this.shield += 80 * TICK;
             }
         }

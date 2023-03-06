@@ -1,6 +1,6 @@
 class PlayerHUD {
-    constructor (player, game) {
-        Object.assign(this, {player, game});
+    constructor(player, game) {
+        Object.assign(this, { player, game });
         ///this.removeFromWorld = false;
 
         this.hpWidth = 200;
@@ -11,14 +11,14 @@ class PlayerHUD {
 
         this.Crosshair = new Crosshair(player, game);
     }
-    
+
     update() {
 
     }
-    
+
     draw(ctx) {
         this.drawHealthBar(ctx);
-        this.drawGunBar(ctx); 
+        this.drawGunBar(ctx);
     };
 
     drawHealthBar(ctx) {
@@ -26,8 +26,8 @@ class PlayerHUD {
         let shieldRatio = this.player.shield / this.player.maxShield;
         ctx.strokeStyle = "White";
         ctx.fillStyle = "rgba(134, 254, 255, 0.8)";
-        
-        
+
+
         // Shield Bar
         ctx.fillRect(10, 10, this.shieldWidth * shieldRatio, this.shieldHeight);
         ctx.strokeRect(10, 10, this.shieldWidth, this.shieldHeight);
@@ -72,8 +72,8 @@ class PlayerHUD {
 }
 
 class Crosshair {
-    constructor (player, game) {
-        Object.assign(this, {player, game});
+    constructor(player, game) {
+        Object.assign(this, { player, game });
 
         this.crosshairSprites = ASSET_MANAGER.getAsset("./sprites/crosshairs.png");
 
@@ -84,7 +84,7 @@ class Crosshair {
 
         this.width = 20;
 
-        
+
         this.onTarget = false;
 
         this.BB = null;
@@ -95,7 +95,7 @@ class Crosshair {
         this.game.addEntity(this);
         this.game.addCollisionEntity(this);
     }
-    
+
     update() {
         if (this.game.mouse !== null) {
             this.position.x = this.game.mouse.x - (12 * PARAMS.SCALE);
@@ -104,7 +104,7 @@ class Crosshair {
         }
 
         this.checkCollisions();
-        
+
     }
 
     updateBB() {
@@ -113,9 +113,9 @@ class Crosshair {
         //console.log("bbx pos: " + (this.position.x - this.BBXOffset + this.game.camera.x) + " bby pos: " + (this.position.y - this.BBYOffset + this.game.camera.y));
 
         this.BB = new BoundingBox(
-            this.position.x - this.BBXOffset + this.game.camera.x, 
+            this.position.x - this.BBXOffset + this.game.camera.x,
             this.position.y - this.BBYOffset + this.game.camera.y,
-            (this.width * PARAMS.SCALE) - (10 * PARAMS.SCALE), 
+            (this.width * PARAMS.SCALE) - (10 * PARAMS.SCALE),
             (this.width * PARAMS.SCALE) - (10 * PARAMS.SCALE));
     }
 
@@ -123,10 +123,10 @@ class Crosshair {
         this.game.collisionEntities.forEach(entity => {
 
             //Collision
-            if (entity.BB && this.BB.collide(entity.BB) ) {
+            if (entity.BB && this.BB.collide(entity.BB)) {
                 if (entity instanceof Grunt || entity instanceof Elite) {
                     if (entity.isAlive) this.onTarget = true;
-                    
+
                 } else {
                     this.onTarget = false;
                 }
@@ -134,14 +134,14 @@ class Crosshair {
 
         });
     }
-    
+
     draw(ctx) {
 
         let gun = this.player.currentGun;
         let crosshairY = gun.getGunInfo().crosshairY;
 
         if (this.game.mouse !== null) {
-            
+
             if (!this.onTarget) {
                 //console.log("NO TARGET");
                 ctx.drawImage(this.crosshairSprites,
@@ -166,6 +166,6 @@ class Crosshair {
             }
         }
 
-        
+
     };
 }

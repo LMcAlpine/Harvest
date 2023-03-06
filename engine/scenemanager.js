@@ -84,20 +84,20 @@ class SceneManager {
 
     clearEntities() {
         this.game.entities.forEach(function (entity) {
-            if(!(entity instanceof SceneManager)) {
+            if (!(entity instanceof SceneManager)) {
                 entity.removeFromWorld = true;
                 entity = null;
             }
-            
+
         });
         this.game.collisionEntities.forEach(function (entity) {
-            if(!(entity instanceof SceneManager)) {
+            if (!(entity instanceof SceneManager)) {
                 entity.removeFromWorld = true;
                 entity = null;
             }
-            
+
         });
-        
+
         this.game.collisionEntities = [];
         this.game.collisionEntities = [];
 
@@ -433,7 +433,8 @@ class SceneManager {
         offscreenCtx.font = "bold 50px Ariel";
         offscreenCtx.textBaseline = "top";
         //offscreenCtx.textAlign = "Center";
-        offscreenCtx.fillText("YOU LOST: Press SPACE to Reset", (width / 2), height / 4);
+
+        offscreenCtx.fillText("YOU LOST: Press SPACE to Reset", (width / 2) - 350, 480);
 
 
         ctx.drawImage(offscreenCanvas,
