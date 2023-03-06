@@ -965,7 +965,7 @@ class MasterChief {
 
 
     takeDamage(dmg) {
-        this.regen = 200;
+        this.regenTimer = 0;
 
         if (this.shield > 0) {
             this.shield -= dmg;
