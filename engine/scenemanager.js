@@ -359,6 +359,7 @@ class SceneManager {
 
 
     winScreen(ctx) {
+
         ctx.drawImage(this.ship, this.titleShipX, 160, this.ship.width, this.ship.height);
 
         let width = PARAMS.CANVAS_WIDTH;
@@ -374,7 +375,7 @@ class SceneManager {
         ctx.fillRect(0, 0, width, height);
         offscreenCtx.fillStyle = "White";
 
-        offscreenCtx.fillStyle = "black";
+        offscreenCtx.fillStyle = "white";
         offscreenCtx.font = "bold 50px Ariel";
         offscreenCtx.textBaseline = "top";
         //offscreenCtx.textAlign = "Center";
