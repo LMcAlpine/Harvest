@@ -39,6 +39,10 @@ ASSET_MANAGER.queueDownload("./images/covenantGlass.png");
 ASSET_MANAGER.queueDownload("./images/cityFlames.png");
 ASSET_MANAGER.queueDownload("./images/skyBurning.png");
 
+
+ASSET_MANAGER.queueDownload("./images/flames/test.png");
+ASSET_MANAGER.queueDownload("./images/flames/test3.png");
+
 ASSET_MANAGER.queueDownload("./music/Halo.mp3");
 ASSET_MANAGER.queueDownload("./sounds/assault_rifle_dryfire.wav");
 ASSET_MANAGER.queueDownload("./sounds/assault_rifle_fire_brown2_1.wav");
@@ -74,6 +78,10 @@ ASSET_MANAGER.queueDownload("./sounds/smg/fire[smg_new04].wav");
 ASSET_MANAGER.queueDownload("./sounds/smg/smg_reload[smg_reload].wav");
 
 
+ASSET_MANAGER.queueDownload("./sounds/shield/shield_depleted.wav");
+ASSET_MANAGER.queueDownload("./sounds/shield/shield_charge.wav");
+
+
 ASSET_MANAGER.queueDownload("./sounds/death_instant.5.ogg");
 ASSET_MANAGER.queueDownload("./sounds/death_violent.2.ogg");
 
@@ -85,6 +93,9 @@ ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");
 	const ctx = canvas.getContext("2d");
 
+
+
+	ASSET_MANAGER.autoRepeat("./music/Halo.mp3");
 
 	PARAMS.BLOCKWIDTH = PARAMS.BITWIDTH * PARAMS.SCALE;
 	PARAMS.CANVAS_WIDTH = canvas.width;

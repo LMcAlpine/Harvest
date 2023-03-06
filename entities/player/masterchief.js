@@ -460,12 +460,13 @@ class MasterChief {
                     if (!this.soundPlaying && this.currentGun.gunType === "PLASMA_RIFLE") {
                         let i = 1;
                         this.soundPlaying = true;
+                        // ASSET_MANAGER.playAsset("./sounds/plasma_rifle_fire_plasmarifle1.wav");
                         let playNextSound = () => {
 
                             ASSET_MANAGER.playAsset("./sounds/plasma_rifle_fire_plasmarifle" + i + ".wav");
                             i++;
                             if (i < 5) {
-                                setTimeout(playNextSound, 75);
+                                setTimeout(playNextSound, 1);
                             }
                             else {
                                 this.soundPlaying = false;
@@ -620,6 +621,7 @@ class MasterChief {
 
             // *** Physics ***
             if (keys.d.pressed && !keys.a.pressed) { //Moving right
+
 
                 if (this.velocity.x < 0) this.velocity.x = 0;
                 if (this.midAir) this.velocity.x = 0; this.midAir = false;
@@ -781,6 +783,8 @@ class MasterChief {
     };
 
     draw(ctx) {
+
+
 
         if (this.isAlive) { //CHIEF IS ALIVE
 
@@ -974,6 +978,9 @@ class MasterChief {
             if (this.shield <= 0) dmg = Math.abs(this.shield);
         }
         if (this.shield <= 0 && this.hp > 0) {
+
+            ASSET_MANAGER.playAsset("./sounds/shield/shield_depleted.wav");
+
             this.shield = 0;
             this.hp -= dmg;
         }
@@ -992,12 +999,25 @@ class MasterChief {
     }
 
     regenShield() {
+
         const TICK = this.game.clockTick;
         if (this.shield < this.maxShield) {
             //console.log(this.regenTimer);
             if (this.regenTimer < 4.2) {
                 this.regenTimer += TICK;
             } else {
+
+                // if (!this.soundPlaying) {
+                //     ASSET_MANAGER.playAsset("./sounds/shield/shield_charge.wav");
+                //     this.soundPlaying = true;
+                //     // dont play sound until the sound has finished playing.
+                //     let audio = ASSET_MANAGER.getAsset("./sounds/shield/shield_charge.wav");
+                //     audio.addEventListener('ended', () => {
+                //         this.soundPlaying = false;
+                //     });
+                // }
+
+                // ASSET_MANAGER.playAsset("./sounds/shotgun_fire_shotgun6050.wav");
                 this.shield += 80 * TICK;
             }
         }
