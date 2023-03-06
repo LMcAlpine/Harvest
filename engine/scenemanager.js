@@ -72,8 +72,22 @@ class SceneManager {
 
     clearEntities() {
         this.game.entities.forEach(function (entity) {
-            entity.removeFromWorld = true;
+            if(!(entity instanceof SceneManager)) {
+                entity.removeFromWorld = true;
+                entity = null;
+            }
+            
         });
+        this.game.collisionEntities.forEach(function (entity) {
+            if(!(entity instanceof SceneManager)) {
+                entity.removeFromWorld = true;
+                entity = null;
+            }
+            
+        });
+        this.game.collisionEntities = [];
+       // this.game.entities = [];
+        console.log(this.game.collisionEntities.length);
     };
 
 
@@ -123,21 +137,21 @@ class SceneManager {
         }
 
         //Test entities
-        let testGun = new Gun(null, this.game, "PLASMA_RIFLE");
-        testGun.position = position;
-        testGun.worldEntity = true;
+        // let testGun = new Gun(null, this.game, "PLASMA_RIFLE");
+        // testGun.position = position;
+        // testGun.worldEntity = true;
 
-        let testGun2 = new Gun(null, this.game, "SMG");
-        testGun2.position = position2;
-        testGun2.worldEntity = true;
+        // let testGun2 = new Gun(null, this.game, "SMG");
+        // testGun2.position = position2;
+        // testGun2.worldEntity = true;
 
-        let testGun3 = new Gun(null, this.game, "SHOTGUN");
-        testGun3.position = position3;
-        testGun3.worldEntity = true;
+        // let testGun3 = new Gun(null, this.game, "SHOTGUN");
+        // testGun3.position = position3;
+        // testGun3.worldEntity = true;
 
-        let testGun4 = new Gun(null, this.game, "SNIPER");
-        testGun4.position = position3;
-        testGun4.worldEntity = true;
+        // let testGun4 = new Gun(null, this.game, "SNIPER");
+        // testGun4.position = position3;
+        // testGun4.worldEntity = true;
 
         // let elite = new Elite(gameEngine, position);
         // this.game.addEntity(elite);
@@ -229,7 +243,7 @@ class SceneManager {
         let midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.BLOCKWIDTH / 2;
 
 
-        console.log("scene " + this.scene + "title " + this.title)
+        //console.log("scene " + this.scene + "title " + this.title)
         //ACTIVE CAMERA
         if (this.scene !== 0) {
             // this.x = this.game.player.position.x - midpointX;
