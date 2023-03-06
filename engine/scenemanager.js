@@ -87,7 +87,8 @@ class SceneManager {
             }
             
         });
-
+        
+        this.game.collisionEntities = [];
         this.game.collisionEntities = [];
 
     };
