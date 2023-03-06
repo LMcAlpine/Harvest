@@ -616,11 +616,6 @@ class MasterChief {
                 this.currentGun.reloadGun();
             }
 
-            //Drops gun, used for testing
-            if (this.game.keys['l']) {
-                console.log("test");
-                this.currentGun.dropGun(this.position);
-            }
 
 
             // *** Physics ***
@@ -637,7 +632,7 @@ class MasterChief {
 
                 if (this.aimRight) this.reverseMovement(false);
                 else this.reverseMovement(true);
-                this.state = 1;
+                if (this.onGround) this.state = 1;
             } else if (keys.a.pressed && !keys.d.pressed) { //Moving left
 
                 if (this.velocity.x > 0) this.velocity.x = 0;
@@ -649,7 +644,7 @@ class MasterChief {
 
                 if (this.aimRight) this.reverseMovement(true);
                 else this.reverseMovement(false);
-                this.state = 1;
+                if (this.onGround) this.state = 1;
             }
             else {
                 if (this.onGround) {

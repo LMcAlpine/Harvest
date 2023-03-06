@@ -1,6 +1,8 @@
 class Layer {
-    constructor(image, speedModifier) {
-        Object.assign(this, { image, speedModifier });
+    constructor(image, speedModifier, game) {
+        Object.assign(this, { image, speedModifier, game });
+
+        //console.log(this.game.player);
         this.x = 0;
         this.y = 0;
         this.width = image.width;
@@ -9,13 +11,13 @@ class Layer {
         // draw second image where first image ends
         this.x2 = this.width;
 
-        this.speed = scrollSpeed * this.speedModifier;
+        this.speed = this.speedModifier * this.game.player.velocity.x / 12;
 
     }
 
     update() {
 
-        this.speed = scrollSpeed * this.speedModifier;
+        this.speed = this.speedModifier * this.game.player.velocity.x / 12;
         if (this.x <= -this.width) {
             this.x = 0;
         }

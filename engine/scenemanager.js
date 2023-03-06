@@ -68,6 +68,8 @@ class SceneManager {
             this.loadLevel();
         }
 
+
+
     }
 
     clearEntities() {
@@ -85,9 +87,9 @@ class SceneManager {
             }
             
         });
+
         this.game.collisionEntities = [];
-       // this.game.entities = [];
-        console.log(this.game.collisionEntities.length);
+
     };
 
 
@@ -117,7 +119,7 @@ class SceneManager {
 
         // stop the title music
         ASSET_MANAGER.pauseBackgroundMusic();
-        this.clearEntities();
+        this.game.clearEntities();
         this.scene = 1;
 
 
@@ -169,17 +171,17 @@ class SceneManager {
 
 
         let frontTrees = ASSET_MANAGER.getAsset("./images/fronttrees.png");
-        let layer = new Layer(frontTrees, 0.09);
+        let layer = new Layer(frontTrees, 0.09, this.game);
         gameEngine.addEntity(layer);
 
         let backtrees = ASSET_MANAGER.getAsset("./images/backtrees.png");
-        layer = new Layer(backtrees, 0.06);
+        layer = new Layer(backtrees, 0.06, this.game);
         gameEngine.addEntity(layer);
 
 
 
         let haloRing = ASSET_MANAGER.getAsset("./images/haloring.png");
-        layer = new Layer(haloRing, 0);
+        layer = new Layer(haloRing, 0, this.game);
         gameEngine.addEntity(layer);
 
 
@@ -187,7 +189,7 @@ class SceneManager {
 
 
         // for the parallax 
-        layer = new Layer(nightForest, 0);
+        layer = new Layer(nightForest, 0, this.game);
 
         gameEngine.addEntity(layer);
 
