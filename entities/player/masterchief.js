@@ -617,11 +617,6 @@ class MasterChief {
                 this.currentGun.reloadGun();
             }
 
-            //Drops gun, used for testing
-            if (this.game.keys['l']) {
-                console.log("test");
-                this.currentGun.dropGun(this.position);
-            }
 
 
             // *** Physics ***
@@ -639,7 +634,7 @@ class MasterChief {
 
                 if (this.aimRight) this.reverseMovement(false);
                 else this.reverseMovement(true);
-                this.state = 1;
+                if (this.onGround) this.state = 1;
             } else if (keys.a.pressed && !keys.d.pressed) { //Moving left
 
                 if (this.velocity.x > 0) this.velocity.x = 0;
@@ -651,7 +646,7 @@ class MasterChief {
 
                 if (this.aimRight) this.reverseMovement(true);
                 else this.reverseMovement(false);
-                this.state = 1;
+                if (this.onGround) this.state = 1;
             }
             else {
                 if (this.onGround) {
@@ -678,8 +673,9 @@ class MasterChief {
 
         } else { //Chief is dead
             if (keys[' '].pressed) {
-                this.game.clearEntities();
-                this.game.sceneManager.loadLevel();
+                console.log("Died");
+                this.game.camera.clearEntities();
+                this.game.camera.loadLevel();
             }
         }
 
@@ -826,7 +822,8 @@ class MasterChief {
 
 
             if (this.deathAnimation.isDone()) { //Draw last frame when death animation completes
-                console.log("DEATH DONE");
+
+                this.game.camera.scene = 3;
                 if (this.aimRight) {
                     this.deathAnimation.drawSpecificFrame(this.game.clockTick, ctx,
                         this.position.x - this.width - this.game.camera.x,
@@ -1005,7 +1002,6 @@ class MasterChief {
     die() {
         this.isAlive = false;
         this.velocity.x = 0;
-        this.game.camera.scene = 3;
     }
 
 };
