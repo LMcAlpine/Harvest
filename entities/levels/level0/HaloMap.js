@@ -1219,7 +1219,7 @@ var HaloMap =
                  "visible":true,
                  "width":0,
                  "x":12800,
-                 "y":301
+                 "y":306
                 }, 
                 {
                  "class":"SpawnPoint",
@@ -1544,6 +1544,54 @@ var HaloMap =
                  "width":0,
                  "x":11953,
                  "y":335
+                }, 
+                {
+                 "class":"ITEM",
+                 "height":0,
+                 "id":137,
+                 "name":"Healthpack",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":3088,
+                 "y":332
+                }, 
+                {
+                 "class":"ITEM",
+                 "height":0,
+                 "id":138,
+                 "name":"Healthpack",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":6032,
+                 "y":431
+                }, 
+                {
+                 "class":"ITEM",
+                 "height":0,
+                 "id":139,
+                 "name":"Healthpack",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":8977,
+                 "y":342
+                }, 
+                {
+                 "class":"ITEM",
+                 "height":0,
+                 "id":142,
+                 "name":"Healthpack",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":12384,
+                 "y":233
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1552,7 +1600,7 @@ var HaloMap =
          "y":0
         }],
  "nextlayerid":16,
- "nextobjectid":136,
+ "nextobjectid":143,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
