@@ -142,7 +142,7 @@ class SceneManager {
         // let elite = new Elite(gameEngine, position);
         // this.game.addEntity(elite);
         // this.game.addCollisionEntity(elite);
-        
+
         // console.log("Spawning grunt at: " + position.x + ", " + position.y);
         // let grunt = new Grunt(gameEngine, position);
         // this.game.addEntity(grunt);
@@ -264,6 +264,8 @@ class SceneManager {
 
     draw(ctx) {
 
+        let TICK = this.game.clockTick;
+
         if (this.title && this.scene == 0) {
             ctx.fillStyle = 'black';
             ctx.font = "50px serif";
@@ -313,7 +315,7 @@ class SceneManager {
 
         //Display FPS
         if (this.FPSCounter >= 1) {
-            this.FPS = Math.round(1 / this.game.clockTick); 
+            this.FPS = Math.round(1 / this.game.clockTick);
             this.FPSCounter = 0;
         } else {
             this.FPSCounter += TICK;
