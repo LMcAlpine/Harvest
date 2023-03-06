@@ -7,7 +7,6 @@ class SceneManager {
         this.game.camera = this;
 
         this.checkPoints = [];
-        this.saves = [];
 
         this.x = 0;
         this.y = 0;
@@ -69,7 +68,7 @@ class SceneManager {
             this.loadLevel();
         }
 
-        this.saveGame();
+
 
     }
 
