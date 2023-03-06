@@ -29,6 +29,54 @@ ASSET_MANAGER.queueDownload("./images/cityfar.png")
 ASSET_MANAGER.queueDownload("./images/nightsky.png")
 ASSET_MANAGER.queueDownload("./images/cityclose.png")
 ASSET_MANAGER.queueDownload("./images/nightBG.png")
+ASSET_MANAGER.queueDownload("./images/backtrees.png")
+ASSET_MANAGER.queueDownload("./images/fronttrees.png")
+ASSET_MANAGER.queueDownload("./images/haloring.png");
+ASSET_MANAGER.queueDownload("./images/covenantGlass.png");
+ASSET_MANAGER.queueDownload("./images/cityFlames.png");
+ASSET_MANAGER.queueDownload("./images/skyBurning.png");
+
+ASSET_MANAGER.queueDownload("./music/Halo.mp3");
+ASSET_MANAGER.queueDownload("./sounds/assault_rifle_dryfire.wav");
+ASSET_MANAGER.queueDownload("./sounds/assault_rifle_fire_brown2_1.wav");
+ASSET_MANAGER.queueDownload("./sounds/assault_rifle_fire_brown2_2.wav");
+ASSET_MANAGER.queueDownload("./sounds/assault_rifle_fire_brown2_3.wav");
+ASSET_MANAGER.queueDownload("./sounds/assault_rifle_fire_brown2_4.wav");
+ASSET_MANAGER.queueDownload("./sounds/ar_ammo_ar_reload.wav");
+
+
+ASSET_MANAGER.queueDownload("./sounds/plasma_rifle_fire_plasmarifle1.wav");
+ASSET_MANAGER.queueDownload("./sounds/plasma_rifle_fire_plasmarifle2.wav");
+ASSET_MANAGER.queueDownload("./sounds/plasma_rifle_fire_plasmarifle3.wav");
+ASSET_MANAGER.queueDownload("./sounds/plasma_rifle_fire_plasmarifle4.wav");
+ASSET_MANAGER.queueDownload("./sounds/plasma_rifle_fire_plasmarifle5.wav");
+
+ASSET_MANAGER.queueDownload("./sounds/plaspistol_overheat_1.wav");
+
+
+ASSET_MANAGER.queueDownload("./sounds/shotgun_fire_shotgun6050.wav");
+ASSET_MANAGER.queueDownload("./sounds/shotgun_reload4_reload3-2empty.wav");
+
+ASSET_MANAGER.queueDownload("./sounds/sniper_rifle_fire_ruger21.wav");
+ASSET_MANAGER.queueDownload("./sounds/sniper_reload_empty.wav");
+
+
+ASSET_MANAGER.queueDownload("./sounds/smg/dryfire[pistdryfire].wav");
+
+ASSET_MANAGER.queueDownload("./sounds/smg/fire[smg_new01].wav");
+ASSET_MANAGER.queueDownload("./sounds/smg/fire[smg_new02].wav");
+ASSET_MANAGER.queueDownload("./sounds/smg/fire[smg_new03].wav");
+ASSET_MANAGER.queueDownload("./sounds/smg/fire[smg_new04].wav");
+
+ASSET_MANAGER.queueDownload("./sounds/smg/smg_reload[smg_reload].wav");
+
+
+ASSET_MANAGER.queueDownload("./sounds/death_instant.5.ogg");
+ASSET_MANAGER.queueDownload("./sounds/death_violent.2.ogg");
+
+
+// elite death
+ASSET_MANAGER.queueDownload("./sounds/deathviolent.die02.ogg");
 
 ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");
@@ -57,10 +105,6 @@ ASSET_MANAGER.downloadAll(() => {
 
 	//console.log(floorCollisions);
 
-	// canvas.onclick = () => {
-	// 	canvas.requestPointerLock();
-	// }
-
 	if (document.pointerLockElement === canvas ||
 		document.mozPointerLockElement === canvas) {
 		console.log('The pointer lock status is now locked');
@@ -68,7 +112,8 @@ ASSET_MANAGER.downloadAll(() => {
 		console.log('The pointer lock status is now unlocked');
 	}
 
-	// Attempt to unlock
+
+
 
 	gameEngine.addEntity(new SceneManager(gameEngine));
 

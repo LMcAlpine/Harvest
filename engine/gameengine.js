@@ -10,9 +10,6 @@ class GameEngine {
         this.entities = [];
         this.collisionEntities = [];
 
-        //this.collisionEntities = [];
-
-
         // Information on the input
         this.click = null;
         this.mouse = null;
@@ -20,7 +17,6 @@ class GameEngine {
         this.wheel = null;
         this.space = null;
         this.keys = {};
-        this.playerIndex = null;
 
 
         // Options and the Details
@@ -114,12 +110,12 @@ class GameEngine {
     };
 
     clearEntities() {
-        
+
         let entitiesCount = this.entities.length;
         console.log("entitiesCount: " + entitiesCount);
         for (let i = 0; i < entitiesCount; i++) {
             let entity = this.entities[i];
-            
+
             if (!(entity instanceof SceneManager)) {
                 entity.removeFromWorld = true;
             }
@@ -134,7 +130,9 @@ class GameEngine {
             }
         }
 
-        
+        console.log(this.collisionEntities);
+
+
 
     }
 
@@ -157,15 +155,20 @@ class GameEngine {
             let entity = this.entities[i];
 
             if (!entity.removeFromWorld) {
+
                 entity.update();
             }
         }
-        for (let i = this.entities.length - 1; i >= 0; --i) {  
+        for (let i = this.entities.length - 1; i >= 0; --i) {
             if (this.entities[i].removeFromWorld) {
+
                 this.entities.splice(i, 1);
             }
         }
-    
+
+        // to update the camera each frame. Don't remove without letting the group know
+        this.camera.update();
+
 
     };
 

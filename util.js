@@ -78,7 +78,7 @@ const collision = ({ object1, object2 }) => {
 
 
 const PARAMS = {
-    DEBUG: false,
+    DEBUG: true,
     SCALE: 3,
     BITWIDTH: 32,
     GRUNTS: true, //Toggles spawning of grunts off
@@ -159,7 +159,7 @@ function rotateImage(spritesheet, xStart, yStart, width, height, theta, scale, f
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
-  }
+}
 
 
 
