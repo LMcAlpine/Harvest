@@ -616,11 +616,6 @@ class MasterChief {
                 this.currentGun.reloadGun();
             }
 
-            //Drops gun, used for testing
-            if (this.game.keys['l']) {
-                console.log("test");
-                this.currentGun.dropGun(this.position);
-            }
 
 
             // *** Physics ***

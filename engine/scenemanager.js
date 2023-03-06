@@ -74,6 +74,8 @@ class SceneManager {
         this.game.entities.forEach(function (entity) {
             entity.removeFromWorld = true;
         });
+
+        
     };
 
 
@@ -103,7 +105,7 @@ class SceneManager {
 
         // stop the title music
         ASSET_MANAGER.pauseBackgroundMusic();
-        this.clearEntities();
+        this.game.clearEntities();
         this.scene = 1;
 
 
@@ -123,21 +125,21 @@ class SceneManager {
         }
 
         //Test entities
-        let testGun = new Gun(null, this.game, "PLASMA_RIFLE");
-        testGun.position = position;
-        testGun.worldEntity = true;
+        // let testGun = new Gun(null, this.game, "PLASMA_RIFLE");
+        // testGun.position = position;
+        // testGun.worldEntity = true;
 
-        let testGun2 = new Gun(null, this.game, "SMG");
-        testGun2.position = position2;
-        testGun2.worldEntity = true;
+        // let testGun2 = new Gun(null, this.game, "SMG");
+        // testGun2.position = position2;
+        // testGun2.worldEntity = true;
 
-        let testGun3 = new Gun(null, this.game, "SHOTGUN");
-        testGun3.position = position3;
-        testGun3.worldEntity = true;
+        // let testGun3 = new Gun(null, this.game, "SHOTGUN");
+        // testGun3.position = position3;
+        // testGun3.worldEntity = true;
 
-        let testGun4 = new Gun(null, this.game, "SNIPER");
-        testGun4.position = position3;
-        testGun4.worldEntity = true;
+        // let testGun4 = new Gun(null, this.game, "SNIPER");
+        // testGun4.position = position3;
+        // testGun4.worldEntity = true;
 
         // let elite = new Elite(gameEngine, position);
         // this.game.addEntity(elite);
@@ -155,17 +157,17 @@ class SceneManager {
 
 
         let frontTrees = ASSET_MANAGER.getAsset("./images/fronttrees.png");
-        let layer = new Layer(frontTrees, 0.09);
+        let layer = new Layer(frontTrees, 0.09, this.game);
         gameEngine.addEntity(layer);
 
         let backtrees = ASSET_MANAGER.getAsset("./images/backtrees.png");
-        layer = new Layer(backtrees, 0.06);
+        layer = new Layer(backtrees, 0.06, this.game);
         gameEngine.addEntity(layer);
 
 
 
         let haloRing = ASSET_MANAGER.getAsset("./images/haloring.png");
-        layer = new Layer(haloRing, 0);
+        layer = new Layer(haloRing, 0, this.game);
         gameEngine.addEntity(layer);
 
 
@@ -173,7 +175,7 @@ class SceneManager {
 
 
         // for the parallax 
-        layer = new Layer(nightForest, 0);
+        layer = new Layer(nightForest, 0, this.game);
 
         gameEngine.addEntity(layer);
 
@@ -229,7 +231,7 @@ class SceneManager {
         let midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.BLOCKWIDTH / 2;
 
 
-        console.log("scene " + this.scene + "title " + this.title)
+        //console.log("scene " + this.scene + "title " + this.title)
         //ACTIVE CAMERA
         if (this.scene !== 0) {
             // this.x = this.game.player.position.x - midpointX;

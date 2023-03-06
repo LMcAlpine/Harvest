@@ -10,9 +10,6 @@ class GameEngine {
         this.entities = [];
         this.collisionEntities = [];
 
-        //this.collisionEntities = [];
-
-
         // Information on the input
         this.click = null;
         this.mouse = null;
@@ -20,7 +17,6 @@ class GameEngine {
         this.wheel = null;
         this.space = null;
         this.keys = {};
-        this.playerIndex = null;
 
 
         // Options and the Details
@@ -134,6 +130,8 @@ class GameEngine {
             }
         }
 
+        console.log(this.collisionEntities);
+
 
 
     }
@@ -157,11 +155,13 @@ class GameEngine {
             let entity = this.entities[i];
 
             if (!entity.removeFromWorld) {
+
                 entity.update();
             }
         }
         for (let i = this.entities.length - 1; i >= 0; --i) {
             if (this.entities[i].removeFromWorld) {
+
                 this.entities.splice(i, 1);
             }
         }
