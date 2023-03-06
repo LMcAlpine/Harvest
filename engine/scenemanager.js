@@ -362,13 +362,16 @@ class SceneManager {
         ctx.textBaseline = "top";
 
         //Display FPS
-        if (this.FPSCounter >= 1) {
-            this.FPS = Math.round(1 / this.game.clockTick);
-            this.FPSCounter = 0;
-        } else {
-            this.FPSCounter += TICK;
+        if (PARAMS.debug) {
+            if (this.FPSCounter >= 1) {
+                this.FPS = Math.round(1 / this.game.clockTick);
+                this.FPSCounter = 0;
+            } else {
+                this.FPSCounter += TICK;
+            }
+            ctx.fillText(this.FPS, PARAMS.CANVAS_WIDTH / 2, 0);
         }
-        ctx.fillText(this.FPS, PARAMS.CANVAS_WIDTH / 2, 0);
+
     }
 
 
