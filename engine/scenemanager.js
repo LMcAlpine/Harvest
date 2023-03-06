@@ -13,17 +13,101 @@ class SceneManager {
 
         this.levelGenerator = null;
         //Toggle which level to load
-        this.scene = 1; //0 = Start Screen, 1 = Game, 2 = Win Screen, 3 = Death Screen
+        this.scene = 0; //0 = Start Screen, 1 = Game, 2 = Win Screen, 3 = Death Screen
 
-        this.loadLevel();
+        this.title = true;
 
+
+        this.elapsedTime = 0;
+
+
+        //  this.loadLevel();
+
+
+        // if (this.title) {
+        //     let img = ASSET_MANAGER.getAsset("./images/cityclose.png")
+        //     let layer = new Layer(img, 0.2);
+        //     gameEngine.addEntity(layer)
+
+
+        //     img = ASSET_MANAGER.getAsset("./images/nightsky.png")
+        //     layer = new Layer(img, 0);
+        //     gameEngine.addEntity(layer)
+
+
+        // }
+        // else {
+        //     this.loadLevel();
+        // }
+        this.loadingLevel = false;
+
+        this.click = false;
+        this.musicPlaying = false;
+
+        this.music = "./music/Halo.mp3";
+
+
+        this.ship = ASSET_MANAGER.getAsset("./images/covenantGlass.png");
+        this.titleShipX = -this.ship.width;
+
+        if (this.title && this.scene === 0) {
+            this.loadTitle();
+
+            window.addEventListener('click', (event) => {
+                if (this.music && this.title && !this.musicPlaying) {
+                    this.click = true;
+                    this.musicPlaying = true;
+                    ASSET_MANAGER.playAsset(this.music);
+                } else {
+                    //  this.click = false;
+                }
+            })
+
+        }
+        else {
+            this.loadLevel();
+        }
+
+    }
+
+    clearEntities() {
+        this.game.entities.forEach(function (entity) {
+            entity.removeFromWorld = true;
+        });
+    };
+
+
+
+    loadTitle() {
+        // let img = ASSET_MANAGER.getAsset("./images/cityclose.png")
+        // let layer = new Layer(img, 0.2);
+        // gameEngine.addEntity(layer);
+
+
+
+
+
+        // img = ASSET_MANAGER.getAsset("./images/nightsky.png")
+        // layer = new Layer(img, 0);
+        // gameEngine.addEntity(layer);
     }
 
 
     loadLevel() {
 
+        // if (this.music) {
+        //     ASSET_MANAGER.playAsset(this.music);
+        // }
+
+        this.loadingLevel = true;
+
+        // stop the title music
+        ASSET_MANAGER.pauseBackgroundMusic();
+        this.clearEntities();
         this.scene = 1;
 
+
+        // if (!this.title) {
         let position = {
             x: 1877,
             y: 200 * PARAMS.SCALE,
@@ -58,27 +142,49 @@ class SceneManager {
         // let elite = new Elite(gameEngine, position);
         // this.game.addEntity(elite);
         // this.game.addCollisionEntity(elite);
-        
+
         // console.log("Spawning grunt at: " + position.x + ", " + position.y);
         // let grunt = new Grunt(gameEngine, position);
         // this.game.addEntity(grunt);
         // this.game.addCollisionEntity(grunt);
 
-        // console.log("Spawning Master Chief at: " + position.x + ", " + position.y);
-        // let player = new MasterChief(gameEngine, position);
-        // this.game.addEntity(player);
-        // this.game.addCollisionEntity(player);
-        // this.game.player = player;
+
 
         this.levelGenerator = new Level0Generator(this.game);
-        let nightForest = ASSET_MANAGER.getAsset("./images/nightBG.png");
 
-        // for the parallax 
-        let layer = new Layer(nightForest, this.game);
+
+
+        let frontTrees = ASSET_MANAGER.getAsset("./images/fronttrees.png");
+        let layer = new Layer(frontTrees, 0.09);
         gameEngine.addEntity(layer);
 
-            
-            
+        let backtrees = ASSET_MANAGER.getAsset("./images/backtrees.png");
+        layer = new Layer(backtrees, 0.06);
+        gameEngine.addEntity(layer);
+
+
+
+        let haloRing = ASSET_MANAGER.getAsset("./images/haloring.png");
+        layer = new Layer(haloRing, 0);
+        gameEngine.addEntity(layer);
+
+
+        let nightForest = ASSET_MANAGER.getAsset("./images/nightBG.png");
+
+
+        // for the parallax 
+        layer = new Layer(nightForest, 0);
+
+        gameEngine.addEntity(layer);
+
+
+
+
+        //     }
+
+
+
+
         //}
 
 
@@ -104,21 +210,97 @@ class SceneManager {
 
     }
 
+    updateAudio() {
+        let mute = document.getElementById("mute").checked;
+        let volume = document.getElementById("volume").value;
+        ASSET_MANAGER.muteAudio(mute);
+        ASSET_MANAGER.adjustVolume(volume);
+    }
+
     update() {
+        if (this.click && this.title) {
+            this.elapsedTime += this.game.clockTick;
+        }
+
+
+        this.updateAudio();
 
         let midpointX = PARAMS.CANVAS_WIDTH / 2 - PARAMS.BLOCKWIDTH / 2;
         let midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.BLOCKWIDTH / 2;
 
+
+        console.log("scene " + this.scene + "title " + this.title)
         //ACTIVE CAMERA
-        this.x = this.game.player.position.x - midpointX;
-        this.y = this.game.player.position.y - midpointY;
+        if (this.scene !== 0) {
+            // this.x = this.game.player.position.x - midpointX;
+            // this.y = this.game.player.position.y - midpointY;
+        }
+
+
+        if (this.title && this.game.keys.Enter) {
+            this.title = false;
+            this.scene = 1;
+            // this.game.removeEle
+
+            this.loadLevel();
+            // this.x = this.game.player.position.x - midpointX;
+            // this.y = this.game.player.position.y - midpointY;
+
+
+        }
+        if (!this.title) {
+            this.x = this.game.player.position.x - midpointX;
+            this.y = this.game.player.position.y - midpointY;
+        }
+
+        if (this.titleShipX > PARAMS.CANVAS_WIDTH) {
+            this.titleShipX = -this.ship.width;
+        }
+        this.titleShipX += 0.5;
+
 
 
     }
 
     draw(ctx) {
 
-        const TICK = this.game.clockTick;
+        let TICK = this.game.clockTick;
+
+        if (this.title && this.scene == 0) {
+            ctx.fillStyle = 'black';
+            ctx.font = "50px serif";
+            //ctx.fillText("TITLE", 100, 100);
+            let img = ASSET_MANAGER.getAsset("./images/skyBurning.png")
+            ctx.drawImage(img, 0, 0, img.width, img.height);
+            let cityflames = ASSET_MANAGER.getAsset("./images/cityFlames.png");
+            ctx.drawImage(this.ship, this.titleShipX, 160, this.ship.width, this.ship.height);
+            ctx.drawImage(cityflames, 0, 0, cityflames.width, cityflames.height);
+
+
+            if (this.click && this.title) {
+                // this.elapsedTime = 0;
+                if (this.elapsedTime >= 7) {
+
+
+
+                    let rgbStep = Math.floor(this.osc(80, 255, 0.5));
+                    ctx.textAlign = "center";
+                    this.drawText("Press Enter to play", 1920 / 2, 510, this.getGray(rgbStep), 50, 43, ctx);
+                }
+
+            }
+
+
+
+
+
+            //ctx.fillText("Press Enter to play", 1920 / 2, 520);
+
+
+
+
+        }
+
 
         if (this.scene === 2) {
             this.winScreen(ctx);
@@ -133,7 +315,7 @@ class SceneManager {
 
         //Display FPS
         if (this.FPSCounter >= 1) {
-            this.FPS = Math.round(1 / this.game.clockTick); 
+            this.FPS = Math.round(1 / this.game.clockTick);
             this.FPSCounter = 0;
         } else {
             this.FPSCounter += TICK;
@@ -141,7 +323,26 @@ class SceneManager {
         ctx.fillText(this.FPS, PARAMS.CANVAS_WIDTH / 2, 0);
     }
 
+
+    drawText(txt, x, y, color, fontSize, fontStrength, ctx) {
+        fontStrength = fontStrength || '';
+        ctx.font = fontStrength + ' ' + fontSize + 'pt ' + 'serif';
+        ctx.fillStyle = color;
+        ctx.fillText(txt, x, y);
+    }
+
+    getGray(grayLevel) {
+        return "rgb(" + grayLevel + "," + grayLevel + "," + grayLevel + ")";
+    }
+
+
+    osc(min, max, freq) {
+        return min + 0.5 * (max - min) * (1 + Math.sin(2 * Math.PI * freq * Date.now() / 1000));
+    }
+
+
     winScreen(ctx) {
+        ctx.drawImage(this.ship, this.titleShipX, 160, this.ship.width, this.ship.height);
 
         let width = PARAMS.CANVAS_WIDTH;
         let height = PARAMS.CANVAS_HEIGHT;
@@ -188,8 +389,8 @@ class SceneManager {
         offscreenCtx.textBaseline = "top";
         //offscreenCtx.textAlign = "Center";
         offscreenCtx.fillText("YOU LOST: Press SPACE to Reset", (width / 2), height / 4);
-        
-        
+
+
         ctx.drawImage(offscreenCanvas,
             0, 0,
             width, height);

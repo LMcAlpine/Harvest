@@ -39,7 +39,7 @@ class Elite {
         this.width = 60;
         this.height = 60;
 
-        this.states = {waiting: 0, attacking: 1};
+        this.states = { waiting: 0, attacking: 1 };
         this.currentState = this.states.waiting;
         this.gunType = this.currentGun.getGunInfo().index; // 3 = Plasma Rifle, 6 = Carbine 
 
@@ -129,7 +129,7 @@ class Elite {
                 if (distance < PARAMS.SCALE * 240) {
                     this.currentState = this.states.attacking;
                 }
-                
+
             }
 
             if (this.currentState === this.states.attacking) {
@@ -159,7 +159,7 @@ class Elite {
                 } else {
                     this.velocity.x = 0;
                 }
-                
+
                 // max speed cap
                 if (this.velocity.x >= ELITE_PHYSICS.MAX_RUN) this.velocity.x = ELITE_PHYSICS.MAX_RUN;
                 if (this.velocity.x <= -ELITE_PHYSICS.MAX_RUN) this.velocity.x = -ELITE_PHYSICS.MAX_RUN;
@@ -175,7 +175,7 @@ class Elite {
                 const targetPosStatic = this.game.player.BB.getCenter();
 
                 this.currentGun.shootGun(firingPosStatic, targetPosStatic);
-                
+
             }
         }
 
@@ -189,7 +189,7 @@ class Elite {
         // update position
         this.position.x += this.velocity.x * TICK * PARAMS.SCALE;
         this.position.y += this.velocity.y * TICK * PARAMS.SCALE;
-       
+
         //console.log(this.velocity);
         this.updateBB();
 
@@ -208,7 +208,7 @@ class Elite {
                     entity.collisionActive = true; //COLLIDING WITH TILE
 
                     //FALLING
-                    if (this.velocity.y > 0) { 
+                    if (this.velocity.y > 0) {
 
                         if (this.lastBB.bottom <= entity.BB.top) {
                             this.position.y = entity.BB.top - this.BB.height - this.BBYOffset;
@@ -217,55 +217,55 @@ class Elite {
                             this.updateBB();
                             return;
                         }
-    
+
                     }
 
                     //JUMPING
                     if (this.velocity.y < 0) { //Jumping
-                        
+
                         if (this.lastBB.top >= entity.BB.bottom) {
 
                             this.position.y = entity.BB.bottom - this.BBYOffset;
                             this.velocity.y = 0;
                             this.updateBB();
                             return;
-    
+
                         }
                     }
 
-                    
+
                     //TOUCHING RIGHTSIDE OF TILE
                     if (this.BB.left <= entity.BB.right
                         && this.BB.bottom > entity.BB.top
-                        && this.velocity.x < 0) { 
+                        && this.velocity.x < 0) {
 
                         this.position.x = entity.BB.right - this.BBXOffset;
 
                         if (this.velocity.x < 0) this.velocity.x = -ELITE_PHYSICS.MAX_RUN / 4;
 
                         this.jumping = true;
-                        
+
                     }
 
 
                     //TOUCHING LEFT SIDE OF TILE
                     if (this.BB.right >= entity.BB.left
                         && this.BB.bottom > entity.BB.top
-                        && this.velocity.x > 0) { 
+                        && this.velocity.x > 0) {
 
                         this.position.x = entity.BB.left - this.BB.width - this.BBXOffset;
 
                         if (this.velocity.x > 0) this.velocity.x = ELITE_PHYSICS.MAX_RUN / 4;
 
                         this.jumping = true;
-                        
+
                     }
 
-                
-                    
+
+
                 }
 
-                
+
             }
         });
 
@@ -289,6 +289,24 @@ class Elite {
     }
 
     die() {
+
+
+
+        if (!this.soundPlaying) {
+
+            ASSET_MANAGER.playAsset("./sounds/deathviolent.die02.ogg");
+
+            //  ASSET_MANAGER.playAsset("./sounds/death_instant.5.ogg");
+            this.soundPlaying = true;
+            // dont play sound until the sound has finished playing.
+            //  let audio = ASSET_MANAGER.getAsset("./sounds/death_instant.5.ogg");
+            let audio = ASSET_MANAGER.getAsset("./sounds/deathviolent.die02.ogg");
+            audio.addEventListener('ended', () => {
+                this.soundPlaying = false;
+            });
+        }
+
+
         this.velocity.x = 0;
         this.isAlive = false;
         this.currentGun.dropGun();
@@ -299,45 +317,45 @@ class Elite {
         if (this.isAlive) {
             if (this.aimRight) {
                 this.animations[this.state][this.gunType].drawFrame(
-                    this.game.clockTick, 
-                    ctx, 
-                    this.position.x - this.game.camera.x, 
-                    this.position.y - this.game.camera.y, 
+                    this.game.clockTick,
+                    ctx,
+                    this.position.x - this.game.camera.x,
+                    this.position.y - this.game.camera.y,
                     this.scale, false);
 
             } else {
                 this.animations[this.state][this.gunType].drawFrame(
-                    this.game.clockTick, 
-                    ctx, 
-                    this.position.x - this.game.camera.x, 
-                    this.position.y - this.game.camera.y, 
+                    this.game.clockTick,
+                    ctx,
+                    this.position.x - this.game.camera.x,
+                    this.position.y - this.game.camera.y,
                     this.scale, true);
             }
         } else { // Elite is dead
             //play death animation
             if (this.aimRight) {
-                this.deathAnimation.drawFrame(this.game.clockTick, ctx, 
-                    this.position.x - this.game.camera.x, 
-                    this.position.y -  this.game.camera.y, 
+                this.deathAnimation.drawFrame(this.game.clockTick, ctx,
+                    this.position.x - this.game.camera.x,
+                    this.position.y - this.game.camera.y,
                     this.scale, false);
             } else {
-                this.deathAnimation.drawFrame(this.game.clockTick, ctx, 
-                    this.position.x - this.game.camera.x, 
-                    this.position.y - this.game.camera.y, 
+                this.deathAnimation.drawFrame(this.game.clockTick, ctx,
+                    this.position.x - this.game.camera.x,
+                    this.position.y - this.game.camera.y,
                     this.scale, true);
             }
 
 
             if (this.deathAnimation.isDone()) { //Draw last frame when death animation completes
                 if (this.aimRight) {
-                    this.deathAnimation.drawSpecificFrame(this.game.clockTick, ctx, 
-                        this.position.x - this.game.camera.x, 
-                        this.position.y - this.game.camera.y, 
+                    this.deathAnimation.drawSpecificFrame(this.game.clockTick, ctx,
+                        this.position.x - this.game.camera.x,
+                        this.position.y - this.game.camera.y,
                         this.scale, false, 2);
                 } else {
-                    this.deathAnimation.drawSpecificFrame(this.game.clockTick, ctx, 
-                        this.position.x - this.game.camera.x, 
-                        this.position.y - this.game.camera.y, 
+                    this.deathAnimation.drawSpecificFrame(this.game.clockTick, ctx,
+                        this.position.x - this.game.camera.x,
+                        this.position.y - this.game.camera.y,
                         this.scale, true, 2);
                 }
             }
@@ -349,6 +367,6 @@ class Elite {
             ctx.strokeStyle = 'cyan';
             ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
         }
-        
+
     };
 }

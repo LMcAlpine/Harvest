@@ -159,7 +159,7 @@ function rotateImage(spritesheet, xStart, yStart, width, height, theta, scale, f
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
-  }
+}
 
 
 
