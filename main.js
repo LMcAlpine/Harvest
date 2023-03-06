@@ -73,6 +73,10 @@ ASSET_MANAGER.queueDownload("./sounds/smg/smg_reload[smg_reload].wav");
 ASSET_MANAGER.queueDownload("./sounds/death_instant.5.ogg");
 ASSET_MANAGER.queueDownload("./sounds/death_violent.2.ogg");
 
+
+// elite death
+ASSET_MANAGER.queueDownload("./sounds/deathviolent.die02.ogg");
+
 ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");
 	const ctx = canvas.getContext("2d");
