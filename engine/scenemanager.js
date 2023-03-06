@@ -141,8 +141,8 @@ class SceneManager {
         }
 
         let position2 = {
-            x: 1600,
-            y: 200 * PARAMS.SCALE,
+            x: 2400,
+            y: 200 * PARAMS.SCALE + 400,
         }
         let position3 = {
             x: 1699,
@@ -150,6 +150,9 @@ class SceneManager {
         }
 
         //Test entities
+
+        //new Healthpack(this.game, position2);
+
         // let testGun = new Gun(null, this.game, "PLASMA_RIFLE");
         // testGun.position = position;
         // testGun.worldEntity = true;
@@ -402,7 +405,7 @@ class SceneManager {
         ctx.fillRect(0, 0, width, height);
         offscreenCtx.fillStyle = "White";
 
-        offscreenCtx.fillStyle = "black";
+        offscreenCtx.fillStyle = "white";
         offscreenCtx.font = "bold 50px Ariel";
         offscreenCtx.textBaseline = "top";
         //offscreenCtx.textAlign = "Center";
