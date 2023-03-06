@@ -6,7 +6,7 @@ class Elite {
         this.isAlive = true;
         this.currentGun = new Gun(this, game, "PLASMA_RIFLE");
         // Properties
-        this.scale = 3;
+        this.scale = PARAMS.SCALE;
 
         //Animation states
         this.state = 0; // 0 = Idle, 1 = Moving
