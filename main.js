@@ -8,7 +8,7 @@ ASSET_MANAGER.queueDownload("./sprites/crosshairs.png");
 
 
 ASSET_MANAGER.queueDownload("./sprites/GruntSprites.png");
-ASSET_MANAGER.queueDownload("./sprites/Blood Impacts.png");
+ASSET_MANAGER.queueDownload("./sprites/Bullet Impacts.png");
 ASSET_MANAGER.queueDownload("./sprites/EliteSprites.png");
 
 ASSET_MANAGER.queueDownload("./sprites/Grass Blocks.png");
