@@ -16,7 +16,7 @@ class Bullet {
     constructor(shooter, game, firingPos, targetPos, bulletVelocity, bulletDamage, bulletType, bulletDistance) {
         Object.assign(this, { shooter, game, firingPos, targetPos, bulletVelocity, bulletDamage, bulletType, bulletDistance});
         
-        this.bloodSprites = ASSET_MANAGER.getAsset("./sprites/Blood Impacts.png");
+        this.impactSprites = ASSET_MANAGER.getAsset("./sprites/Bullet Impacts.png");
 
         let xDiff = (this.targetPos.x + 50)- this.firingPos.x;
         let yDiff = (this.targetPos.y)- this.firingPos.y;
@@ -39,10 +39,19 @@ class Bullet {
             y: this.firingPos.y
         }
 
+        this.impactPosition = {
+            x: null,
+            y: null
+        }
+
         this.bulletEndX = this.position.x + this.vectorNormalized.x * this.bulletDistance;
         this.bulletEndY = this.position.y + this.vectorNormalized.y * this.bulletDistance;
 
         this.removeFromWorld = false;
+
+        this.bulletImpacts = [];
+        this.playImpact = 0; // 0 = toggledOff, 1 = blue
+        this.loadAnimations();
 
         this.updateBB();
 
@@ -51,33 +60,8 @@ class Bullet {
     };
 
 
-    update() {
+    
 
-        this.position = {
-            x: (this.position.x + (this.vectorNormalized.x * this.bulletVelocity)),
-            y: (this.position.y + (this.vectorNormalized.y * this.bulletVelocity))
-        }
-
-        //Loop to kill bullet entity
-        if (Math.abs(this.position.x - this.firingPos.x) >= Math.abs(this.bulletEndX - this.firingPos.x) 
-            && Math.abs(this.position.y - this.firingPos.y) >= Math.abs(this.bulletEndY - this.firingPos.y)) {
-
-                this.removeFromWorld = true;
-        }
-
-        this.collisionChecker();
-
-        this.updateBB();
-
-    };
-
-    updateBB() {
-        this.lastBB = this.BB;
-        let width = 20;
-        let height = 20;
-        this.BB = new BoundingBox(this.position.x - (width / 2), this.position.y - (height / 2), width, height);
-
-    }
 
     collisionChecker() {
 
@@ -87,6 +71,10 @@ class Bullet {
             if (entity.BB && this.shooter !== entity && this !== entity && this.BB.collide(entity.BB)) {//Collision
                 if (entity instanceof Tile) { 
                     this.removeFromWorld = true;
+                    // this.playImpact = 3;
+
+                    // this.impactPosition.x = this.position.x;
+                    // this.impactPosition.y = this.position.y;
 
                 } else if (entity instanceof Grunt //Bullet hits a grunt
                     && entity.isAlive
@@ -95,7 +83,12 @@ class Bullet {
 
                     entity.currentState = entity.states.attacking;
                     entity.takeDamage(this.bulletDamage);
-                    this.removeFromWorld = true;
+                    this.playImpact = 1;
+
+                    this.impactPosition.x = this.position.x;
+                    this.impactPosition.y = this.position.y;
+
+                   // this.removeFromWorld = true;
 
                 } else if (entity instanceof Elite //Bullet hits a grunt
                     && entity.isAlive
@@ -104,12 +97,20 @@ class Bullet {
 
                     entity.currentState = entity.states.attacking;
                     entity.takeDamage(this.bulletDamage);
-                    this.removeFromWorld = true;
+                    this.playImpact = 1;
+
+                    this.impactPosition.x = this.position.x;
+                    this.impactPosition.y = this.position.y;
+
+                    //this.removeFromWorld = true;
 
                 } else if (entity instanceof MasterChief) {
                     //console.log("cheese ouch");
                     entity.takeDamage(this.bulletDamage);
-                    this.removeFromWorld = true;
+                    this.playImpact = 2;
+
+                    this.impactPosition.x = this.position.x;
+                    this.impactPosition.y = this.position.y;
                 }
 
 
@@ -127,39 +128,119 @@ class Bullet {
 
         if (PARAMS.DEBUG && this.BB) {
             ctx.strokeStyle = 'red';
-            ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
-
-            
+            ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height); 
         }
 
-        if (this.bulletType === "BULLET") {
-            //Draw circle representing bullet
-            ctx.beginPath();
-            ctx.fillStyle = "gold";
-            ctx.arc(
-                this.position.x - this.game.camera.x, //X Position of circle
-                this.position.y - this.game.camera.y, //Y Position of circle
-                2, 0, Math.PI * 2, false);
-            ctx.fill();
-            ctx.closePath();
-        } else if (this.bulletType ===  "PLASMA") {
-            //Draw circle representing bullet
-            ctx.beginPath();
-            ctx.fillStyle = "cyan";
-            ctx.arc(
-                this.position.x - this.game.camera.x, //X Position of circle
-                this.position.y - this.game.camera.y, //Y Position of circle
-                5, 0, Math.PI * 2, false);
-            ctx.fill();
-            ctx.closePath();
+        if (this.playImpact !== 0) this.impactAnimation(ctx);
+        else {
+            if (this.bulletType === "BULLET") {
+                //Draw circle representing bullet
+                ctx.beginPath();
+                ctx.fillStyle = "gold";
+                ctx.arc(
+                    this.position.x - this.game.camera.x, //X Position of circle
+                    this.position.y - this.game.camera.y, //Y Position of circle
+                    2, 0, Math.PI * 2, false);
+                ctx.fill();
+                ctx.closePath();
+    
+            } else if (this.bulletType ===  "PLASMA") {
+                //Draw circle representing bullet
+                ctx.beginPath();
+                ctx.fillStyle = "cyan";
+                ctx.arc(
+                    this.position.x - this.game.camera.x, //X Position of circle
+                    this.position.y - this.game.camera.y, //Y Position of circle
+                    5, 0, Math.PI * 2, false);
+                ctx.fill();
+                ctx.closePath();
+            }
         }
         
-
-        
-
-
 
     };
+
+    impactAnimation(ctx) {
+
+
+        this.bulletImpacts[this.playImpact].drawFrame(
+            this.game.clockTick, ctx,
+            this.impactPosition.x - this.game.camera.x,
+            this.impactPosition.y - this.game.camera.y,
+            PARAMS.SCALE, false);
+
+        
+
+        if (this.bulletImpacts[this.playImpact].isDone()) {
+            console.log("DONE");
+            this.bulletImpacts[this.playImpact].reset();
+            this.bulletImpacts = 0;
+            this.removeFromWorld = true;
+        }
+    }
+
+    loadAnimations() {
+        for (let i = 0; i <= 3; i++) {
+            this.bulletImpacts.push([]);   
+        }
+
+        this.bulletImpacts[1] = new Animator(this.impactSprites,
+            0, 0,
+            16, 16,
+            3, 0.1,
+            0,
+            false, false);
+
+        this.bulletImpacts[2] = new Animator(this.impactSprites,
+            0, 16,
+            16, 16,
+            3, 0.1,
+            0,
+            false, false);
+
+        this.bulletImpacts[3] = new Animator(this.impactSprites,
+            0, 32,
+            16, 16,
+            3, 0.1,
+            0,
+            false, false);
+
+            
+
+    }
+
+
+    update() {
+
+        if (this.playImpact == 0) { //Don't need to update if impact already detected
+
+            this.position = {
+                x: (this.position.x + (this.vectorNormalized.x * this.bulletVelocity)),
+                y: (this.position.y + (this.vectorNormalized.y * this.bulletVelocity))
+            }
+
+            //Loop to kill bullet entity
+            if (Math.abs(this.position.x - this.firingPos.x) >= Math.abs(this.bulletEndX - this.firingPos.x) 
+                && Math.abs(this.position.y - this.firingPos.y) >= Math.abs(this.bulletEndY - this.firingPos.y)) {
+
+                    this.removeFromWorld = true;
+            }
+
+            this.collisionChecker(); 
+
+            this.updateBB();
+
+        }
+
+    };
+
+    updateBB() {
+        this.lastBB = this.BB;
+        let width = 20;
+        let height = 20;
+        this.BB = new BoundingBox(this.position.x - (width / 2), this.position.y - (height / 2), width, height);
+
+    }
 
 
 

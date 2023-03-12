@@ -48,7 +48,7 @@ class Gun {
             },
 
             "ASSAULT_RIFLE": {
-                param: [true, 0.05, 30, 35, 36, "BULLET"],
+                param: [true, 0.05, 30, 30, 36, "BULLET"],
                 bulletDistance: 300 * PARAMS.SCALE,
                 spriteX: 0,
                 spriteY: 30,
