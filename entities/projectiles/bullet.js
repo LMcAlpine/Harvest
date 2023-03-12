@@ -107,8 +107,12 @@ class Bullet {
                 } else if (entity instanceof MasterChief) {
                     //console.log("cheese ouch");
                     entity.takeDamage(this.bulletDamage);
-                    this.playImpact = 2;
 
+                    if (entity.shield <= 0)  {
+                        this.playImpact = 2;
+                    } else {
+                        this.removeFromWorld = true;
+                    }
                     this.impactPosition.x = this.position.x;
                     this.impactPosition.y = this.position.y;
                 }
